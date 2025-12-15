@@ -54,7 +54,7 @@ brew install fzf neofetch cava chafa nowplaying-cli
 ### Quick Install
 
 ```bash
-git clone https://github.com/luvrksnskye//dotfiles.git
+git clone https://github.com/luvrksnskye/dotfiles.git
 cd dotfiles
 chmod +x install.sh
 ./install.sh
