@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# ╔════════════════════════════════════════════════════════════════════════════╗
+# ║                           JANKYBORDERS CONFIG                              ║
+# ║                              Skye Edition                                  ║
+# ╚════════════════════════════════════════════════════════════════════════════╝
+
+# Window border configuration
+# Increased glow effect with higher opacity (0xbb = ~73% opacity)
+
+borders \
+    active_color=0xbbcba6f7 \
+    inactive_color=0x00000000 \
+    width=5.0 \
+    style=round \
+    hidpi=on

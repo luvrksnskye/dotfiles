@@ -1,0 +1,92 @@
+#!/bin/bash
+
+# ╔════════════════════════════════════════════════════════════════════════════╗
+# ║                                                                            ║
+# ║   ██╗     ██╗   ██╗██╗   ██╗██████╗ ██╗  ██╗███████╗███╗   ██╗███████╗    ║
+# ║   ██║     ██║   ██║██║   ██║██╔══██╗██║ ██╔╝██╔════╝████╗  ██║██╔════╝    ║
+# ║   ██║     ██║   ██║██║   ██║██████╔╝█████╔╝ ███████╗██╔██╗ ██║███████╗    ║
+# ║   ██║     ██║   ██║╚██╗ ██╔╝██╔══██╗██╔═██╗ ╚════██║██║╚██╗██║╚════██║    ║
+# ║   ███████╗╚██████╔╝ ╚████╔╝ ██║  ██║██║  ██╗███████║██║ ╚████║███████║    ║
+# ║   ╚══════╝ ╚═════╝   ╚═══╝  ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚══════╝    ║
+# ║                                                                            ║
+# ║                          Skye's Custom Scripts                             ║
+# ║                                                                            ║
+# ╚════════════════════════════════════════════════════════════════════════════╝
+
+SCRIPT_DIR="$HOME/.config/luvrksnskye"
+WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
+CACHE_DIR="$HOME/.cache/luvrksnskye"
+
+mkdir -p "$CACHE_DIR"
+
+show_help() {
+    clear
+    cat << 'EOF'
+
+    ╭──────────────────────────────────────────────────────────────────────────╮
+    │                                                                          │
+    │    ██╗     ██╗   ██╗██╗   ██╗██████╗                                     │
+    │    ██║     ██║   ██║██║   ██║██╔══██╗                                    │
+    │    ██║     ██║   ██║██║   ██║██████╔╝                                    │
+    │    ██║     ██║   ██║╚██╗ ██╔╝██╔══██╗                                    │
+    │    ███████╗╚██████╔╝ ╚████╔╝ ██║  ██║                                    │
+    │    ╚══════╝ ╚═════╝   ╚═══╝  ╚═╝  ╚═╝                                    │
+    │                                                                          │
+    │                     Command Reference                                    │
+    │                                                                          │
+    ├──────────────────────────────────────────────────────────────────────────┤
+    │                                                                          │
+    │   WALLPAPER                                                              │
+    │   ─────────────────────────────────────────────────────────────────────  │
+    │                                                                          │
+    │     luvr wall              Interactive wallpaper selector                │
+    │     luvr wall-random       Set a random wallpaper                        │
+    │     luvr wall-set <path>   Set a specific wallpaper                      │
+    │                                                                          │
+    │   UTILITIES                                                              │
+    │   ─────────────────────────────────────────────────────────────────────  │
+    │                                                                          │
+    │     luvr keys              Show keybinding reference                     │
+    │     luvr reload            Reload all configurations                     │
+    │     luvr help              Show this help message                        │
+    │                                                                          │
+    │   SHORTCUTS                                                              │
+    │   ─────────────────────────────────────────────────────────────────────  │
+    │                                                                          │
+    │     wall                   Alias for luvr wall                           │
+    │     wallr                  Alias for luvr wall-random                    │
+    │     keys                   Alias for luvr keys                           │
+    │                                                                          │
+    ╰──────────────────────────────────────────────────────────────────────────╯
+
+EOF
+}
+
+case "$1" in
+    wall)
+        "$SCRIPT_DIR/wallpaper_select.sh"
+        ;;
+    wall-random|wallr)
+        "$SCRIPT_DIR/wallpaper_random.sh"
+        ;;
+    wall-set)
+        "$SCRIPT_DIR/wallpaper_set.sh" "$2"
+        ;;
+    keys)
+        "$SCRIPT_DIR/key_hints.sh"
+        ;;
+    reload)
+        "$SCRIPT_DIR/reload.sh"
+        ;;
+    help|--help|-h|"")
+        show_help
+        ;;
+    *)
+        echo ""
+        echo "  Unknown command: $1"
+        echo ""
+        echo "  Run 'luvr help' for usage"
+        echo ""
+        exit 1
+        ;;
+esac
