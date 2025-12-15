@@ -1,4 +1,82 @@
-.env
+# ===============================
+# macOS
+# ===============================
 .DS_Store
-*.log
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
 
+# ===============================
+# Secrets / Sensitive
+# ===============================
+.env
+.env.*
+*.secret
+*.secrets
+*.key
+*.pem
+*.p12
+*.crt
+*.der
+*.cer
+
+# ===============================
+# SSH / GPG
+# ===============================
+.ssh/
+.gnupg/
+
+# ===============================
+# Shell history
+# ===============================
+.zsh_history
+.bash_history
+.nushell_history
+.nu_history
+
+# ===============================
+# Cache / temp
+# ===============================
+.cache/
+.tmp/
+*.log
+*.swp
+*.swo
+*.bak
+
+# ===============================
+# Package managers
+# ===============================
+node_modules/
+npm-debug.log*
+pnpm-lock.yaml
+yarn.lock
+.pnpm-store/
+
+# ===============================
+# Tool-specific configs to ignore
+# ===============================
+.config/gh/
+.config/gcloud/
+.config/docker/
+.config/npm/
+.config/pip/
+.config/iterm2/
+.config/obs-studio/
+.config/spotify/
+.config/discord/
+
+# ===============================
+# Editors
+# ===============================
+.vscode/
+.idea/
+*.code-workspace
+
+# ===============================
+# Fonts cache
+# ===============================
+.fontconfig/
