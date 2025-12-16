@@ -28,6 +28,7 @@
 # │                       QUICK CLOSE (Esc)                                    │
 # └────────────────────────────────────────────────────────────────────────────┘
 escape : /usr/local/bin/yabai -m window --close
+alt - escape : /usr/local/bin/yabai -m window --close
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                         WINDOW FOCUS                                       │

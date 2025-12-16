@@ -79,14 +79,7 @@ case "$PERIOD" in
         sleep 0.2
         animate_block "$C_PEACH" \
             "" \
-            "                    ." \
-            "                   .:." \
-            "                  .:::." \
-            "                 .:::::." \
-            "             ___ :::::::. ___" \
-            "            /   \\':::::'/   \\" \
-            "           |  ☀  | ''' |  ☀  |" \
-            "            \\___/       \\___/" \
+            "" \
             ""
         
         sleep 0.3
@@ -95,7 +88,7 @@ case "$PERIOD" in
         echo -e "  ${C_LAVENDER}│${C_RESET}"
         animate_text "  │   Good Morning, Skye!" "$C_YELLOW" $DELAY
         echo -e "  ${C_LAVENDER}│${C_RESET}"
-        animate_text "  │   Rise and shine ✨" "$C_PEACH" $DELAY
+        animate_text "  │   Rise and shine " "$C_PEACH" $DELAY
         echo -e "  ${C_LAVENDER}│${C_RESET}"
         animate_text "  ╰─────────────────────────────────────╯" "$C_LAVENDER" $FAST_DELAY
         ;;
@@ -105,13 +98,7 @@ case "$PERIOD" in
         sleep 0.2
         animate_block "$C_SKY" \
             "" \
-            "           .-~~~-." \
-            "     .- ~ ~-(        )_ _" \
-            "    /                      ~ -." \
-            "   |      ☁    ☁           \   \\" \
-            "    \\                  ☁    .'" \
-            "      ~- ._ _________ . -~" \
-            "                ☀" \
+            "" \
             ""
         
         sleep 0.3
@@ -120,7 +107,7 @@ case "$PERIOD" in
         echo -e "  ${C_LAVENDER}│${C_RESET}"
         animate_text "  │   Good Afternoon, Skye!" "$C_SKY" $DELAY
         echo -e "  ${C_LAVENDER}│${C_RESET}"
-        animate_text "  │   Keep up the great work 💪" "$C_TEAL" $DELAY
+        animate_text "  │   Keep up the great work  flexing_biceps" "$C_TEAL" $DELAY
         echo -e "  ${C_LAVENDER}│${C_RESET}"
         animate_text "  ╰─────────────────────────────────────╯" "$C_LAVENDER" $FAST_DELAY
         ;;
@@ -130,13 +117,7 @@ case "$PERIOD" in
         sleep 0.2
         animate_block "$C_PEACH" \
             "" \
-            "        .  *  .   . *       *" \
-            "     *    .    *    .   *" \
-            "   .   *        ___      ." \
-            "      .    *   /   \\  *    ." \
-            "   *      .   | 🌅 |     *" \
-            "     .  *      \\___/  .    ." \
-            "  ────────────────────────────" \
+            "" \
             ""
         
         sleep 0.3
@@ -145,7 +126,7 @@ case "$PERIOD" in
         echo -e "  ${C_LAVENDER}│${C_RESET}"
         animate_text "  │   Good Evening, Skye!" "$C_PEACH" $DELAY
         echo -e "  ${C_LAVENDER}│${C_RESET}"
-        animate_text "  │   Time to wind down 🌙" "$C_MAUVE" $DELAY
+        animate_text "  │   Time to wind down " "$C_MAUVE" $DELAY
         echo -e "  ${C_LAVENDER}│${C_RESET}"
         animate_text "  ╰─────────────────────────────────────╯" "$C_LAVENDER" $FAST_DELAY
         ;;
@@ -155,13 +136,7 @@ case "$PERIOD" in
         sleep 0.2
         animate_block "$C_MAUVE" \
             "" \
-            "        ✦  .    ˚    .  ✦" \
-            "     .    ✦     ☾      ." \
-            "   ✦    .    ✦    .  ✦   ." \
-            "      .   ★    .    ✦" \
-            "    ✦   .    ✦  ★    ." \
-            "       .  ✦    .   ✦  ." \
-            "     ✦    .  ✦   .    ✦" \
+            "" \
             ""
         
         sleep 0.3
@@ -170,7 +145,7 @@ case "$PERIOD" in
         echo -e "  ${C_LAVENDER}│${C_RESET}"
         animate_text "  │   Good Night, Skye!" "$C_MAUVE" $DELAY
         echo -e "  ${C_LAVENDER}│${C_RESET}"
-        animate_text "  │   Sweet dreams 💜" "$C_PINK" $DELAY
+        animate_text "  │   Sweet dreams " "$C_PINK" $DELAY
         echo -e "  ${C_LAVENDER}│${C_RESET}"
         animate_text "  ╰─────────────────────────────────────╯" "$C_LAVENDER" $FAST_DELAY
         ;;

@@ -26,8 +26,14 @@ SHELL_NAME="$(basename "$SHELL")"
 
 if command -v sw_vers >/dev/null 2>&1; then
   OS_NAME="$(sw_vers -productName) $(sw_vers -productVersion)"
+  OS_ICON=""
 else
   OS_NAME="$(uname -sr)"
+  if [[ "$(uname)" == "Linux" ]]; then
+    OS_ICON=""
+  else
+    OS_ICON="טּ"
+  fi
 fi
 
 DATE_NOW="$(date '+%Y-%m-%d')"
@@ -43,17 +49,17 @@ animate() {
 ${LAVENDER}⧣₊˚﹒✦₊  ⧣₊˚   𓂃★   ⸝⸝   ⧣₊˚﹒✦₊  ⧣₊˚${RESET}
 
       ${MAUVE}/)     /)
-    ${MAUVE}(｡•ㅅ•｡)〝₎₎   ${PINK}luvrksknskye ✦₊ ˊ˗${RESET}
+    ${MAUve}(｡•ㅅ•｡)〝₎₎   ${PINK}luvrksknskye ✦₊ ˊ˗${RESET}
 
-${MAUVE}. .╭∪─∪──────────────────── ${LAVENDER}✦ ⁺.${RESET}
-${MAUVE}. .┊ ◟﹫ ${TEXT}User     : ${YELLOW}${USER_NAME}${RESET}
-${MAUVE}. .┊ ﹒𐐪 ${TEXT}Uptime   : ${TEAL}${UPTIME}${RESET}
-${MAUVE}. .┊ ꜝꜝ﹒ ${TEXT}Pronouns : ${PINK}she/they${RESET}
-${MAUVE}. .┊ ⨳゛ ${TEXT}Date     : ${PEACH}${DATE_NOW}${RESET}
-${MAUVE}. .┊ ◟ヾ ${TEXT}Shell    : ${BLUE}${SHELL_NAME}${RESET}
-${MAUVE}. .┊ ﹒𐐪 ${TEXT}OS       : ${GREEN}${OS_NAME}${RESET}
-${MAUVE}. .┊ ◟﹫ ${TEXT}Extra    : ${SKY}hai!!!${RESET}
-${MAUVE}   ╰─────────────────────── ${LAVENDER}✦ ⁺.${RESET}
+${MAUVE}╭∪─∪──────────────────── ${LAVENDER}✦ ⁺.${RESET}
+${MAUVE}│  ${TEXT} User     : ${YELLOW}${USER_NAME}${RESET}
+${MAUVE}│ 祥 ${TEXT} Uptime   : ${TEAL}${UPTIME}${RESET}
+${MAUVE}│ ⚧ ${TEXT} Pronouns : ${PINK}she/they${RESET}
+${MAUVE}│  ${TEXT} Date     : ${PEACH}${DATE_NOW}${RESET}
+${MAUVE}│ консоль ${TEXT} Shell    : ${BLUE}${SHELL_NAME}${RESET}
+${MAUVE}│ ${OS_ICON} ${TEXT} OS       : ${GREEN}${OS_NAME}${RESET}
+${MAUVE}│  ${TEXT} Extra    : ${SKY}hai!!!${RESET}
+${MAUVE}╰─────────────────────── ${LAVENDER}✦ ⁺.${RESET}
 
 ${LAVENDER}⧣₊˚﹒✦₊  ⧣₊˚   𓂃★   ⸝⸝   ⧣₊˚﹒✦₊  ⧣₊˚${RESET}
 

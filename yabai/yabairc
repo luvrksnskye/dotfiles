@@ -62,12 +62,13 @@ yabai -m config right_padding                10
 yabai -m config window_gap                   8
 
 # Mouse
-yabai -m config mouse_modifier               alt
+# Hold fn and right click to resize
+yabai -m config mouse_modifier               fn
 yabai -m config mouse_action1                move
 yabai -m config mouse_action2                resize
 yabai -m config mouse_drop_action            swap
 yabai -m config focus_follows_mouse          autoraise
-yabai -m config mouse_follows_focus          off
+yabai -m config mouse_follows_focus          on
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                     WINDOW APPEARANCE & ANIMATIONS                         │
