@@ -11,239 +11,187 @@
 # ║                   Hotkey Daemon for Yabai                                  ║
 # ║                                                                            ║
 # ╚════════════════════════════════════════════════════════════════════════════╝
+# ╔════════════════════════════════════════════════════════════════════════════╗
+# ║                          Skye Edition                                      ║
+# ║                   Hotkey Daemon for Yabai                                  ║
+# ╚════════════════════════════════════════════════════════════════════════════╝
+
+# NOTE:
+# - skhdrc does NOT support variable assignment like YABAI="..." :contentReference[oaicite:4]{index=4}
+# - For symbol keys, use keycodes (skhd -o) :contentReference[oaicite:5]{index=5}
+
+# Paths (Intel Homebrew usually uses /usr/local/bin)
+# If yours differs, change both lines below.
+# (We keep paths inline in every command for launchd/PATH safety.)
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                       QUICK CLOSE (Esc)                                    │
 # └────────────────────────────────────────────────────────────────────────────┘
-
-# Close focused window with Escape
-escape : yabai -m window --close
+escape : /usr/local/bin/yabai -m window --close
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                         WINDOW FOCUS                                       │
 # │                    Alt + H/J/K/L or Arrows                                 │
 # └────────────────────────────────────────────────────────────────────────────┘
+alt - h : /usr/local/bin/yabai -m window --focus west  || /usr/local/bin/yabai -m display --focus west
+alt - j : /usr/local/bin/yabai -m window --focus south || /usr/local/bin/yabai -m display --focus south
+alt - k : /usr/local/bin/yabai -m window --focus north || /usr/local/bin/yabai -m display --focus north
+alt - l : /usr/local/bin/yabai -m window --focus east  || /usr/local/bin/yabai -m display --focus east
 
-# Vim-style
-alt - h : yabai -m window --focus west  || yabai -m display --focus west
-alt - j : yabai -m window --focus south || yabai -m display --focus south
-alt - k : yabai -m window --focus north || yabai -m display --focus north
-alt - l : yabai -m window --focus east  || yabai -m display --focus east
-
-# Arrow keys
-alt - left  : yabai -m window --focus west  || yabai -m display --focus west
-alt - down  : yabai -m window --focus south || yabai -m display --focus south
-alt - up    : yabai -m window --focus north || yabai -m display --focus north
-alt - right : yabai -m window --focus east  || yabai -m display --focus east
+alt - left  : /usr/local/bin/yabai -m window --focus west  || /usr/local/bin/yabai -m display --focus west
+alt - down  : /usr/local/bin/yabai -m window --focus south || /usr/local/bin/yabai -m display --focus south
+alt - up    : /usr/local/bin/yabai -m window --focus north || /usr/local/bin/yabai -m display --focus north
+alt - right : /usr/local/bin/yabai -m window --focus east  || /usr/local/bin/yabai -m display --focus east
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                         WINDOW SWAP                                        │
 # │                 Alt + Shift + H/J/K/L or Arrows                            │
 # └────────────────────────────────────────────────────────────────────────────┘
+shift + alt - h : /usr/local/bin/yabai -m window --swap west  || /usr/local/bin/yabai -m window --display west --focus
+shift + alt - j : /usr/local/bin/yabai -m window --swap south || /usr/local/bin/yabai -m window --display south --focus
+shift + alt - k : /usr/local/bin/yabai -m window --swap north || /usr/local/bin/yabai -m window --display north --focus
+shift + alt - l : /usr/local/bin/yabai -m window --swap east  || /usr/local/bin/yabai -m window --display east --focus
 
-# Vim-style (swap)
-shift + alt - h : yabai -m window --swap west  || yabai -m window --display west --focus
-shift + alt - j : yabai -m window --swap south || yabai -m window --display south --focus
-shift + alt - k : yabai -m window --swap north || yabai -m window --display north --focus
-shift + alt - l : yabai -m window --swap east  || yabai -m window --display east --focus
-
-# Arrow keys (swap)
-shift + alt - left  : yabai -m window --swap west  || yabai -m window --display west --focus
-shift + alt - down  : yabai -m window --swap south || yabai -m window --display south --focus
-shift + alt - up    : yabai -m window --swap north || yabai -m window --display north --focus
-shift + alt - right : yabai -m window --swap east  || yabai -m window --display east --focus
+shift + alt - left  : /usr/local/bin/yabai -m window --swap west  || /usr/local/bin/yabai -m window --display west --focus
+shift + alt - down  : /usr/local/bin/yabai -m window --swap south || /usr/local/bin/yabai -m window --display south --focus
+shift + alt - up    : /usr/local/bin/yabai -m window --swap north || /usr/local/bin/yabai -m window --display north --focus
+shift + alt - right : /usr/local/bin/yabai -m window --swap east  || /usr/local/bin/yabai -m window --display east --focus
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
-# │                     WARP/INSERT WINDOWS                                    │
-# │              Ctrl + Alt + Direction (insert into container)                │
+# │                     WARP / INSERT WINDOWS                                  │
 # └────────────────────────────────────────────────────────────────────────────┘
+ctrl + alt - h : /usr/local/bin/yabai -m window --warp west
+ctrl + alt - j : /usr/local/bin/yabai -m window --warp south
+ctrl + alt - k : /usr/local/bin/yabai -m window --warp north
+ctrl + alt - l : /usr/local/bin/yabai -m window --warp east
 
-# Warp (insert window into another container)
-ctrl + alt - h : yabai -m window --warp west
-ctrl + alt - j : yabai -m window --warp south
-ctrl + alt - k : yabai -m window --warp north
-ctrl + alt - l : yabai -m window --warp east
-
-# Insert window above/below current (split vertically)
-ctrl + shift + alt - k : yabai -m window --insert north && skhd -k "cmd - n"
-ctrl + shift + alt - j : yabai -m window --insert south && skhd -k "cmd - n"
-
-# Insert window left/right (split horizontally)  
-ctrl + shift + alt - h : yabai -m window --insert west && skhd -k "cmd - n"
-ctrl + shift + alt - l : yabai -m window --insert east && skhd -k "cmd - n"
+ctrl + shift + alt - k : /usr/local/bin/yabai -m window --insert north && /usr/local/bin/skhd -k "cmd - n"
+ctrl + shift + alt - j : /usr/local/bin/yabai -m window --insert south && /usr/local/bin/skhd -k "cmd - n"
+ctrl + shift + alt - h : /usr/local/bin/yabai -m window --insert west  && /usr/local/bin/skhd -k "cmd - n"
+ctrl + shift + alt - l : /usr/local/bin/yabai -m window --insert east  && /usr/local/bin/skhd -k "cmd - n"
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                          WORKSPACES                                        │
-# │                     Alt + 1-4 to focus                                     │
-# │                  Alt + Shift + 1-4 to send                                 │
 # └────────────────────────────────────────────────────────────────────────────┘
+alt - 1 : /usr/local/bin/yabai -m space --focus 1
+alt - 2 : /usr/local/bin/yabai -m space --focus 2
+alt - 3 : /usr/local/bin/yabai -m space --focus 3
+alt - 4 : /usr/local/bin/yabai -m space --focus 4
 
-# Focus space
-alt - 1 : yabai -m space --focus 1
-alt - 2 : yabai -m space --focus 2
-alt - 3 : yabai -m space --focus 3
-alt - 4 : yabai -m space --focus 4
+shift + alt - 1 : /usr/local/bin/yabai -m window --space 1 --focus
+shift + alt - 2 : /usr/local/bin/yabai -m window --space 2 --focus
+shift + alt - 3 : /usr/local/bin/yabai -m window --space 3 --focus
+shift + alt - 4 : /usr/local/bin/yabai -m window --space 4 --focus
 
-# Send window to space (with follow)
-shift + alt - 1 : yabai -m window --space 1 --focus
-shift + alt - 2 : yabai -m window --space 2 --focus
-shift + alt - 3 : yabai -m window --space 3 --focus
-shift + alt - 4 : yabai -m window --space 4 --focus
-
-# Previous/next space
-alt - tab : yabai -m space --focus recent
-alt - p   : yabai -m space --focus prev || yabai -m space --focus last
-alt - n   : yabai -m space --focus next || yabai -m space --focus first
+alt - tab : /usr/local/bin/yabai -m space --focus recent
+alt - p   : /usr/local/bin/yabai -m space --focus prev || /usr/local/bin/yabai -m space --focus last
+alt - n   : /usr/local/bin/yabai -m space --focus next || /usr/local/bin/yabai -m space --focus first
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                            LAYOUT                                          │
 # └────────────────────────────────────────────────────────────────────────────┘
+# slash "/" = 0x2C (common US/ANSI). verify with: skhd -o :contentReference[oaicite:6]{index=6}
+alt - 0x2C : /usr/local/bin/yabai -m window --toggle split
 
-# Toggle split orientation
-alt - slash : yabai -m window --toggle split
+alt - f     : /usr/local/bin/yabai -m window --toggle float --grid 4:4:1:1:2:2
+shift + alt - f : /usr/local/bin/yabai -m window --toggle zoom-fullscreen
+ctrl + alt - f  : /usr/local/bin/yabai -m window --toggle native-fullscreen
 
-# Toggle float (centered)
-alt - f : yabai -m window --toggle float --grid 4:4:1:1:2:2
+alt - s : /usr/local/bin/yabai -m window --toggle sticky
+alt - 0 : /usr/local/bin/yabai -m space  --balance
 
-# Toggle fullscreen
-shift + alt - f : yabai -m window --toggle zoom-fullscreen
-
-# Toggle native fullscreen
-ctrl + alt - f : yabai -m window --toggle native-fullscreen
-
-# Toggle sticky (visible on all spaces)
-alt - s : yabai -m window --toggle sticky
-
-# Balance all windows
-alt - 0 : yabai -m space --balance
-
-# Rotate tree
-alt - r : yabai -m space --rotate 90
-
-# Mirror tree
-alt - x : yabai -m space --mirror x-axis
-alt - y : yabai -m space --mirror y-axis
+alt - r : /usr/local/bin/yabai -m space --rotate 90
+alt - x : /usr/local/bin/yabai -m space --mirror x-axis
+alt - y : /usr/local/bin/yabai -m space --mirror y-axis
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                            RESIZE                                          │
-# │                    Smooth animated resizing                                │
 # └────────────────────────────────────────────────────────────────────────────┘
+# "=" = 0x18, "-" = 0x1B (common US/ANSI). verify with skhd -o :contentReference[oaicite:7]{index=7}
+shift + alt - 0x18 : /usr/local/bin/yabai -m window --resize right:50:0  || /usr/local/bin/yabai -m window --resize left:-50:0
+shift + alt - 0x1B : /usr/local/bin/yabai -m window --resize right:-50:0 || /usr/local/bin/yabai -m window --resize left:50:0
 
-# Grow/shrink window (horizontal)
-shift + alt - equal : yabai -m window --resize right:50:0 || yabai -m window --resize left:-50:0
-shift + alt - minus : yabai -m window --resize right:-50:0 || yabai -m window --resize left:50:0
+ctrl + alt - left  : /usr/local/bin/yabai -m window --resize left:-50:0   || /usr/local/bin/yabai -m window --resize right:-50:0
+ctrl + alt - right : /usr/local/bin/yabai -m window --resize right:50:0   || /usr/local/bin/yabai -m window --resize left:50:0
+ctrl + alt - up    : /usr/local/bin/yabai -m window --resize top:0:-50    || /usr/local/bin/yabai -m window --resize bottom:0:-50
+ctrl + alt - down  : /usr/local/bin/yabai -m window --resize bottom:0:50  || /usr/local/bin/yabai -m window --resize top:0:50
 
-# Resize in all directions with Ctrl + Alt + Arrows
-ctrl + alt - left  : yabai -m window --resize left:-50:0 || yabai -m window --resize right:-50:0
-ctrl + alt - right : yabai -m window --resize right:50:0 || yabai -m window --resize left:50:0
-ctrl + alt - up    : yabai -m window --resize top:0:-50 || yabai -m window --resize bottom:0:-50
-ctrl + alt - down  : yabai -m window --resize bottom:0:50 || yabai -m window --resize top:0:50
+shift + ctrl + alt - left  : /usr/local/bin/yabai -m window --resize left:-20:0   || /usr/local/bin/yabai -m window --resize right:-20:0
+shift + ctrl + alt - right : /usr/local/bin/yabai -m window --resize right:20:0   || /usr/local/bin/yabai -m window --resize left:20:0
+shift + ctrl + alt - up    : /usr/local/bin/yabai -m window --resize top:0:-20    || /usr/local/bin/yabai -m window --resize bottom:0:-20
+shift + ctrl + alt - down  : /usr/local/bin/yabai -m window --resize bottom:0:20  || /usr/local/bin/yabai -m window --resize top:0:20
 
-# Fine-grained resize (smaller increments) with Shift
-shift + ctrl + alt - left  : yabai -m window --resize left:-20:0 || yabai -m window --resize right:-20:0
-shift + ctrl + alt - right : yabai -m window --resize right:20:0 || yabai -m window --resize left:20:0
-shift + ctrl + alt - up    : yabai -m window --resize top:0:-20 || yabai -m window --resize bottom:0:-20
-shift + ctrl + alt - down  : yabai -m window --resize bottom:0:20 || yabai -m window --resize top:0:20
-
-# Set window to specific ratios
-alt - 1 [
-    "yabai" : yabai -m window --ratio abs:0.3
-]
-alt - 2 [
-    "yabai" : yabai -m window --ratio abs:0.5
-]
-alt - 3 [
-    "yabai" : yabai -m window --ratio abs:0.7
-]
+# Window ratio (moved to avoid conflict with alt-1/2/3 spaces)
+cmd + alt - 1 : /usr/local/bin/yabai -m window --ratio abs:0.3
+cmd + alt - 2 : /usr/local/bin/yabai -m window --ratio abs:0.5
+cmd + alt - 3 : /usr/local/bin/yabai -m window --ratio abs:0.7
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                          MINIMIZE                                          │
-# │               Animated minimize to dock                                    │
 # └────────────────────────────────────────────────────────────────────────────┘
+alt - w : /usr/local/bin/yabai -m window --minimize
 
-# Minimize current window (uses macOS genie animation)
-alt - w : yabai -m window --minimize
+shift + alt - w : /usr/local/bin/yabai -m query --windows --space \
+  | /usr/local/bin/jq -r '.[] | select(.["has-focus"] == false) | .id' \
+  | /usr/bin/xargs -I {} /usr/local/bin/yabai -m window {} --minimize
 
-# Minimize all windows except current
-shift + alt - w : yabai -m query --windows --space | jq -r '.[] | select(.["has-focus"] == false) | .id' | xargs -I {} yabai -m window {} --minimize
-
-# Deminimize (restore) last minimized window
-ctrl + alt - w : yabai -m query --windows | jq -r 'map(select(.["is-minimized"] == true)) | sort_by(.id) | last | .id' | xargs -I {} yabai -m window {} --deminimize
+ctrl + alt - w : /usr/local/bin/yabai -m query --windows \
+  | /usr/local/bin/jq -r 'map(select(.["is-minimized"] == true)) | sort_by(.id) | last | .id' \
+  | /usr/bin/xargs -I {} /usr/local/bin/yabai -m window {} --deminimize
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                         WINDOW STACK                                       │
 # └────────────────────────────────────────────────────────────────────────────┘
+# "," = 0x2B, "." = 0x2F, "[" = 0x21, "]" = 0x1E (common US/ANSI). verify with skhd -o :contentReference[oaicite:8]{index=8}
+alt - 0x2B : /usr/local/bin/yabai -m window --stack prev
+alt - 0x2F : /usr/local/bin/yabai -m window --stack next
 
-# Stack windows
-alt - comma : yabai -m window --stack prev
-alt - period : yabai -m window --stack next
-
-# Focus through stack
-alt - bracketleft : yabai -m window --focus stack.prev || yabai -m window --focus stack.last
-alt - bracketright : yabai -m window --focus stack.next || yabai -m window --focus stack.first
+alt - 0x21 : /usr/local/bin/yabai -m window --focus stack.prev || /usr/local/bin/yabai -m window --focus stack.last
+alt - 0x1E : /usr/local/bin/yabai -m window --focus stack.next || /usr/local/bin/yabai -m window --focus stack.first
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                          DISPLAYS                                          │
 # └────────────────────────────────────────────────────────────────────────────┘
+ctrl + alt - 1 : /usr/local/bin/yabai -m display --focus 1
+ctrl + alt - 2 : /usr/local/bin/yabai -m display --focus 2
+ctrl + alt - 3 : /usr/local/bin/yabai -m display --focus 3
 
-# Focus display
-ctrl + alt - 1 : yabai -m display --focus 1
-ctrl + alt - 2 : yabai -m display --focus 2
-ctrl + alt - 3 : yabai -m display --focus 3
-
-# Move window to display
-shift + ctrl + alt - 1 : yabai -m window --display 1 --focus
-shift + ctrl + alt - 2 : yabai -m window --display 2 --focus
-shift + ctrl + alt - 3 : yabai -m window --display 3 --focus
+shift + ctrl + alt - 1 : /usr/local/bin/yabai -m window --display 1 --focus
+shift + ctrl + alt - 2 : /usr/local/bin/yabai -m window --display 2 --focus
+shift + ctrl + alt - 3 : /usr/local/bin/yabai -m window --display 3 --focus
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                        APP LAUNCHING                                       │
-# │                    Alt + Shift + Letter                                    │
 # └────────────────────────────────────────────────────────────────────────────┘
+shift + alt - t : /usr/bin/open -na /Applications/Ghostty.app
+shift + alt - b : /usr/bin/open -na "/Applications/Brave Browser.app"
+shift + alt - z : /usr/bin/open -na "/Applications/Zen Browser.app"
+shift + alt - o : /usr/bin/open -na /Applications/Obsidian.app
+shift + alt - d : /usr/bin/open -na /Applications/Discord.app
+shift + alt - c : /usr/bin/open -na /Applications/Claude.app
+shift + alt - v : /usr/bin/open -na "/Applications/Visual Studio Code.app"
+shift + alt - m : /usr/bin/open -na /Applications/Spotify.app
+shift + alt - n : /usr/bin/open -na /Applications/Notes.app
+shift + alt - a : /usr/bin/open -na /Applications/Music.app
 
-shift + alt - t : open -na /Applications/Ghostty.app
-shift + alt - b : open -na "/Applications/Brave Browser.app"
-shift + alt - z : open -na "/Applications/Zen Browser.app"
-shift + alt - o : open -na /Applications/Obsidian.app
-shift + alt - d : open -na /Applications/Discord.app
-shift + alt - c : open -na /Applications/Claude.app
-shift + alt - v : open -na "/Applications/Visual Studio Code.app"
-shift + alt - m : open -na /Applications/Spotify.app
-shift + alt - n : open -na /Applications/Notes.app
-shift + alt - a : open -na /Applications/Music.app
-
-# Finder toggle
-shift + alt - e : yabai -m window --focus $(yabai -m query --windows | jq 'map(select(.app == "Finder")) | .[0].id') || open -a Finder
+shift + alt - e : /usr/local/bin/yabai -m window --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq -r 'map(select(.app == "Finder")) | .[0].id') \
+  || /usr/bin/open -a Finder
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                          SERVICE                                           │
 # └────────────────────────────────────────────────────────────────────────────┘
-
-# Restart yabai
-ctrl + alt - r : yabai --restart-service
-
-# Reload skhd
-ctrl + alt - s : skhd --reload
-
-# Close window (also Esc above)
-alt - q : yabai -m window --close
+ctrl + alt - r : /usr/local/bin/yabai --restart-service
+ctrl + alt - s : /usr/local/bin/skhd -r
+alt - q        : /usr/local/bin/yabai -m window --close
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                        LAYOUT PRESETS                                      │
 # └────────────────────────────────────────────────────────────────────────────┘
-
-# Set BSP layout
-alt - b : yabai -m space --layout bsp
-
-# Set Stack layout
-alt - g : yabai -m space --layout stack
-
-# Set Float layout (disable tiling)
-alt - t : yabai -m space --layout float
+alt - b : /usr/local/bin/yabai -m space --layout bsp
+alt - g : /usr/local/bin/yabai -m space --layout stack
+alt - t : /usr/local/bin/yabai -m space --layout float
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                          GREETING                                          │
 # └────────────────────────────────────────────────────────────────────────────┘
-
-# Show animated greeting
-ctrl + alt - g : ~/.config/luvrksnskye/greeting.sh
+ctrl + alt - g : /bin/sh ~/.config/luvrksnskye/greeting.sh
