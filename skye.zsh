@@ -106,3 +106,14 @@ setopt SHARE_HISTORY
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
+
+# ╔════════════════════════════════════════════════════════════════════════════╗
+# ║                     WALLPAPER FUNCTIONS                                    ║
+# ╚════════════════════════════════════════════════════════════════════════════╝
+
+wallf() { luvrksnskye wall-set "$1" "fade"; }
+wallg() { luvrksnskye wall-set "$1" "grow"; }
+wallw() { luvrksnskye wall-set "$1" "wave"; }
+wallx() { luvrksnskye wall-set "$1" "liquid"; }
+walls() { luvrksnskye wall-set "$1" "spiral"; }
+wallz() { luvrksnskye wall-set "$1" "fold"; }
