@@ -16,11 +16,33 @@ export PATH="$HOME/.config/luvrksnskye:$PATH"
 
 # System
 alias cls="clear"
-alias reload="source ~/.zshrc"
+# alias reload="source ~/.zshrc"
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias whoiam="luvrksnskye whoami"
+
+# Function to reload everything
+unalias reload &>/dev/null
+reload() {
+    echo "Reloading Zsh configuration..."
+    source ~/.zshrc
+
+    echo "Reloading yabai..."
+    yabai --restart-service
+
+    echo "Reloading skhd..."
+    skhd --reload
+
+    echo "Reloading sketchybar..."
+    brew services restart sketchybar
+
+    echo "Reloading borders..."
+    brew services restart borders
+
+    echo "All configurations reloaded successfully!"
+}
+
 
 # Editor
 alias v="nvim"

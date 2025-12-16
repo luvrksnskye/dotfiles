@@ -8,12 +8,13 @@
 set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Colors
+# Colors - Catppuccin Mocha (True Color)
 C_RESET='\033[0m'
-C_LAVENDER='\033[38;5;183m'
-C_PINK='\033[38;5;218m'
-C_GREEN='\033[38;5;114m'
-C_DIM='\033[2m'
+C_LAVENDER='\033[38;2;180;190;254m'
+C_PINK='\033[38;2;245;194;231m'
+C_GREEN='\033[38;2;166;227;161m'
+C_DIM='\033[38;2;108;112;134m'
+C_TEXT='\033[38;2;205;214;244m'
 
 clear
 echo -e "${C_LAVENDER}"
@@ -78,10 +79,18 @@ echo ""
 
 echo -e "  ${C_PINK}Wallpaper${C_RESET}"
 echo -e "  ${C_DIM}────────────────────────────────────────${C_RESET}"
-if [ -d "$SCRIPT_DIR/wallpaper" ]; then
-    install_item "wallpaper_animate" "$SCRIPT_DIR/wallpaper/wallpaper_animate" "$HOME/.config/luvrksnskye/wallpaper_animate"
-    cp "$SCRIPT_DIR/wallpaper/wallpaper_"*. sh "$HOME/.config/luvrksnskye/" 2>/dev/null
-    chmod +x "$HOME/.config/luvrksnskye/wallpaper_"* 2>/dev/null
+if [ -d "$SCRIPT_DIR/luvrksnskye/wallpapers" ]; then
+    echo -ne "  ${C_DIM}Compiling wallpaper_animate${C_RESET}"
+    printf '%*s' $((19 - 2)) ''
+    (cd "$SCRIPT_DIR/luvrksnskye/wallpapers" && make clean && make) > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        echo -e "${C_GREEN}done${C_RESET}"
+    else
+        echo -e "${C_PINK}failed${C_RESET}"
+    fi
+    install_item "wallpaper_animate" "$SCRIPT_DIR/luvrksnskye/wallpapers/wallpaper_animate" "$HOME/.config/luvrksnskye/wallpaper_animate"
+    cp "$SCRIPT_DIR/luvrksnskye/wallpapers/wallpaper_"*.sh "$HOME/.config/luvrksnskye/" 2>/dev/null
+    chmod +x "$HOME/.config/luvrksnskye/wallpaper_"*.sh 2>/dev/null
     echo -e "  ${C_DIM}wallpaper scripts${C_RESET}${C_GREEN}done${C_RESET}"
 fi
 echo ""
@@ -140,5 +149,5 @@ echo "       brew services start borders"
 echo ""
 echo -e "  ${C_PINK}Commands${C_RESET}"
 echo ""
-echo "    luvr / whoiam / wall / wallr / wallls / keys"
+echo "    luvr / whoiam / wall / wallr / wallls / keys / reload"
 echo ""

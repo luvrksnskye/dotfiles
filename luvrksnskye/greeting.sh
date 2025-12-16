@@ -5,20 +5,20 @@
 # ║                 Time-based message with ASCII art                          ║
 # ╚════════════════════════════════════════════════════════════════════════════╝
 
-# Colors - Catppuccin Mocha
+# Colors - Catppuccin Mocha (True Color)
 C_RESET='\033[0m'
 C_BOLD='\033[1m'
 C_DIM='\033[2m'
-C_LAVENDER='\033[38;5;183m'
-C_PINK='\033[38;5;218m'
-C_MAUVE='\033[38;5;141m'
-C_BLUE='\033[38;5;111m'
-C_SKY='\033[38;5;117m'
-C_TEAL='\033[38;5;116m'
-C_GREEN='\033[38;5;114m'
-C_YELLOW='\033[38;5;222m'
-C_PEACH='\033[38;5;216m'
-C_TEXT='\033[38;5;189m'
+C_LAVENDER='\033[38;2;180;190;254m'
+C_PINK='\033[38;2;245;194;231m'
+C_MAUVE='\033[38;2;203;166;247m'
+C_BLUE='\033[38;2;137;180;250m'
+C_SKY='\033[38;2;137;220;235m'
+C_TEAL='\033[38;2;148;226;213m'
+C_GREEN='\033[38;2;166;227;161m'
+C_YELLOW='\033[38;2;249;226;175m'
+C_PEACH='\033[38;2;250;179;135m'
+C_TEXT='\033[38;2;205;214;244m'
 
 # Animation delay
 DELAY=0.03

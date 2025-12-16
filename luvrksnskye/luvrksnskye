@@ -17,70 +17,69 @@ CACHE_DIR="$HOME/.cache/luvrksnskye"
 mkdir -p "$CACHE_DIR"
 
 # -----------------------------------------------------------------------------
+# SCRIPT DEPS
+# -----------------------------------------------------------------------------
+source "$HOME/.config/yabai/skye.zsh"
+
+# -----------------------------------------------------------------------------
 # COLORS — Catppuccin Mocha
 # -----------------------------------------------------------------------------
 if [[ -t 1 ]]; then
-  R="\033[0m"
-  B="\033[1m"
-
-  C1="\033[38;2;243;139;168m"
-  C2="\033[38;2;203;166;247m"
-  C3="\033[38;2;180;190;254m"
-  C4="\033[38;2;137;180;250m"
-  C5="\033[38;2;166;227;161m"
-  SUB="\033[38;2;186;194;222m"
-  LINE="\033[38;2;88;91;112m"
+    R="\033[0m"
+    B="\033[1m"
+    C_RED="\033[38;2;243;139;168m"
+    C_MAUVE="\033[38;2;203;166;247m"
+    C_LAVENDER="\033[38;2;180;190;254m"
+    C_BLUE="\033[38;2;137;180;250m"
+    C_GREEN="\033[38;2;166;227;161m"
+    C_PINK="\033[38;2;245;194;231m"
+    SUB="\033[38;2;186;194;222m"
+    LINE="\033[38;2;88;91;112m"
 else
-  R=""; B=""
-  C1=""; C2=""; C3=""; C4=""; C5=""
-  SUB=""; LINE=""
+    R=""; B=""
+    C_RED=""; C_MAUVE=""; C_LAVENDER=""; C_BLUE=""; C_GREEN=""; C_PINK=""
+    SUB=""; LINE=""
 fi
 
 # -----------------------------------------------------------------------------
 # UI
 # -----------------------------------------------------------------------------
 show_help() {
-  clear
-
-  echo -e "${C1}███████╗██╗  ██╗██╗   ██╗███████╗         ██╗ ██████╗ ██╗   ██╗██████╗ ███╗   ██╗███████╗██╗   ██╗${R}"
-  echo -e "${C2}██╔════╝██║ ██╔╝╚██╗ ██╔╝██╔════╝         ██║██╔═══██╗██║   ██║██╔══██╗████╗  ██║██╔════╝╚██╗ ██╔╝${R}"
-  echo -e "${C3}███████╗█████╔╝  ╚████╔╝ █████╗           ██║██║   ██║██║   ██║██████╔╝██╔██╗ ██║█████╗   ╚████╔╝ ${R}"
-  echo -e "${C4}╚════██║██╔═██╗   ╚██╔╝  ██╔══╝      ██   ██║██║   ██║██║   ██║██╔══██╗██║╚██╗██║██╔══╝    ╚██╔╝  ${R}"
-  echo -e "${C5}███████║██║  ██╗   ██║   ███████╗    ╚█████╔╝╚██████╔╝╚██████╔╝██║  ██║██║ ╚████║███████╗   ██║   ${R}"
-  echo -e "${C4}╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝     ╚════╝  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ${R}"
-
-  echo
-  echo -e "        ${SUB}✦ Skye Journey · Custom Terminal Toolkit · Catppuccin Mocha ✦${R}"
-  echo
-  echo -e "${LINE}────────────────────────────────────────────────────────────────────────${R}"
-  echo
-
-  echo -e "${C3}${B}WALLPAPER${R}"
-  echo -e "${LINE}────────────────────────${R}"
-  echo -e "${C4}luvr wall${R}               Interactive wallpaper selector"
-  echo -e "${C4}luvr wall-random${R}        Set random wallpaper"
-  echo -e "${C4}luvr wall-list${R}          List wallpapers"
-  echo -e "${C4}luvr wall-set <path>${R}    Set wallpaper"
-  echo -e "${C4}luvr wall-set <path> <fx>${R}"
-  echo -e "      ${SUB}fx: wave · fade · grow · liquid · spiral · fold${R}"
-  echo
-
-  echo -e "${C3}${B}USER${R}"
-  echo -e "${LINE}────────────────────────${R}"
-  echo -e "${C4}luvr whoami${R}             Show user info"
-  echo
-
-  echo -e "${C3}${B}ALIASES${R}"
-  echo -e "${LINE}────────────────────────${R}"
-  echo -e "${C5}wall${R}   → luvr wall"
-  echo -e "${C5}wallr${R}  → luvr wall-random"
-  echo -e "${C5}wallls${R} → luvr wall-list"
-  echo -e "${C5}whoiam${R} → luvr whoami"
-  echo
-
-  echo -e "${LINE}────────────────────────────────────────────────────────────────────────${R}"
-  echo -e "${SUB}made with love and insomnia ✦${R}"
-  echo
+    clear
+    echo -e "${C_RED}███████╗██╗  ██╗██╗   ██╗███████╗         ██╗ ██████╗ ██╗   ██╗██████╗ ███╗   ██╗███████╗██╗   ██╗${R}"
+    echo -e "${C_MAUVE}██╔════╝██║ ██╔╝╚██╗ ██╔╝██╔════╝         ██║██╔═══██╗██║   ██║██╔══██╗████╗  ██║██╔════╝╚██╗ ██╔╝${R}"
+    echo -e "${C_LAVENDER}███████╗█████╔╝  ╚████╔╝ █████╗           ██║██║   ██║██║   ██║██████╔╝██╔██╗ ██║█████╗   ╚████╔╝ ${R}"
+    echo -e "${C_BLUE}╚════██║██╔═██╗   ╚██╔╝  ██╔══╝      ██   ██║██║   ██║██║   ██║██╔══██╗██║╚██╗██║██╔══╝    ╚██╔╝  ${R}"
+    echo -e "${C_GREEN}███████║██║  ██╗   ██║   ███████╗    ╚█████╔╝╚██████╔╝╚██████╔╝██║  ██║██║ ╚████║███████╗   ██║   ${R}"
+    echo -e "${C_BLUE}╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝     ╚════╝  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ${R}"
+    echo
+    echo -e "        ${SUB}✦ Skye Journey · Custom Terminal Toolkit · Catppuccin Mocha ✦${R}"
+    echo
+    echo -e "${LINE}────────────────────────────────────────────────────────────────────────${R}"
+    echo
+    echo -e "${C_LAVENDER}${B}WALLPAPER${R}"
+    echo -e "${LINE}────────────────────────${R}"
+    echo -e "${C_BLUE}luvr wall${R}               Interactive wallpaper selector"
+    echo -e "${C_BLUE}luvr wall-random${R}        Set random wallpaper"
+    echo -e "${C_BLUE}luvr wall-list${R}          List wallpapers"
+    echo -e "${C_BLUE}luvr wall-set <path>${R}    Set wallpaper"
+    echo -e "${C_BLUE}luvr wall-set <path> <fx>${R}"
+    echo -e "      ${SUB}fx: wave · fade · grow · liquid · spiral · fold${R}"
+    echo
+    echo -e "${C_LAVENDER}${B}USER${R}"
+    echo -e "${LINE}────────────────────────${R}"
+    echo -e "${C_BLUE}luvr whoami${R}             Show user info"
+    echo
+    echo -e "${C_LAVENDER}${B}ALIASES${R}"
+    echo -e "${LINE}────────────────────────${R}"
+    echo -e "${C_GREEN}wall${R}   → luvr wall"
+    echo -e "${C_GREEN}wallr${R}  → luvr wall-random"
+    echo -e "${C_GREEN}wallls${R} → luvr wall-list"
+    echo -e "${C_GREEN}whoiam${R} → luvr whoami"
+    echo
+    echo -e "${LINE}────────────────────────────────────────────────────────────────────────${R}"
+    echo -e "${SUB}made with love and insomnia ✦${R}"
+    echo
 }
 
 show_error() {
@@ -122,6 +121,9 @@ case "$1" in
         ;;
     whoami)
         "$SCRIPT_DIR/whoiam.sh"
+        ;;
+    reload)
+        reload
         ;;
     help|--help|-h|"")
         show_help

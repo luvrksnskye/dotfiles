@@ -5,7 +5,7 @@
 # ╚════════════════════════════════════════════════════════════════════════════╝
 
 WALLPAPER="$1"
-TRANSITION_TYPE="${2:-wave}"
+TRANSITION_TYPE="${2:-liquid}"
 CACHE_DIR="$HOME/.cache/luvrksnskye"
 CACHE_FILE="$CACHE_DIR/current_wallpaper"
 
@@ -19,7 +19,7 @@ mkdir -p "$CACHE_DIR"
 
 if [ -z "$WALLPAPER" ]; then
   echo ""
-  echo -e "  ${C_PINK}Usage: ${C_RESET} wallpaper_set /path/to/image [wave|fade|grow]"
+  echo -e "  ${C_PINK}Usage: ${C_RESET} wallpaper_set /path/to/image [wave|fade|grow|liquid|spiral|fold|slide] [direction]"
   echo ""
   exit 1
 fi

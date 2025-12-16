@@ -10,26 +10,26 @@ CACHE_FILE="$HOME/. cache/luvrksnskye/current_wallpaper"
 mkdir -p "$HOME/.cache/luvrksnskye"
 mkdir -p "$WALLPAPER_DIR"
 
-# Colors — CATPPUCCIN MOCHA
+# Colors — CATPPUCCIN MOCHA (True Color)
 C_RESET='\033[0m'
 C_DIM='\033[2m'
 C_BOLD='\033[1m'
-C_PURPLE='\033[38;5;141m'    # mauve
-C_LAVENDER='\033[38;5;183m'  # lavender
-C_PINK='\033[38;5;218m'      # pink
-C_BLUE='\033[38;5;111m'      # blue
-C_SKY='\033[38;5;117m'       # sky
-C_TEAL='\033[38;5;116m'      # teal
-C_GREEN='\033[38;5;114m'     # green
-C_YELLOW='\033[38;5;222m'    # yellow
-C_PEACH='\033[38;5;216m'     # peach
-C_TEXT='\033[38;5;189m'      # text
-C_SUBTEXT='\033[38;5;245m'   # subtext0
-C_OVERLAY='\033[38;5;147m'   # overlay0
-C_SURFACE='\033[38;5;127m'   # surface1
-C_BASE='\033[38;5;30m'       # base
-C_MANTLE='\033[38;5;23m'     # mantle
-C_CRUST='\033[38;5;17m'      # crust
+C_MAUVE='\033[38;2;203;166;247m'
+C_LAVENDER='\033[38;2;180;190;254m'
+C_PINK='\033[38;2;245;194;231m'
+C_BLUE='\033[38;2;137;180;250m'
+C_SKY='\033[38;2;137;220;235m'
+C_TEAL='\033[38;2;148;226;213m'
+C_GREEN='\033[38;2;166;227;161m'
+C_YELLOW='\033[38;2;249;226;175m'
+C_PEACH='\033[38;2;250;179;135m'
+C_TEXT='\033[38;2;205;214;244m'
+C_SUBTEXT='\033[38;2;166;173;200m'
+C_OVERLAY='\033[38;2;125;130;152m'
+C_SURFACE='\033[38;2;69;71;90m'
+C_BASE='\033[38;2;30;30;46m'
+C_MANTLE='\033[38;2;24;24;37m'
+C_CRUST='\033[38;2;17;17;27m'
 
 # Animator
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -58,13 +58,14 @@ print_footer() {
   echo -e "${C_DIM}────────────────────────────────────────────────────────────────────${C_RESET}"
   echo ""
   echo -e "  ${C_SUBTEXT}Navigation${C_RESET}"
-  echo -e "  ${C_PURPLE}↑/↓${C_RESET}         Move selection"
-  echo -e "  ${C_PURPLE}Enter${C_RESET}       Apply wallpaper"
-  echo -e "  ${C_PURPLE}Tab${C_RESET}         Toggle preview"
-  echo -e "  ${C_PURPLE}Esc${C_RESET}         Cancel"
+  echo -e "  ${C_MAUVE}↑/↓${C_RESET}         Move selection"
+  echo -e "  ${C_MAUVE}Enter${C_RESET}       Apply wallpaper"
+  echo -e "  ${C_MAUVE}Tab${C_RESET}         Toggle preview"
+  echo -e "  ${C_MAUVE}Esc${C_RESET}         Cancel"
   echo ""
   echo -e "  ${C_SUBTEXT}Transition effects${C_RESET}"
-  echo -e "  ${C_SKY}1${C_RESET} liquid   ${C_TEAL}2${C_RESET} wave   ${C_LAVENDER}3${C_RESET} grow   ${C_PEACH}4${C_RESET} fade   ${C_PURPLE}5${C_RESET} spiral"
+  echo -e "  ${C_SKY}1${C_RESET} liquid   ${C_TEAL}2${C_RESET} wave   ${C_LAVENDER}3${C_RESET} grow   ${C_PEACH}4${C_RESET} fade   ${C_MAUVE}5${C_RESET} spiral   ${C_PINK}6${C_RESET} fold   ${C_BLUE}7${C_RESET} slide"
+  echo -e "  ${C_SUBTEXT}Press ${C_YELLOW}8${C_RESET} to change slide direction${C_RESET}"
   echo ""
 }
 
@@ -111,6 +112,7 @@ print_footer
 
 # Set initial transition type
 export TRANSITION="$TRANSITION_TYPE"
+export DIRECTION="left"
 
 # Function to change transition
 change_transition() {
@@ -121,12 +123,26 @@ change_transition() {
     4) TRANSITION="fade" ;;
     5) TRANSITION="spiral" ;;
     6) TRANSITION="fold" ;;
+    7) TRANSITION="slide" ;;
     *) TRANSITION="wave" ;;
   esac
   echo -e "\n  ${C_GREEN}Transition: ${C_RESET}${C_PINK}$TRANSITION${C_RESET}"
 }
 
+# Function to change slide direction
+change_direction() {
+    case "$DIRECTION" in
+        left) DIRECTION="right" ;;
+        right) DIRECTION="up" ;;
+        up) DIRECTION="down" ;;
+        down) DIRECTION="left" ;;
+    esac
+    echo -e "\n  ${C_GREEN}Slide Direction: ${C_RESET}${C_PINK}$DIRECTION${C_RESET}"
+}
+
 export -f change_transition
+export -f change_direction
+
 
 # Custom preview command
 PREVIEW_CMD="bash -lc '
@@ -194,6 +210,8 @@ SELECTED=$(display_list | fzf \
   --bind="4:execute(change_transition 4)+refresh-preview" \
   --bind="5:execute(change_transition 5)+refresh-preview" \
   --bind="6:execute(change_transition 6)+refresh-preview" \
+  --bind="7:execute(change_transition 7)+refresh-preview" \
+  --bind="8:execute(change_direction)+refresh-preview" \
   --bind="tab:toggle-preview"
 )
 
@@ -206,8 +224,13 @@ if [ -n "$SELECTED" ]; then
 
   if [ -f "$FULL_PATH" ]; then
     if [ -x "$ANIMATOR" ]; then
-      "$ANIMATOR" "$FULL_PATH" "$TRANSITION" 2>/dev/null || \
-      osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"$FULL_PATH\""
+      if [ "$TRANSITION" = "slide" ]; then
+        "$ANIMATOR" "$FULL_PATH" "$TRANSITION" "$DIRECTION" 2>/dev/null || \
+        osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"$FULL_PATH\""
+      else
+        "$ANIMATOR" "$FULL_PATH" "$TRANSITION" 2>/dev/null || \
+        osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"$FULL_PATH\""
+      fi
     else
       osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"$FULL_PATH\""
     fi
@@ -227,6 +250,9 @@ EOF
     echo -e "  ${C_GREEN}$(basename "$FULL_PATH")${C_RESET}"
     echo ""
     echo -e "  ${C_SUBTEXT}Transition:  ${C_RESET}${C_PINK}$TRANSITION${C_RESET}"
+    if [ "$TRANSITION" = "slide" ]; then
+      echo -e "  ${C_SUBTEXT}Direction:   ${C_RESET}${C_PINK}$DIRECTION${C_RESET}"
+    fi
     echo ""
   else
     echo ""

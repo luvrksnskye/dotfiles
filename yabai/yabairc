@@ -152,6 +152,9 @@ yabai -m rule --add app="^FaceTime$"           manage=off
 # Sticky windows (visible on all spaces)
 yabai -m rule --add app="^Spotify$"            sticky=on
 
+# Set padding to 0 for fullscreen windows
+yabai -m rule --add is-fullscreen=1 border=off no_padding=1
+
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                              STARTUP                                       │
 # └────────────────────────────────────────────────────────────────────────────┘

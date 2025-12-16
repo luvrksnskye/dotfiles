@@ -19,7 +19,8 @@ typedef enum {
     TRANSITION_GROW,
     TRANSITION_LIQUID,
     TRANSITION_SPIRAL,
-    TRANSITION_FOLD
+    TRANSITION_FOLD,
+    TRANSITION_SLIDE
 } TransitionType;
 
 typedef struct {
@@ -73,6 +74,7 @@ static TransitionType parseTransition(const char *str) {
     if (strcasecmp(str, "spiral") == 0) return TRANSITION_SPIRAL;
     if (strcasecmp(str, "fold") == 0) return TRANSITION_FOLD;
     if (strcasecmp(str, "wave") == 0) return TRANSITION_WAVE;
+    if (strcasecmp(str, "slide") == 0) return TRANSITION_SLIDE;
     return TRANSITION_LIQUID;
 }
 
@@ -88,6 +90,7 @@ static AnimationConfig getAnimationConfig(TransitionType type) {
         case TRANSITION_WAVE:   config.duration = 0.9; break;
         case TRANSITION_SPIRAL: config.duration = 1.4; break;
         case TRANSITION_FOLD:   config.duration = 1.0; break;
+        case TRANSITION_SLIDE:  config.duration = 1.0; break;
         default:                config.duration = 1.0; break;
     }
 
@@ -137,7 +140,7 @@ static void animateLiquid(const char *path, AnimationConfig config) {
 
     NSWindow *window = [[NSWindow alloc]
         initWithContentRect:screenFrame
-        styleMask:NSBorderlessWindowMask
+        styleMask:NSWindowStyleMaskBorderless
         backing:NSBackingStoreBuffered
         defer:NO];
 
@@ -211,7 +214,7 @@ static void animateFade(const char *path, AnimationConfig config) {
 
     NSWindow *window = [[NSWindow alloc]
         initWithContentRect:screenFrame
-        styleMask:NSBorderlessWindowMask
+        styleMask:NSWindowStyleMaskBorderless
         backing:NSBackingStoreBuffered
         defer:NO];
 
@@ -263,7 +266,7 @@ static void animateGrow(const char *path, AnimationConfig config) {
 
     NSWindow *window = [[NSWindow alloc]
         initWithContentRect:screenFrame
-        styleMask:NSBorderlessWindowMask
+        styleMask:NSWindowStyleMaskBorderless
         backing:NSBackingStoreBuffered
         defer:NO];
 
@@ -322,7 +325,7 @@ static void animateWave(const char *path, AnimationConfig config) {
 
     NSWindow *window = [[NSWindow alloc]
         initWithContentRect:screenFrame
-        styleMask:NSBorderlessWindowMask
+        styleMask:NSWindowStyleMaskBorderless
         backing:NSBackingStoreBuffered
         defer:NO];
 
@@ -372,7 +375,7 @@ static void animateSpiral(const char *path, AnimationConfig config) {
 
     NSWindow *window = [[NSWindow alloc]
         initWithContentRect:screenFrame
-        styleMask:NSBorderlessWindowMask
+        styleMask:NSWindowStyleMaskBorderless
         backing:NSBackingStoreBuffered
         defer:NO];
 
@@ -438,7 +441,7 @@ static void animateFold(const char *path, AnimationConfig config) {
 
     NSWindow *window = [[NSWindow alloc]
         initWithContentRect:screenFrame
-        styleMask:NSBorderlessWindowMask
+        styleMask:NSWindowStyleMaskBorderless
         backing:NSBackingStoreBuffered
         defer:NO];
 
@@ -478,6 +481,69 @@ static void animateFold(const char *path, AnimationConfig config) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// SLIDE TRANSITION
+// ═══════════════════════════════════════════════════════════════════════════
+
+static void animateSlide(const char *path, AnimationConfig config, const char *direction) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+    NSScreen *mainScreen = [NSScreen mainScreen];
+    if (!mainScreen) { [pool drain]; return; }
+
+    NSRect screenFrame = [mainScreen frame];
+
+    setWallpaper(path);
+
+    NSWindow *window = [[NSWindow alloc]
+        initWithContentRect:screenFrame
+        styleMask:NSWindowStyleMaskBorderless
+        backing:NSBackingStoreBuffered
+        defer:NO];
+    
+    [window setLevel:NSScreenSaverWindowLevel];
+    [window setBackgroundColor:[NSColor blackColor]];
+    [window setOpaque:YES];
+    [window setIgnoresMouseEvents:YES];
+    [window makeKeyAndOrderFront:nil];
+    pumpRunLoop();
+
+    struct timespec start, current;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+
+    double elapsed = 0.0;
+    while (elapsed < config.duration) {
+        clock_gettime(CLOCK_MONOTONIC, &current);
+        elapsed = (current.tv_sec - start.tv_sec) +
+                  (current.tv_nsec - start.tv_nsec) / 1e9;
+        
+        double progress = fmin(elapsed / config.duration, 1.0);
+        double eased_progress = easeOutQuart(progress);
+
+        NSRect newFrame = screenFrame;
+
+        if (strcmp(direction, "left") == 0) {
+            newFrame.origin.x = -screenFrame.size.width * eased_progress;
+        } else if (strcmp(direction, "right") == 0) {
+            newFrame.origin.x = screenFrame.size.width * eased_progress;
+        } else if (strcmp(direction, "up") == 0) {
+            newFrame.origin.y = screenFrame.size.height * eased_progress;
+        } else { // down
+            newFrame.origin.y = -screenFrame.size.height * eased_progress;
+        }
+
+        [window setFrame:newFrame display:YES];
+        
+        pumpRunLoop();
+        usleep((useconds_t)(config.frameDuration * 1000000));
+    }
+
+    [window close];
+    [window release];
+    [pool drain];
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════
 // MAIN
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -491,7 +557,7 @@ int main(int argc, const char *argv[]) {
     pumpRunLoop();
 
     if (argc < 2) {
-        fprintf(stderr, "Usage: %s <image_path> [liquid|fade|grow|wave|spiral|fold]\n", argv[0]);
+        fprintf(stderr, "Usage: %s <image_path> [liquid|fade|grow|wave|spiral|fold|slide] [direction]\n", argv[0]);
         fprintf(stderr, "\nTransition types:\n");
         fprintf(stderr, "  liquid  - Smooth liquid-like fade with wave effect (default)\n");
         fprintf(stderr, "  fade    - Simple cross-fade\n");
@@ -499,12 +565,14 @@ int main(int argc, const char *argv[]) {
         fprintf(stderr, "  wave    - Wave-like fade\n");
         fprintf(stderr, "  spiral  - Spiral rotation fade\n");
         fprintf(stderr, "  fold    - Horizontal fold effect\n");
+        fprintf(stderr, "  slide   - Slide in from a direction (left, right, up, down)\n");
         [pool drain];
         return EXIT_FAILURE;
     }
 
     const char *imagePath = argv[1];
     const char *transitionStr = (argc > 2) ? argv[2] : "liquid";
+    const char *direction = (argc > 3) ? argv[3] : "left";
 
     if (access(imagePath, F_OK) == -1) {
         fprintf(stderr, "Error: File not found: %s\n", imagePath);
@@ -522,6 +590,7 @@ int main(int argc, const char *argv[]) {
         case TRANSITION_WAVE:   animateWave(imagePath, config); break;
         case TRANSITION_SPIRAL: animateSpiral(imagePath, config); break;
         case TRANSITION_FOLD:   animateFold(imagePath, config); break;
+        case TRANSITION_SLIDE:  animateSlide(imagePath, config, direction); break;
         default:                animateLiquid(imagePath, config); break;
     }
 
@@ -530,3 +599,4 @@ int main(int argc, const char *argv[]) {
     [pool drain];
     return EXIT_SUCCESS;
 }
+

@@ -15,10 +15,11 @@ Haiii this is my macOS desktop setup with Aerospace as the window manager, Sketc
 
 ## Features
 
-- Yabai tiling window manager with fluid animations
+- Yabai tiling window manager with fluid animations (configured via built-in `asmvik` fork features)
 - skhd for keyboard shortcuts
 - SketchyBar with Spotify + Apple Music support
-- Animated wallpaper transitions
+- Animated wallpaper transitions (now with "slide" effect, "liquid" is default)
+- Enhanced terminal interfaces for custom scripts
 - Catppuccin Mocha theme
 
 ---
@@ -38,7 +39,7 @@ brew tap FelixKratz/formulae && brew install borders
 brew install --cask font-jetbrains-mono-nerd-font
 
 # Recommended
-brew install fzf jq nowplaying-cli chafa
+brew install fzf jq nowplaying-cli chafa neofetch cava
 ```
 
 ### Install
@@ -66,6 +67,8 @@ brew services start borders
 ---
 
 ## Keybindings
+
+For a full and animated keybinding reference, run `luvr keys` in your terminal.
 
 ### Window Focus
 | Key | Action |
@@ -109,9 +112,14 @@ brew services start borders
 | Command | Description |
 |---------|-------------|
 | luvr | Show help |
-| wall | Wallpaper selector |
-| wallr | Random wallpaper |
-| keys | Keybinding reference |
+| luvr greet | Animated greeting |
+| luvr whoami | Show user info card |
+| luvr keys | Animated keybinding reference |
+| luvr wall | Interactive wallpaper selector |
+| luvr wall-random | Set random wallpaper |
+| luvr wall-list | List wallpapers |
+| luvr wall-set <path> [fx] | Set wallpaper with animation (fx: wave, fade, grow, liquid, spiral, fold, slide) |
+| reload | Reload all configurations and services |
 
 ---
 

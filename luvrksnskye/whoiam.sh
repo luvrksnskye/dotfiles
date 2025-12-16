@@ -5,20 +5,19 @@
 # Cute terminal user card
 # ===============================
 
-# -------- COLORS (Catppuccin-ish) --------
+# -------- COLORS (Catppuccin Mocha True Color) --------
 RESET="\033[0m"
 BOLD="\033[1m"
-
-PINK="\033[38;5;218m"
-MAUVE="\033[38;5;141m"
-LAVENDER="\033[38;5;183m"
-PEACH="\033[38;5;216m"
-YELLOW="\033[38;5;222m"
-BLUE="\033[38;5;111m"
-GREEN="\033[38;5;114m"
-TEAL="\033[38;5;116m"
-SKY="\033[38;5;117m"
-TEXT="\033[38;5;189m"
+PINK="\033[38;2;245;194;231m"
+MAUVE="\033[38;2;203;166;247m"
+LAVENDER="\033[38;2;180;190;254m"
+PEACH="\033[38;2;250;179;135m"
+YELLOW="\033[38;2;249;226;175m"
+BLUE="\033[38;2;137;180;250m"
+GREEN="\033[38;2;166;227;161m"
+TEAL="\033[38;2;148;226;213m"
+SKY="\033[38;2;137;220;235m"
+TEXT="\033[38;2;205;214;244m"
 
 # -------- SYSTEM INFO --------
 USER_NAME="$(whoami)"
@@ -33,25 +32,40 @@ fi
 
 DATE_NOW="$(date '+%Y-%m-%d')"
 
-clear
+# -------- ANIMATION --------
+animate() {
+    clear
+    tput civis
+    trap 'tput cnorm; exit' INT TERM
+    
+    local content
+    read -r -d '' content << EOM
+${LAVENDER}⧣₊˚﹒✦₊  ⧣₊˚   𓂃★   ⸝⸝   ⧣₊˚﹒✦₊  ⧣₊˚${RESET}
 
-# -------- HEADER --------
-echo -e "${LAVENDER}⧣₊˚﹒✦₊  ⧣₊˚   𓂃★   ⸝⸝   ⧣₊˚﹒✦₊  ⧣₊˚${RESET}\n"
+      ${MAUVE}/)     /)
+    ${MAUVE}(｡•ㅅ•｡)〝₎₎   ${PINK}luvrksknskye ✦₊ ˊ˗${RESET}
 
-# -------- CAT --------
-echo -e "      ${MAUVE}/)     /)"
-echo -e "    ${MAUVE}(｡•ㅅ•｡)〝₎₎   ${PINK}luvrksknskye ✦₊ ˊ˗${RESET}\n"
+${MAUVE}. .╭∪─∪──────────────────── ${LAVENDER}✦ ⁺.${RESET}
+${MAUVE}. .┊ ◟﹫ ${TEXT}User     : ${YELLOW}${USER_NAME}${RESET}
+${MAUVE}. .┊ ﹒𐐪 ${TEXT}Uptime   : ${TEAL}${UPTIME}${RESET}
+${MAUVE}. .┊ ꜝꜝ﹒ ${TEXT}Pronouns : ${PINK}she/they${RESET}
+${MAUVE}. .┊ ⨳゛ ${TEXT}Date     : ${PEACH}${DATE_NOW}${RESET}
+${MAUVE}. .┊ ◟ヾ ${TEXT}Shell    : ${BLUE}${SHELL_NAME}${RESET}
+${MAUVE}. .┊ ﹒𐐪 ${TEXT}OS       : ${GREEN}${OS_NAME}${RESET}
+${MAUVE}. .┊ ◟﹫ ${TEXT}Extra    : ${SKY}hai!!!${RESET}
+${MAUVE}   ╰─────────────────────── ${LAVENDER}✦ ⁺.${RESET}
 
-# -------- INFO CARD --------
-echo -e "${MAUVE}. .╭∪─∪──────────────────── ${LAVENDER}✦ ⁺.${RESET}"
-echo -e "${MAUVE}. .┊ ◟﹫ ${TEXT}User     : ${YELLOW}${USER_NAME}${RESET}"
-echo -e "${MAUVE}. .┊ ﹒𐐪 ${TEXT}Uptime   : ${TEAL}${UPTIME}${RESET}"
-echo -e "${MAUVE}. .┊ ꜝꜝ﹒ ${TEXT}Pronouns : ${PINK}she/they${RESET}"
-echo -e "${MAUVE}. .┊ ⨳゛ ${TEXT}Date     : ${PEACH}${DATE_NOW}${RESET}"
-echo -e "${MAUVE}. .┊ ◟ヾ ${TEXT}Shell    : ${BLUE}${SHELL_NAME}${RESET}"
-echo -e "${MAUVE}. .┊ ﹒𐐪 ${TEXT}OS       : ${GREEN}${OS_NAME}${RESET}"
-echo -e "${MAUVE}. .┊ ◟﹫ ${TEXT}Extra    : ${SKY}hai!!!${RESET}"
-echo -e "${MAUVE}   ╰─────────────────────── ${LAVENDER}✦ ⁺.${RESET}\n"
+${LAVENDER}⧣₊˚﹒✦₊  ⧣₊˚   𓂃★   ⸝⸝   ⧣₊˚﹒✦₊  ⧣₊˚${RESET}
 
-# -------- FOOTER --------
-echo -e "${LAVENDER}⧣₊˚﹒✦₊  ⧣₊˚   𓂃★   ⸝⸝   ⧣₊˚﹒✦₊  ⧣₊˚${RESET}\n"
+EOM
+
+    echo -e "$content" | while IFS= read -r line; do
+        echo -e "$line"
+        sleep 0.02
+    done
+
+    tput cnorm
+}
+
+animate
+
