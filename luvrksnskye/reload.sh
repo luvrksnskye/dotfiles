@@ -24,16 +24,28 @@ EOF
 echo -e "${C_RESET}"
 echo ""
 
-# Reload Aerospace
-if command -v aerospace &> /dev/null; then
-    echo -ne "  ${C_DIM}Aerospace${C_RESET}        "
-    if aerospace reload-config 2>/dev/null; then
+# Reload Yabai
+if command -v yabai &> /dev/null; then
+    echo -ne "  ${C_DIM}Yabai${C_RESET}            "
+    if yabai --restart-service 2>/dev/null; then
         echo -e "${C_GREEN}done${C_RESET}"
     else
         echo -e "${C_PINK}failed${C_RESET}"
     fi
 else
-    echo -e "  ${C_DIM}Aerospace${C_RESET}        ${C_DIM}not installed${C_RESET}"
+    echo -e "  ${C_DIM}Yabai${C_RESET}            ${C_DIM}not installed${C_RESET}"
+fi
+
+# Reload skhd
+if command -v skhd &> /dev/null; then
+    echo -ne "  ${C_DIM}skhd${C_RESET}             "
+    if skhd --reload 2>/dev/null; then
+        echo -e "${C_GREEN}done${C_RESET}"
+    else
+        echo -e "${C_PINK}failed${C_RESET}"
+    fi
+else
+    echo -e "  ${C_DIM}skhd${C_RESET}             ${C_DIM}not installed${C_RESET}"
 fi
 
 # Reload SketchyBar

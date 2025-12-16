@@ -1,0 +1,159 @@
+#!/usr/bin/env bash
+
+# ╔════════════════════════════════════════════════════════════════════════════╗
+# ║                                                                            ║
+# ║   ██╗   ██╗ █████╗ ██████╗  █████╗ ██╗                                    ║
+# ║   ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗██║                                    ║
+# ║    ╚████╔╝ ███████║██████╔╝███████║██║                                    ║
+# ║     ╚██╔╝  ██╔══██║██╔══██╗██╔══██║██║                                    ║
+# ║      ██║   ██║  ██║██████╔╝██║  ██║██║                                    ║
+# ║      ╚═╝   ╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═╝╚═╝                                    ║
+# ║                                                                            ║
+# ║                          Skye Edition                                      ║
+# ║                     Fluid Animations Enabled                               ║
+# ║                                                                            ║
+# ╚════════════════════════════════════════════════════════════════════════════╝
+
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                         SCRIPTING ADDITION                                 │
+# │              Requires SIP partially disabled                               │
+# └────────────────────────────────────────────────────────────────────────────┘
+
+# Unload macOS WindowManager for better control
+launchctl unload -F /System/Library/LaunchAgents/com.apple.WindowManager.plist >/dev/null 2>&1 &
+
+# Load scripting addition
+sudo yabai --load-sa
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                            SIGNALS                                         │
+# └────────────────────────────────────────────────────────────────────────────┘
+
+# SketchyBar integration
+yabai -m signal --add event=window_focused action="sketchybar --trigger window_focus"
+yabai -m signal --add event=window_created action="sketchybar --trigger windows_on_spaces"
+yabai -m signal --add event=window_destroyed action="sketchybar --trigger windows_on_spaces"
+yabai -m signal --add event=window_moved action="sketchybar --trigger windows_on_spaces"
+yabai -m signal --add event=space_changed action="sketchybar --trigger space_change"
+
+# Auto-float small/non-resizable windows
+yabai -m signal --add event=window_created action='
+  yabai -m query --windows --window $YABAI_WINDOW_ID | jq -er ".\"can-resize\" or .\"is-floating\"" || \
+  yabai -m window $YABAI_WINDOW_ID --toggle float
+'
+
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                          GLOBAL SETTINGS                                   │
+# └────────────────────────────────────────────────────────────────────────────┘
+
+# Layout
+yabai -m config layout                       bsp
+yabai -m config window_placement             second_child
+yabai -m config auto_balance                 off
+yabai -m config split_ratio                  0.50
+yabai -m config split_type                   auto
+
+# Gaps and padding
+yabai -m config top_padding                  10
+yabai -m config bottom_padding               10
+yabai -m config left_padding                 10
+yabai -m config right_padding                10
+yabai -m config window_gap                   8
+
+# Mouse
+yabai -m config mouse_modifier               alt
+yabai -m config mouse_action1                move
+yabai -m config mouse_action2                resize
+yabai -m config mouse_drop_action            swap
+yabai -m config focus_follows_mouse          autoraise
+yabai -m config mouse_follows_focus          off
+
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                     WINDOW APPEARANCE & ANIMATIONS                         │
+# │                    Requires SIP disabled + asmvik fork                     │
+# └────────────────────────────────────────────────────────────────────────────┘
+
+# Window opacity (fade effect)
+yabai -m config window_opacity               on
+yabai -m config window_opacity_duration      0.2
+yabai -m config active_window_opacity        1.0
+yabai -m config normal_window_opacity        0.90
+
+# Window animations (bouncy smooth movement)
+yabai -m config window_animation_duration    0.35
+yabai -m config window_animation_easing      ease_out_quint
+
+# Insert feedback animation
+yabai -m config insert_feedback_color        0xbbcba6f7
+
+# Shadows
+yabai -m config window_shadow                float
+
+# Menu bar
+yabai -m config menubar_opacity              1.0
+yabai -m config external_bar                 all:40:0
+
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                       RESIZE & MINIMIZE                                    │
+# └────────────────────────────────────────────────────────────────────────────┘
+
+# Enable window resize from any edge
+yabai -m config window_origin_display        default
+yabai -m config window_zoom_persist          on
+
+# Smooth minimize animation (macOS native with yabai integration)
+# Note: minimize uses macOS genie/scale effect
+
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                          SPACE SETTINGS                                    │
+# └────────────────────────────────────────────────────────────────────────────┘
+
+# Space labels
+yabai -m space 1 --label main
+yabai -m space 2 --label code
+yabai -m space 3 --label web
+yabai -m space 4 --label media
+
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                            WINDOW RULES                                    │
+# └────────────────────────────────────────────────────────────────────────────┘
+
+# Float system apps
+yabai -m rule --add app="^System Settings$"    manage=off
+yabai -m rule --add app="^System Preferences$" manage=off
+yabai -m rule --add app="^System Information$" manage=off
+yabai -m rule --add app="^Calculator$"         manage=off
+yabai -m rule --add app="^Karabiner"           manage=off
+yabai -m rule --add app="^Archive Utility$"    manage=off
+yabai -m rule --add app="^Finder$"             manage=off
+yabai -m rule --add app="^Preview$"            manage=off
+yabai -m rule --add app="^Activity Monitor$"   manage=off
+yabai -m rule --add app="^App Store$"          manage=off
+yabai -m rule --add app="^Font Book$"          manage=off
+yabai -m rule --add app="^Digital Color"       manage=off
+yabai -m rule --add app="^Disk Utility$"       manage=off
+yabai -m rule --add app="^KeyboardCleanTool$"  manage=off
+
+# Float specific windows
+yabai -m rule --add title="^Preferences$"      manage=off
+yabai -m rule --add title="^Settings$"         manage=off
+yabai -m rule --add title="^Opening"           manage=off
+yabai -m rule --add title="^Open$"             manage=off
+yabai -m rule --add title="^Save$"             manage=off
+yabai -m rule --add title="^Software Update$"  manage=off
+
+# Float communication apps (optional - remove if you want them tiled)
+yabai -m rule --add app="^Discord$"            manage=off
+yabai -m rule --add app="^Slack$"              manage=off
+yabai -m rule --add app="^Messages$"           manage=off
+yabai -m rule --add app="^FaceTime$"           manage=off
+
+# Sticky windows (visible on all spaces)
+yabai -m rule --add app="^Spotify$"            sticky=on
+
+# ┌────────────────────────────────────────────────────────────────────────────┐
+# │                              STARTUP                                       │
+# └────────────────────────────────────────────────────────────────────────────┘
+
+echo "✨ Yabai loaded with smooth animations!"

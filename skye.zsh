@@ -8,7 +8,6 @@
 # │                              PATH                                          │
 # └────────────────────────────────────────────────────────────────────────────┘
 
-# Add luvrksnskye scripts to PATH
 export PATH="$HOME/.config/luvrksnskye:$PATH"
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
@@ -31,7 +30,6 @@ alias v.="nvim ."
 # Tools
 alias nf="neofetch"
 alias cv="cava"
-alias rain="terminal-rain"
 alias f="open -a Finder ."
 
 # Apps
@@ -39,9 +37,11 @@ alias brave="open -a 'Brave Browser'"
 alias zen="open -a 'Zen Browser'"
 alias g="open -a Ghostty"
 
-# Config reload
-alias ar="aerospace reload-config"
+# Yabai & skhd
+alias yr="yabai --restart-service"
+alias sr="skhd --reload"
 alias sbr="brew services restart sketchybar"
+alias br="brew services restart borders"
 
 # luvrksnskye shortcuts
 alias luvr="luvrksnskye"

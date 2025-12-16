@@ -6,7 +6,7 @@
 # ╚════════════════════════════════════════════════════════════════════════════╝
 
 # Window border configuration
-# Increased glow effect with higher opacity (0xbb = ~73% opacity)
+# Glow effect with Catppuccin lavender
 
 borders \
     active_color=0xbbcba6f7 \

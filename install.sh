@@ -1,36 +1,23 @@
 #!/bin/bash
 
 # ╔════════════════════════════════════════════════════════════════════════════╗
-# ║                                                                            ║
-# ║   ██╗███╗   ██╗███████╗████████╗ █████╗ ██╗     ██╗                        ║
-# ║   ██║████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║     ██║                        ║
-# ║   ██║██╔██╗ ██║███████╗   ██║   ███████║██║     ██║                        ║
-# ║   ██║██║╚██╗██║╚════██║   ██║   ██╔══██║██║     ██║                        ║
-# ║   ██║██║ ╚████║███████║   ██║   ██║  ██║███████╗███████╗                   ║
-# ║   ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝                   ║
-# ║                                                                            ║
-# ║                         Skye's Dotfiles                                    ║
-# ║                                                                            ║
+# ║                         SKYE'S DOTFILES INSTALLER                          ║
+# ║                              Yabai Edition                                 ║
 # ╚════════════════════════════════════════════════════════════════════════════╝
 
 set -e
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Colors
 C_RESET='\033[0m'
-C_BOLD='\033[1m'
-C_DIM='\033[2m'
 C_LAVENDER='\033[38;5;183m'
 C_PINK='\033[38;5;218m'
 C_GREEN='\033[38;5;114m'
-C_YELLOW='\033[38;5;222m'
+C_DIM='\033[2m'
 
-print_header() {
-    clear
-    echo ""
-    echo -e "${C_LAVENDER}"
-    cat << 'EOF'
+clear
+echo -e "${C_LAVENDER}"
+cat << 'EOF'
     ╔════════════════════════════════════════════════════════════════════╗
     ║                                                                    ║
     ║   ███████╗██╗  ██╗██╗   ██╗███████╗                                ║
@@ -41,184 +28,107 @@ print_header() {
     ║   ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝                                ║
     ║                                                                    ║
     ║                    Dotfiles Installer                              ║
+    ║                      Yabai Edition                                 ║
     ║                                                                    ║
     ╚════════════════════════════════════════════════════════════════════╝
 EOF
-    echo -e "${C_RESET}"
-    echo ""
-}
+echo -e "${C_RESET}"
+echo ""
 
 backup() {
     if [ -e "$1" ]; then
-        local backup_path="$1.backup.$(date +%Y%m%d%H%M%S)"
         echo -e "  ${C_DIM}Backing up${C_RESET} $(basename "$1")"
-        mv "$1" "$backup_path"
+        mv "$1" "$1.backup.$(date +%Y%m%d%H%M%S)"
     fi
 }
 
-install_component() {
-    local name="$1"
-    local source="$2"
-    local dest="$3"
-    local is_file="${4:-false}"
-    
+install_item() {
+    local name="$1" src="$2" dest="$3"
     echo -ne "  ${C_DIM}$name${C_RESET}"
-    printf '%*s' $((20 - ${#name})) ''
-    
-    if [ "$is_file" = "true" ]; then
-        if [ -f "$source" ]; then
-            backup "$dest"
-            cp "$source" "$dest"
-            chmod +x "$dest" 2>/dev/null || true
-            echo -e "${C_GREEN}done${C_RESET}"
-        else
-            echo -e "${C_YELLOW}skipped${C_RESET} ${C_DIM}(not found)${C_RESET}"
-        fi
+    printf '%*s' $((18 - ${#name})) ''
+    if [ -e "$src" ]; then
+        backup "$dest"
+        cp -r "$src" "$dest"
+        find "$dest" -type f \( -name "*.sh" -o -name "*rc" \) -exec chmod +x {} \; 2>/dev/null
+        echo -e "${C_GREEN}done${C_RESET}"
     else
-        if [ -d "$source" ]; then
-            backup "$dest"
-            cp -r "$source" "$dest"
-            # Make scripts executable
-            find "$dest" -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
-            find "$dest" -type f -name "*rc" -exec chmod +x {} \; 2>/dev/null || true
-            echo -e "${C_GREEN}done${C_RESET}"
-        else
-            echo -e "${C_YELLOW}skipped${C_RESET} ${C_DIM}(not found)${C_RESET}"
-        fi
+        echo -e "${C_PINK}not found${C_RESET}"
     fi
 }
 
-print_header
+mkdir -p "$HOME/.config" "$HOME/Pictures/Wallpapers" "$HOME/.cache/luvrksnskye"
 
-echo -e "  ${C_LAVENDER}Installing configurations...${C_RESET}"
-echo ""
-
-# Create necessary directories
-mkdir -p "$HOME/.config"
-mkdir -p "$HOME/Pictures/Wallpapers"
-mkdir -p "$HOME/.cache/luvrksnskye"
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Core Components
-# ──────────────────────────────────────────────────────────────────────────────
-
-echo -e "  ${C_PINK}Core${C_RESET}"
+echo -e "  ${C_PINK}Window Manager${C_RESET}"
 echo -e "  ${C_DIM}────────────────────────────────────────${C_RESET}"
-
-# Aerospace
-install_component "Aerospace" "$SCRIPT_DIR/aerospace.toml" "$HOME/.aerospace.toml" "true"
-
-# SketchyBar
-install_component "SketchyBar" "$SCRIPT_DIR/sketchybar" "$HOME/.config/sketchybar"
-
-# JankyBorders
-mkdir -p "$HOME/.config/borders"
-install_component "Borders" "$SCRIPT_DIR/borders" "$HOME/.config/borders"
-
-# luvrksnskye scripts
-install_component "luvrksnskye" "$SCRIPT_DIR/luvrksnskye" "$HOME/.config/luvrksnskye"
-chmod +x "$HOME/.config/luvrksnskye/"* 2>/dev/null || true
-
+install_item "Yabai" "$SCRIPT_DIR/yabai" "$HOME/.config/yabai"
+install_item "skhd" "$SCRIPT_DIR/skhd" "$HOME/.config/skhd"
 echo ""
 
-# ──────────────────────────────────────────────────────────────────────────────
-# Shell Configuration
-# ──────────────────────────────────────────────────────────────────────────────
+echo -e "  ${C_PINK}Bar & Borders${C_RESET}"
+echo -e "  ${C_DIM}────────────────────────────────────────${C_RESET}"
+install_item "SketchyBar" "$SCRIPT_DIR/sketchybar" "$HOME/.config/sketchybar"
+install_item "Borders" "$SCRIPT_DIR/borders" "$HOME/.config/borders"
+echo ""
+
+echo -e "  ${C_PINK}Utilities${C_RESET}"
+echo -e "  ${C_DIM}────────────────────────────────────────${C_RESET}"
+install_item "luvrksnskye" "$SCRIPT_DIR/luvrksnskye" "$HOME/.config/luvrksnskye"
+chmod +x "$HOME/.config/luvrksnskye/"* 2>/dev/null
+echo ""
 
 echo -e "  ${C_PINK}Shell${C_RESET}"
 echo -e "  ${C_DIM}────────────────────────────────────────${C_RESET}"
-
-# ZSH - Install skye.zsh directly to ~/.config/
 if [ -f "$SCRIPT_DIR/skye.zsh" ]; then
-    echo -ne "  ${C_DIM}skye.zsh${C_RESET}"
-    printf '%*s' 12 ''
     backup "$HOME/.config/skye.zsh"
     cp "$SCRIPT_DIR/skye.zsh" "$HOME/.config/skye.zsh"
-    echo -e "${C_GREEN}done${C_RESET}"
-else
-    echo -e "  ${C_DIM}skye.zsh${C_RESET}            ${C_YELLOW}skipped${C_RESET}"
+    echo -e "  ${C_DIM}skye.zsh${C_RESET}          ${C_GREEN}done${C_RESET}"
 fi
-
-# Starship
-install_component "Starship" "$SCRIPT_DIR/starship" "$HOME/.config/starship"
-
-# Powerlevel10k (just a reference, users have their own)
-install_component "Powerlevel10k" "$SCRIPT_DIR/powerlevel10k" "$HOME/.config/powerlevel10k"
-
-# Nushell
-install_component "Nushell" "$SCRIPT_DIR/nushell" "$HOME/.config/nushell"
-
+install_item "Starship" "$SCRIPT_DIR/starship" "$HOME/.config/starship"
+install_item "Nushell" "$SCRIPT_DIR/nushell" "$HOME/.config/nushell"
 echo ""
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Terminal & Apps
-# ──────────────────────────────────────────────────────────────────────────────
 
 echo -e "  ${C_PINK}Terminal${C_RESET}"
 echo -e "  ${C_DIM}────────────────────────────────────────${C_RESET}"
-
-# Ghostty
-install_component "Ghostty" "$SCRIPT_DIR/ghostty" "$HOME/.config/ghostty"
-
-# Neofetch
-install_component "Neofetch" "$SCRIPT_DIR/neofetch" "$HOME/.config/neofetch"
-
-# Cava
-install_component "Cava" "$SCRIPT_DIR/cava" "$HOME/.config/cava"
-
+install_item "Ghostty" "$SCRIPT_DIR/ghostty" "$HOME/.config/ghostty"
+install_item "Neofetch" "$SCRIPT_DIR/neofetch" "$HOME/.config/neofetch"
+install_item "Cava" "$SCRIPT_DIR/cava" "$HOME/.config/cava"
 echo ""
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Complete
-# ──────────────────────────────────────────────────────────────────────────────
 
 echo -e "${C_LAVENDER}"
 cat << 'EOF'
     ╔════════════════════════════════════════════════════════════════════╗
-    ║                                                                    ║
     ║                    Installation Complete                           ║
-    ║                                                                    ║
     ╚════════════════════════════════════════════════════════════════════╝
 EOF
 echo -e "${C_RESET}"
 
 echo ""
 echo -e "  ${C_PINK}Dependencies${C_RESET}"
-echo -e "  ${C_DIM}────────────────────────────────────────${C_RESET}"
 echo ""
-echo -e "  ${C_LAVENDER}Required:${C_RESET}"
-echo ""
-echo "    brew install --cask nikitabobko/tap/aerospace"
+echo "    # Required (SIP must be partially disabled for animations)"
+echo "    brew install koekeishiya/formulae/yabai"
+echo "    brew install koekeishiya/formulae/skhd"
 echo "    brew install sketchybar"
 echo "    brew tap FelixKratz/formulae && brew install borders"
 echo "    brew install --cask font-jetbrains-mono-nerd-font"
 echo ""
-echo -e "  ${C_LAVENDER}Recommended:${C_RESET}"
-echo ""
-echo "    brew install fzf neofetch cava chafa nowplaying-cli"
+echo "    # Recommended"
+echo "    brew install fzf jq nowplaying-cli chafa neofetch cava"
 echo ""
 echo -e "  ${C_PINK}Setup${C_RESET}"
-echo -e "  ${C_DIM}────────────────────────────────────────${C_RESET}"
 echo ""
-echo -e "  1. Add to ${C_LAVENDER}~/.zshrc${C_RESET} (if not already there):"
+echo "    1. Add to ~/.zshrc:"
+echo "       source ~/.config/skye.zsh"
 echo ""
-echo "     source ~/.config/skye.zsh"
+echo "    2. Configure sudoers for yabai (see yabai wiki)"
 echo ""
-echo -e "  2. Reload shell:"
-echo ""
-echo "     source ~/.zshrc"
-echo ""
-echo -e "  3. Start services:"
-echo ""
-echo "     aerospace reload-config"
-echo "     brew services restart sketchybar"
-echo "     brew services restart borders"
+echo "    3. Start services:"
+echo "       yabai --start-service"
+echo "       skhd --start-service"
+echo "       brew services start sketchybar"
+echo "       brew services start borders"
 echo ""
 echo -e "  ${C_PINK}Commands${C_RESET}"
-echo -e "  ${C_DIM}────────────────────────────────────────${C_RESET}"
 echo ""
-echo -e "    ${C_LAVENDER}luvr${C_RESET}          Show all commands"
-echo -e "    ${C_LAVENDER}keys${C_RESET}          Show keybindings"
-echo -e "    ${C_LAVENDER}wall${C_RESET}          Select wallpaper"
-echo -e "    ${C_LAVENDER}wallr${C_RESET}         Random wallpaper"
+echo "    luvr / keys / wall / wallr"
 echo ""

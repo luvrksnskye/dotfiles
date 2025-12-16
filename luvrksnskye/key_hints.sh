@@ -2,6 +2,7 @@
 
 # ╔════════════════════════════════════════════════════════════════════════════╗
 # ║                            KEYBINDING HINTS                                ║
+# ║                              Yabai + skhd                                  ║
 # ╚════════════════════════════════════════════════════════════════════════════╝
 
 clear
@@ -9,62 +10,66 @@ cat << 'EOF'
 
  ╔═══════════════════════════════════════════════════════════════════════════════╗
  ║                                                                               ║
- ║    █████╗ ███████╗██████╗  ██████╗ ███████╗██████╗  █████╗  ██████╗███████╗  ║
- ║   ██╔══██╗██╔════╝██╔══██╗██╔═══██╗██╔════╝██╔══██╗██╔══██╗██╔════╝██╔════╝  ║
- ║   ███████║█████╗  ██████╔╝██║   ██║███████╗██████╔╝███████║██║     █████╗    ║
- ║   ██╔══██║██╔══╝  ██╔══██╗██║   ██║╚════██║██╔═══╝ ██╔══██║██║     ██╔══╝    ║
- ║   ██║  ██║███████╗██║  ██║╚██████╔╝███████║██║     ██║  ██║╚██████╗███████╗  ║
- ║   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝     ╚═╝  ╚═╝ ╚═════╝╚══════╝  ║
+ ║   ██╗   ██╗ █████╗ ██████╗  █████╗ ██╗                                       ║
+ ║   ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗██║                                       ║
+ ║    ╚████╔╝ ███████║██████╔╝███████║██║                                       ║
+ ║     ╚██╔╝  ██╔══██║██╔══██╗██╔══██║██║                                       ║
+ ║      ██║   ██║  ██║██████╔╝██║  ██║██║                                       ║
+ ║      ╚═╝   ╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═╝╚═╝                                       ║
  ║                                                                               ║
  ║                            Keybinding Reference                               ║
  ║                                                                               ║
  ╠═══════════════════════════════════════════════════════════════════════════════╣
  ║                                                                               ║
- ║   NAVIGATION                            MOVE WINDOWS                          ║
+ ║   FOCUS WINDOWS                         MOVE/SWAP WINDOWS                     ║
  ║   ────────────────────────────────────  ────────────────────────────────────  ║
- ║   Alt + H/J/K/L        Focus (vim)      Alt + Shift + H/J/K/L   Move (vim)    ║
- ║   Alt + Arrows         Focus (arrows)   Alt + Shift + Arrows    Move (arrows) ║
- ║   Alt + 1-4            Workspace        Alt + Shift + 1-4       Send to WS    ║
- ║   Alt + Tab            Back and forth   Alt + Shift + Tab       Move to mon   ║
+ ║   Alt + H/J/K/L        Focus (vim)      Alt + Shift + H/J/K/L   Swap (vim)    ║
+ ║   Alt + Arrows         Focus (arrows)   Alt + Shift + Arrows    Swap (arrows) ║
+ ║   Alt + Tab            Recent space     Ctrl + Alt + H/J/K/L    Warp/Insert   ║
+ ║   Alt + P/N            Prev/Next space                                        ║
  ║                                                                               ║
- ║   LAYOUT                                RESIZE                                ║
+ ║   INSERT WINDOWS                        LAYOUT                                ║
  ║   ────────────────────────────────────  ────────────────────────────────────  ║
- ║   Alt + /              Toggle H/V       Alt + Shift + =         Grow          ║
- ║   Alt + ,              Toggle accordion Alt + Shift + -         Shrink        ║
- ║   Alt + Ctrl + F       Float/Tile       Alt + Ctrl + Shift + F  Fullscreen    ║
+ ║   Ctrl+Shift+Alt + K   Insert above     Alt + /                 Toggle split  ║
+ ║   Ctrl+Shift+Alt + J   Insert below     Alt + F                 Float/Tile    ║
+ ║   Ctrl+Shift+Alt + H   Insert left      Alt + Shift + F         Fullscreen    ║
+ ║   Ctrl+Shift+Alt + L   Insert right     Alt + R                 Rotate 90°    ║
  ║                                                                               ║
- ║   JOIN WINDOWS                          MODES                                 ║
+ ║   RESIZE (animated)                     MINIMIZE (animated)                   ║
  ║   ────────────────────────────────────  ────────────────────────────────────  ║
- ║   Alt + Ctrl + H       Join left        Alt + Enter             Nav mode      ║
- ║   Alt + Ctrl + J       Join down        Alt + Shift + ;         Apps mode     ║
- ║   Alt + Ctrl + K       Join up          Alt + Shift + S         Service mode  ║
- ║   Alt + Ctrl + L       Join right                                             ║
+ ║   Ctrl + Alt + Arrows  Resize window    Alt + W                 Minimize      ║
+ ║   Alt + Shift + =/−    Grow/Shrink      Alt + Shift + W         Minimize all  ║
+ ║   Ctrl+Shift+Alt+Arrow Fine resize      Ctrl + Alt + W          Restore last  ║
+ ║   Alt + mouse drag     Free resize                                            ║
+ ║                                                                               ║
+ ║   WORKSPACES                            QUICK ACTIONS                         ║
+ ║   ────────────────────────────────────  ────────────────────────────────────  ║
+ ║   Alt + 1-4            Focus space      Esc                     Close window  ║
+ ║   Alt + Shift + 1-4    Send to space    Alt + Q                 Close window  ║
+ ║   Alt + 0              Balance windows  Alt + S                 Toggle sticky ║
  ║                                                                               ║
  ╠═══════════════════════════════════════════════════════════════════════════════╣
  ║                                                                               ║
- ║   NAV MODE  (Alt + Enter to activate, Esc/Enter to exit)                      ║
- ║   ────────────────────────────────────────────────────────────────────────    ║
- ║   Arrows / HJKL        Focus windows     Shift + Arrows/HJKL  Move windows    ║
- ║   1-4                  Go to workspace   F                    Float/Tile      ║
- ║   M                    Fullscreen        Q                    Close window    ║
- ║                                                                               ║
- ╠═══════════════════════════════════════════════════════════════════════════════╣
- ║                                                                               ║
- ║   LAUNCH APPS  (Direct shortcuts - no mode needed)                            ║
+ ║   LAUNCH APPS  (Alt + Shift + Letter)                                         ║
  ║   ────────────────────────────────────────────────────────────────────────    ║
  ║   Alt + Shift + T      Terminal          Alt + Shift + D        Discord       ║
  ║   Alt + Shift + B      Brave Browser     Alt + Shift + C        Claude        ║
  ║   Alt + Shift + Z      Zen Browser       Alt + Shift + V        VS Code       ║
- ║   Alt + Shift + F      Finder            Alt + Shift + M        Spotify       ║
- ║   Alt + Shift + O      Obsidian          Alt + Shift + N        Notes         ║
- ║   Alt + Shift + P      Preview                                                ║
+ ║   Alt + Shift + E      Finder            Alt + Shift + M        Spotify       ║
+ ║   Alt + Shift + O      Obsidian          Alt + Shift + A        Apple Music   ║
+ ║   Alt + Shift + N      Notes                                                  ║
  ║                                                                               ║
  ╠═══════════════════════════════════════════════════════════════════════════════╣
  ║                                                                               ║
- ║   SERVICE MODE  (Alt + Shift + S to activate, Esc to exit and reload)         ║
+ ║   SERVICE                               UTILITIES                             ║
+ ║   ────────────────────────────────────  ────────────────────────────────────  ║
+ ║   Ctrl + Alt + R       Restart Yabai    Ctrl + Alt + G          Greeting      ║
+ ║   Ctrl + Alt + S       Reload skhd      luvr greet              Greeting      ║
+ ║                                                                               ║
+ ║   MOUSE (hold Alt)                                                            ║
  ║   ────────────────────────────────────────────────────────────────────────    ║
- ║   R                    Reset layout      Backspace              Close others  ║
- ║   F                    Float/Tile                                             ║
+ ║   Alt + Left Click     Move window                                            ║
+ ║   Alt + Right Click    Resize window                                          ║
  ║                                                                               ║
  ╚═══════════════════════════════════════════════════════════════════════════════╝
 
