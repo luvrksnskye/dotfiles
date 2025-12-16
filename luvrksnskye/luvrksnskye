@@ -79,50 +79,54 @@ show_help() {
   echo
 
   echo -e "${LINE}────────────────────────────────────────────────────────────────────────${R}"
-  echo -e "${SUB}made with love, pastel chaos, and insomnia ✦${R}"
+  echo -e "${SUB}made with love and insomnia ✦${R}"
   echo
 }
 
 show_error() {
-  echo
-  echo -e "${C1}${B}✖ Error${R} ${SUB}$1${R}"
-  echo -e "${SUB}Run ${C4}luvr help${R}${SUB} for usage.${R}"
-  echo
-  exit 1
+    echo ""
+    echo -e "  ${C_PINK}Error: $1${C_RESET}"
+    echo ""
+    echo -e "  Run ${C_BLUE}luvr help${C_RESET} for usage"
+    echo ""
+    exit 1
 }
 
 check_scripts() {
-  [ ! -d "$WALLPAPER_SCRIPTS" ] && show_error "Wallpaper scripts not found at $WALLPAPER_SCRIPTS"
+    if [ ! -d "$WALLPAPER_SCRIPTS" ]; then
+        show_error "Wallpaper scripts not found at $WALLPAPER_SCRIPTS"
+    fi
 }
 
-# -----------------------------------------------------------------------------
-# COMMAND ROUTER
-# -----------------------------------------------------------------------------
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 case "$1" in
-  wall)
-    check_scripts
-    "$WALLPAPER_SCRIPTS/wallpaper_select.sh" "$2"
-    ;;
-  wall-random|wallr)
-    check_scripts
-    "$WALLPAPER_SCRIPTS/wallpaper_random.sh"
-    ;;
-  wall-list|wallls)
-    check_scripts
-    "$WALLPAPER_SCRIPTS/wallpaper_list.sh"
-    ;;
-  wall-set)
-    check_scripts
-    [ -z "$2" ] && show_error "wall-set requires a path"
-    "$WALLPAPER_SCRIPTS/wallpaper_set.sh" "$2" "$3"
-    ;;
-  whoami)
-    "$SCRIPT_DIR/whoiam.sh"
-    ;;
-  help|--help|-h|"")
-    show_help
-    ;;
-  *)
-    show_error "Unknown command: $1"
-    ;;
+    wall)
+        check_scripts
+        "$WALLPAPER_SCRIPTS/wallpaper_select.sh" "$2"
+        ;;
+    wall-random|wallr)
+        check_scripts
+        "$WALLPAPER_SCRIPTS/wallpaper_random.sh"
+        ;;
+    wall-list|wallls)
+        check_scripts
+        "$WALLPAPER_SCRIPTS/wallpaper_list.sh"
+        ;;
+    wall-set)
+        check_scripts
+        if [ -z "$2" ]; then
+            show_error "wall-set requires a path argument"
+        fi
+        "$WALLPAPER_SCRIPTS/wallpaper_set.sh" "$2" "$3"
+        ;;
+    whoami)
+        "$SCRIPT_DIR/whoiam.sh"
+        ;;
+    help|--help|-h|"")
+        show_help
+        ;;
+    *)
+        show_error "Unknown command: $1"
+        ;;
 esac
