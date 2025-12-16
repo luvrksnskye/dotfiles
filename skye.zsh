@@ -1,7 +1,7 @@
 # ╔════════════════════════════════════════════════════════════════════════════╗
 # ║                           SKYE'S ZSH CONFIG                                ║
 # ║                                                                            ║
-# ║                  Add to ~/.zshrc: source ~/.config/skye.zsh                ║
+# ║                  Add to ~/. zshrc:  source ~/.config/skye. zsh                ║
 # ╚════════════════════════════════════════════════════════════════════════════╝
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
@@ -48,6 +48,7 @@ alias br="brew services restart borders"
 alias luvr="luvrksnskye"
 alias wall="luvrksnskye wall"
 alias wallr="luvrksnskye wall-random"
+alias wallls="luvrksnskye wall-list"
 alias keys="luvrksnskye keys"
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
@@ -71,8 +72,8 @@ extract() {
             *.tar.bz2)   tar xjf "$1"     ;;
             *.tar.gz)    tar xzf "$1"     ;;
             *.bz2)       bunzip2 "$1"     ;;
-            *.rar)       unrar x "$1"     ;;
-            *.gz)        gunzip "$1"      ;;
+            *. rar)       unrar x "$1"     ;;
+            *. gz)        gunzip "$1"      ;;
             *.tar)       tar xf "$1"      ;;
             *.tbz2)      tar xjf "$1"     ;;
             *.tgz)       tar xzf "$1"     ;;
@@ -86,12 +87,20 @@ extract() {
     fi
 }
 
+# Wallpaper functions with transitions
+wallf() { luvrksnskye wall-set "$1" "fade"; }
+wallg() { luvrksnskye wall-set "$1" "grow"; }
+wallw() { luvrksnskye wall-set "$1" "wave"; }
+wallx() { luvrksnskye wall-set "$1" "liquid"; }
+walls() { luvrksnskye wall-set "$1" "spiral"; }
+wallz() { luvrksnskye wall-set "$1" "fold"; }
+
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                            COMPLETION                                      │
 # └────────────────────────────────────────────────────────────────────────────┘
 
 autoload -Uz compinit && compinit
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ': completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' menu select
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
