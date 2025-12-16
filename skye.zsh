@@ -20,6 +20,7 @@ alias reload="source ~/.zshrc"
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
+alias whoiam="luvrksnskye whoami"
 
 # Editor
 alias v="nvim"

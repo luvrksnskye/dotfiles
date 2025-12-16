@@ -38,7 +38,7 @@ echo ""
 backup() {
     if [ -e "$1" ]; then
         echo -e "  ${C_DIM}Backing up${C_RESET} $(basename "$1")"
-        mv "$1" "$1.backup.$(date +%Y%m%d%H%M%S)"
+        mv "$1" "$1.backup. $(date +%Y%m%d%H%M%S)"
     fi
 }
 
@@ -74,6 +74,16 @@ echo -e "  ${C_PINK}Utilities${C_RESET}"
 echo -e "  ${C_DIM}────────────────────────────────────────${C_RESET}"
 install_item "luvrksnskye" "$SCRIPT_DIR/luvrksnskye" "$HOME/.config/luvrksnskye"
 chmod +x "$HOME/.config/luvrksnskye/"* 2>/dev/null
+echo ""
+
+echo -e "  ${C_PINK}Wallpaper${C_RESET}"
+echo -e "  ${C_DIM}────────────────────────────────────────${C_RESET}"
+if [ -d "$SCRIPT_DIR/wallpaper" ]; then
+    install_item "wallpaper_animate" "$SCRIPT_DIR/wallpaper/wallpaper_animate" "$HOME/.config/luvrksnskye/wallpaper_animate"
+    cp "$SCRIPT_DIR/wallpaper/wallpaper_"*. sh "$HOME/.config/luvrksnskye/" 2>/dev/null
+    chmod +x "$HOME/.config/luvrksnskye/wallpaper_"* 2>/dev/null
+    echo -e "  ${C_DIM}wallpaper scripts${C_RESET}${C_GREEN}done${C_RESET}"
+fi
 echo ""
 
 echo -e "  ${C_PINK}Shell${C_RESET}"
@@ -130,5 +140,5 @@ echo "       brew services start borders"
 echo ""
 echo -e "  ${C_PINK}Commands${C_RESET}"
 echo ""
-echo "    luvr / keys / wall / wallr"
+echo "    luvr / whoiam / wall / wallr / wallls / keys"
 echo ""

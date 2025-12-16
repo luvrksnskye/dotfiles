@@ -1,96 +1,128 @@
 #!/bin/bash
 
-# ╔════════════════════════════════════════════════════════════════════════════╗
-# ║                                                                            ║
-# ║   ██╗     ██╗   ██╗██╗   ██╗██████╗ ██╗  ██╗███████╗███╗   ██╗███████╗    ║
-# ║   ██║     ██║   ██║██║   ██║██╔══██╗██║ ██╔╝██╔════╝████╗  ██║██╔════╝    ║
-# ║   ██║     ██║   ██║██║   ██║██████╔╝█████╔╝ ███████╗██╔██╗ ██║███████╗    ║
-# ║   ██║     ██║   ██║╚██╗ ██╔╝██╔══██╗██╔═██╗ ╚════██║██║╚██╗██║╚════██║    ║
-# ║   ███████╗╚██████╔╝ ╚████╔╝ ██║  ██║██║  ██╗███████║██║ ╚████║███████║    ║
-# ║   ╚══════╝ ╚═════╝   ╚═══╝  ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚══════╝    ║
-# ║                                                                            ║
-# ║                          Skye's Custom Scripts                             ║
-# ║                                                                            ║
-# ╚════════════════════════════════════════════════════════════════════════════╝
+#    ███████╗██╗  ██╗██╗   ██╗███████╗         ██╗ ██████╗ ██╗   ██╗██████╗ ███╗   ██╗███████╗██╗   ██╗
+#    ██╔════╝██║ ██╔╝╚██╗ ██╔╝██╔════╝         ██║██╔═══██╗██║   ██║██╔══██╗████╗  ██║██╔════╝╚██╗ ██╔╝
+#    ███████╗█████╔╝  ╚████╔╝ █████╗           ██║██║   ██║██║   ██║██████╔╝██╔██╗ ██║█████╗   ╚████╔╝ 
+#    ╚════██║██╔═██╗   ╚██╔╝  ██╔══╝      ██   ██║██║   ██║██║   ██║██╔══██╗██║╚██╗██║██╔══╝    ╚██╔╝  
+#    ███████║██║  ██╗   ██║   ███████╗    ╚█████╔╝╚██████╔╝╚██████╔╝██║  ██║██║ ╚████║███████╗   ██║   
+#    ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝     ╚════╝  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   
 
-SCRIPT_DIR="$HOME/.config/luvrksnskye"
-WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
+# =============================================================================
+#  Skye Journey ✦ Terminal Toolkit
+# =============================================================================
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WALLPAPER_SCRIPTS="$SCRIPT_DIR/wallpapers"
 CACHE_DIR="$HOME/.cache/luvrksnskye"
-
 mkdir -p "$CACHE_DIR"
 
+# -----------------------------------------------------------------------------
+# COLORS — Catppuccin Mocha
+# -----------------------------------------------------------------------------
+if [[ -t 1 ]]; then
+  R="\033[0m"
+  B="\033[1m"
+
+  C1="\033[38;2;243;139;168m"
+  C2="\033[38;2;203;166;247m"
+  C3="\033[38;2;180;190;254m"
+  C4="\033[38;2;137;180;250m"
+  C5="\033[38;2;166;227;161m"
+  SUB="\033[38;2;186;194;222m"
+  LINE="\033[38;2;88;91;112m"
+else
+  R=""; B=""
+  C1=""; C2=""; C3=""; C4=""; C5=""
+  SUB=""; LINE=""
+fi
+
+# -----------------------------------------------------------------------------
+# UI
+# -----------------------------------------------------------------------------
 show_help() {
-    clear
-    cat << 'EOF'
+  clear
 
-    ╭──────────────────────────────────────────────────────────────────────────╮
-    │                                                                          │
-    ║   ██╗     ██╗   ██╗██╗   ██╗██████╗ ██╗  ██╗███████╗███╗   ██╗███████╗   ║  
-    ║   ██║     ██║   ██║██║   ██║██╔══██╗██║ ██╔╝██╔════╝████╗  ██║██╔════╝   ║ 
-    ║   ██║     ██║   ██║██║   ██║██████╔╝█████╔╝ ███████╗██╔██╗ ██║███████╗   ║ 
-    ║   ██║     ██║   ██║╚██╗ ██╔╝██╔══██╗██╔═██╗ ╚════██║██║╚██╗██║╚════██║   ║ 
-    ║   ███████╗╚██████╔╝ ╚████╔╝ ██║  ██║██║  ██╗███████║██║ ╚████║███████║   ║ 
-    ║   ╚══════╝ ╚═════╝   ╚═══╝  ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚══════╝   ║ 
-    │                                                                          │
-    │                     Command Reference                                    │
-    │                                                                          │
-    ├──────────────────────────────────────────────────────────────────────────┤
-    │                                                                          │
-    │   WALLPAPER                                                              │
-    │   ─────────────────────────────────────────────────────────────────────  │
-    │                                                                          │
-    │     luvr wall              Interactive wallpaper selector                │
-    │     luvr wall-random       Set a random wallpaper                        │
-    │     luvr wall-set <path>   Set a specific wallpaper                      │
-    │                                                                          │
-    │   UTILITIES                                                              │
-    │   ─────────────────────────────────────────────────────────────────────  │
-    │                                                                          │
-    │     luvr keys              Show keybinding reference                     │
-    │     luvr reload            Reload all configurations                     │
-    │     luvr greet             Show animated greeting                        │
-    │     luvr help              Show this help message                        │
-    │                                                                          │
-    │   SHORTCUTS                                                              │
-    │   ─────────────────────────────────────────────────────────────────────  │
-    │                                                                          │
-    │     wall                   Alias for luvr wall                           │
-    │     wallr                  Alias for luvr wall-random                    │
-    │     keys                   Alias for luvr keys                           │
-    │                                                                          │
-    ╰──────────────────────────────────────────────────────────────────────────╯
+  echo -e "${C1}███████╗██╗  ██╗██╗   ██╗███████╗         ██╗ ██████╗ ██╗   ██╗██████╗ ███╗   ██╗███████╗██╗   ██╗${R}"
+  echo -e "${C2}██╔════╝██║ ██╔╝╚██╗ ██╔╝██╔════╝         ██║██╔═══██╗██║   ██║██╔══██╗████╗  ██║██╔════╝╚██╗ ██╔╝${R}"
+  echo -e "${C3}███████╗█████╔╝  ╚████╔╝ █████╗           ██║██║   ██║██║   ██║██████╔╝██╔██╗ ██║█████╗   ╚████╔╝ ${R}"
+  echo -e "${C4}╚════██║██╔═██╗   ╚██╔╝  ██╔══╝      ██   ██║██║   ██║██║   ██║██╔══██╗██║╚██╗██║██╔══╝    ╚██╔╝  ${R}"
+  echo -e "${C5}███████║██║  ██╗   ██║   ███████╗    ╚█████╔╝╚██████╔╝╚██████╔╝██║  ██║██║ ╚████║███████╗   ██║   ${R}"
+  echo -e "${C4}╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝     ╚════╝  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ${R}"
 
-EOF
+  echo
+  echo -e "        ${SUB}✦ Skye Journey · Custom Terminal Toolkit · Catppuccin Mocha ✦${R}"
+  echo
+  echo -e "${LINE}────────────────────────────────────────────────────────────────────────${R}"
+  echo
+
+  echo -e "${C3}${B}WALLPAPER${R}"
+  echo -e "${LINE}────────────────────────${R}"
+  echo -e "${C4}luvr wall${R}               Interactive wallpaper selector"
+  echo -e "${C4}luvr wall-random${R}        Set random wallpaper"
+  echo -e "${C4}luvr wall-list${R}          List wallpapers"
+  echo -e "${C4}luvr wall-set <path>${R}    Set wallpaper"
+  echo -e "${C4}luvr wall-set <path> <fx>${R}"
+  echo -e "      ${SUB}fx: wave · fade · grow · liquid · spiral · fold${R}"
+  echo
+
+  echo -e "${C3}${B}USER${R}"
+  echo -e "${LINE}────────────────────────${R}"
+  echo -e "${C4}luvr whoami${R}             Show user info"
+  echo
+
+  echo -e "${C3}${B}ALIASES${R}"
+  echo -e "${LINE}────────────────────────${R}"
+  echo -e "${C5}wall${R}   → luvr wall"
+  echo -e "${C5}wallr${R}  → luvr wall-random"
+  echo -e "${C5}wallls${R} → luvr wall-list"
+  echo -e "${C5}whoiam${R} → luvr whoami"
+  echo
+
+  echo -e "${LINE}────────────────────────────────────────────────────────────────────────${R}"
+  echo -e "${SUB}made with love, pastel chaos, and insomnia ✦${R}"
+  echo
 }
 
+show_error() {
+  echo
+  echo -e "${C1}${B}✖ Error${R} ${SUB}$1${R}"
+  echo -e "${SUB}Run ${C4}luvr help${R}${SUB} for usage.${R}"
+  echo
+  exit 1
+}
+
+check_scripts() {
+  [ ! -d "$WALLPAPER_SCRIPTS" ] && show_error "Wallpaper scripts not found at $WALLPAPER_SCRIPTS"
+}
+
+# -----------------------------------------------------------------------------
+# COMMAND ROUTER
+# -----------------------------------------------------------------------------
 case "$1" in
-    wall)
-        "$SCRIPT_DIR/wallpaper_select.sh"
-        ;;
-    wall-random|wallr)
-        "$SCRIPT_DIR/wallpaper_random.sh"
-        ;;
-    wall-set)
-        "$SCRIPT_DIR/wallpaper_set.sh" "$2" "$3"
-        ;;
-    keys)
-        "$SCRIPT_DIR/key_hints.sh"
-        ;;
-    reload)
-        "$SCRIPT_DIR/reload.sh"
-        ;;
-    greet|greeting|hello)
-        "$SCRIPT_DIR/greeting.sh"
-        ;;
-    help|--help|-h|"")
-        show_help
-        ;;
-    *)
-        echo ""
-        echo "  Unknown command: $1"
-        echo ""
-        echo "  Run 'luvr help' for usage"
-        echo ""
-        exit 1
-        ;;
+  wall)
+    check_scripts
+    "$WALLPAPER_SCRIPTS/wallpaper_select.sh" "$2"
+    ;;
+  wall-random|wallr)
+    check_scripts
+    "$WALLPAPER_SCRIPTS/wallpaper_random.sh"
+    ;;
+  wall-list|wallls)
+    check_scripts
+    "$WALLPAPER_SCRIPTS/wallpaper_list.sh"
+    ;;
+  wall-set)
+    check_scripts
+    [ -z "$2" ] && show_error "wall-set requires a path"
+    "$WALLPAPER_SCRIPTS/wallpaper_set.sh" "$2" "$3"
+    ;;
+  whoami)
+    "$SCRIPT_DIR/whoiam.sh"
+    ;;
+  help|--help|-h|"")
+    show_help
+    ;;
+  *)
+    show_error "Unknown command: $1"
+    ;;
 esac

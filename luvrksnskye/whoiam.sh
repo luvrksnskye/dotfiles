@@ -57,7 +57,7 @@ clear
 
 # ASCII art cat
 echo ""
-gradient_print "⧣+ ̊.✦+ ⧣+ ̊ 𓂃★ ⸝⸝ ⧣+ ̊.✦+ ⧣+ ̊"
+gradient_print "⧣+ ̊. ✦+ ⧣+ ̊ 𓂃★ ⸝⸝ ⧣+ ̊.✦+ ⧣+ ̊"
 echo -e "${C_MAUVE} /) /)        ${C_PINK}╭──────────────────────────────╮"
 echo -e "${C_MAUVE}(。•ᄉ•。)      ${C_PINK}│                              │"
 echo -e "${C_MAUVE} (${C_PINK}\(${C_MAUVE})${C_PINK})${C_MAUVE}        ${C_PINK}│   ${C_YELLOW}User Info${C_PINK}                   │"
@@ -69,20 +69,15 @@ echo ""
 
 # User information
 echo -e "${C_LAVENDER}✦+ ˊ˗"
-echo -e "${C_MAUVE}.╭∪─∪──────────${C_LAVENDER} ✦ +."
-echo -e "${C_MAUVE}.┊ ◟@${C_RESET} User     : ${C_BOLD}${C_YELLOW}$USER${C_RESET}"
-echo -e "${C_MAUVE}.┊.𐐪${C_RESET} Uptime   : ${C_TEAL}$UPTIME${C_RESET}"
-echo -e "${C_MAUVE}.┊ꜝꜝ.${C_RESET}Pronouns : ${C_PINK}she/they${C_RESET}"
+echo -e "${C_MAUVE}. ╭∪─∪──────────${C_LAVENDER} ✦ +."
+echo -e "${C_MAUVE}. ┊ ◟@${C_RESET} User     :  ${C_BOLD}${C_YELLOW}$USER${C_RESET}"
+echo -e "${C_MAUVE}.┊. 𐐪${C_RESET} Uptime   : ${C_TEAL}$UPTIME${C_RESET}"
+echo -e "${C_MAUVE}.┊ꜝꜝ. ${C_RESET}Pronouns : ${C_PINK}she/they${C_RESET}"
 echo -e "${C_MAUVE}.┊ ⨳ ゙${C_RESET}Date     : ${C_PEACH}$DATE${C_RESET}"
 echo -e "${C_MAUVE}.┊ ◟ヾ${C_RESET} Shell    : ${C_BLUE}$SHELL${C_RESET}"
-echo -e "${C_MAUVE}.┊.𐐪${C_RESET} OS       : ${C_GREEN}$OS $OS_VERSION${C_RESET}"
-echo -e "${C_MAUVE}.┊ ◟@${C_RESET} Extra    : ${C_SKY}hai!!!${C_RESET}"
-echo -e "${C_MAUVE}╰─────────────${C_LAVENDER} ✦ +.${C_RESET}"
+echo -e "${C_MAUVE}.┊. 𐐪${C_RESET} OS       : ${C_GREEN}$OS $OS_VERSION${C_RESET}"
+echo -e "${C_MAUVE}.┊ ◟@${C_RESET} Extra    : ${C_SKY}hai!!! ${C_RESET}"
+echo -e "${C_MAUVE}╰─────────────${C_LAVENDER} ✦ +. ${C_RESET}"
 echo ""
-gradient_print "⧣+ ̊.✦+ ⧣+ ̊ 𓂃★ ⸝⸝ ⧣+ ̊.✦+ ⧣+ ̊"
-echo ""
-
-# Add original whoami output with separator
-echo -e "${C_SUBTEXT0}${C_DIM}── Original whoami output ──${C_RESET}"
-echo -e "${C_DIM}$(whoami)${C_RESET}"
+gradient_print "⧣+ ̊. ✦+ ⧣+ ̊ 𓂃★ ⸝⸝ ⧣+ ̊.✦+ ⧣+ ̊"
 echo ""
