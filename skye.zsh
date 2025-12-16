@@ -31,6 +31,7 @@ alias v.="nvim ."
 alias nf="neofetch"
 alias cv="cava"
 alias f="open -a Finder ."
+alias rain="terminal-rain"
 
 # Apps
 alias brave="open -a 'Brave Browser'"
