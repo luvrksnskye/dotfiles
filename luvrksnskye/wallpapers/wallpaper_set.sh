@@ -40,7 +40,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ANIMATOR="$SCRIPT_DIR/wallpaper_animate"
 
 if [ -x "$ANIMATOR" ]; then
-  "$ANIMATOR" "$WALLPAPER" "$TRANSITION_TYPE" 2>/dev/null || \
+  "$ANIMATOR" "$WALLPAPER" "$TRANSITION_TYPE" || \
   osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"$WALLPAPER\""
 else
   osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"$WALLPAPER\""
