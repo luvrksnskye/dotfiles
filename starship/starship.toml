@@ -51,7 +51,6 @@ crust     = "#11111b"
 success_symbol = "[>](catppuccinMocha.green)"
 error_symbol   = "[>](catppuccinMocha.red)"
 vimcmd_symbol  = "[<](catppuccinMocha.green)"
-vicmd_symbol   = "[<](catppuccinMocha.green)"
 
 # ─────────────────────────────────────────────
 # DIRECTORY
@@ -113,10 +112,8 @@ style  = "catppuccinMocha.sky"
 # ─────────────────────────────────────────────
 
 [kubernetes]
-symbol        = "󱃾 "
-style         = "catppuccinMocha.blue"
-context_style = "catppuccinMocha.blue"
-user_style    = "catppuccinMocha.blue"
+symbol = "󱃾 "
+style  = "catppuccinMocha.blue"
 
 [aws]
 symbol = " "
@@ -156,7 +153,6 @@ ssh_only = false
 [shlvl]
 format = "[$shlvl]($style)"
 style  = "catppuccinMocha.blue"
-disabled_indicator = ""
 
 # ─────────────────────────────────────────────
 # BATTERY / TIME
