@@ -1,8 +1,185 @@
-format = """$os$directory$git_branch$git_status$character"""
+# ~/.config/starship.toml
+# ─────────────────────────────────────────────
+# Skye ✦ Catppuccin Mocha Starship Config
+# ─────────────────────────────────────────────
 
-[os]
-disabled = false
+format = """
+[╭╴](catppuccinMocha.pink)$directory[separator](catppuccinMocha.pink)\
+$git_branch$git_status$nodejs$python$rust$go$kubernetes$aws$gcloud$terraform$docker$username$hostname$shlvl$battery$time$custom
+[╰─](catppuccinMocha.pink)$character
+"""
+
+add_newline = false
+
+# ─────────────────────────────────────────────
+# PALETTE
+# ─────────────────────────────────────────────
+
+[palettes.catppuccinMocha]
+rosewater = "#f5e0dc"
+flamingo  = "#f2cdcd"
+pink      = "#f5c2e7"
+mauve     = "#cba6f7"
+red       = "#f38ba8"
+maroon    = "#eba0ac"
+peach     = "#fab387"
+yellow    = "#f9e2af"
+green     = "#a6e3a1"
+teal      = "#94e2d5"
+sky       = "#89dceb"
+sapphire  = "#74c7ec"
+blue      = "#89b4fa"
+lavender  = "#b4befe"
+text      = "#cdd6f4"
+subtext1  = "#bac2de"
+subtext0  = "#a6adc8"
+overlay2  = "#9399b2"
+overlay1  = "#7f849c"
+overlay0  = "#6c7086"
+surface2  = "#585b70"
+surface1  = "#45475a"
+surface0  = "#313244"
+base      = "#1e1e2e"
+mantle    = "#181825"
+crust     = "#11111b"
+
+# ─────────────────────────────────────────────
+# PROMPT SYMBOL
+# ─────────────────────────────────────────────
 
 [character]
-success_symbol = "[>](bold green)"
-error_symbol = "[>](bold red)"
+success_symbol = "[>](catppuccinMocha.green)"
+error_symbol   = "[>](catppuccinMocha.red)"
+vimcmd_symbol  = "[<](catppuccinMocha.green)"
+vicmd_symbol   = "[<](catppuccinMocha.green)"
+
+# ─────────────────────────────────────────────
+# DIRECTORY
+# ─────────────────────────────────────────────
+
+[directory]
+style = "catppuccinMocha.mauve"
+truncation_length = 3
+truncate_to_repo = false
+
+# ─────────────────────────────────────────────
+# GIT
+# ─────────────────────────────────────────────
+
+[git_branch]
+symbol = " branch "
+style  = "catppuccinMocha.mauve"
+
+[git_status]
+style      = "catppuccinMocha.pink"
+conflicted = " conflicts"
+ahead      = "⇡${count}"
+behind     = "⇣${count}"
+diverged   = "⇕⇡${ahead_count}⇣${behind_count}"
+untracked  = "!"
+stashed    = "$"
+modified   = "~"
+staged     = "+"
+renamed    = "»"
+deleted    = "✘"
+
+# ─────────────────────────────────────────────
+# LANGUAGES
+# ─────────────────────────────────────────────
+
+[nodejs]
+symbol = " "
+style  = "catppuccinMocha.green"
+detect_files   = ["package.json", ".node-version"]
+detect_folders = ["node_modules"]
+
+[python]
+symbol = " "
+style  = "catppuccinMocha.yellow"
+pyenv_version_format = "pyenv ${version}"
+detect_files   = ["requirements.txt", ".python-version"]
+detect_folders = ["__pycache__"]
+
+[rust]
+symbol = " "
+style  = "catppuccinMocha.red"
+
+[go]
+symbol = " "
+style  = "catppuccinMocha.sky"
+
+# ─────────────────────────────────────────────
+# CLOUD / DEVOPS
+# ─────────────────────────────────────────────
+
+[kubernetes]
+symbol        = "󱃾 "
+style         = "catppuccinMocha.blue"
+context_style = "catppuccinMocha.blue"
+user_style    = "catppuccinMocha.blue"
+
+[aws]
+symbol = " "
+style  = "catppuccinMocha.peach"
+
+[gcloud]
+symbol = "kbs "
+style  = "catppuccinMocha.peach"
+
+[terraform]
+symbol = "Ter "
+style  = "catppuccinMocha.mauve"
+
+[docker]
+symbol = " "
+style  = "catppuccinMocha.blue"
+
+# ─────────────────────────────────────────────
+# USER / HOST
+# ─────────────────────────────────────────────
+
+[username]
+style_user = "catppuccinMocha.teal"
+style_root = "catppuccinMocha.red"
+format     = "[$user]($style)"
+show_always = false
+
+[hostname]
+style = "catppuccinMocha.mauve"
+format = "[$hostname]($style)"
+ssh_only = false
+
+# ─────────────────────────────────────────────
+# SHELL LEVEL
+# ─────────────────────────────────────────────
+
+[shlvl]
+format = "[$shlvl]($style)"
+style  = "catppuccinMocha.blue"
+disabled_indicator = ""
+
+# ─────────────────────────────────────────────
+# BATTERY / TIME
+# ─────────────────────────────────────────────
+
+[battery]
+full_symbol        = ""
+charging_symbol    = ""
+discharging_symbol = ""
+unknown_symbol     = ""
+empty_symbol       = ""
+
+[time]
+format = "[$time]($style)"
+style  = "catppuccinMocha.overlay0"
+
+# ─────────────────────────────────────────────
+# CUSTOM
+# ─────────────────────────────────────────────
+
+[custom.example]
+command = "echo 'Custom!'"
+when    = "true"
+shell  = ["bash", "--noprofile", "--norc"]
+format = "[$output]($style)"
+style  = "catppuccinMocha.green"

@@ -73,6 +73,13 @@ alias wall="luvrksnskye wall"
 alias wallr="luvrksnskye wall-random"
 alias keys="luvrksnskye keys"
 
+# New Autocomplete Aliases
+alias kcg="kew cure great"
+alias k="kew"
+alias momo="momoisay freestyle"
+alias gem="gemini"
+alias wttr="curl wttr.in"
+
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                             FUNCTIONS                                      │
 # └────────────────────────────────────────────────────────────────────────────┘
@@ -117,6 +124,32 @@ autoload -Uz compinit && compinit
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' menu select
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
+# Custom Autocomplete Functions
+_autocomplete_kcg() {
+    compadd "kew cure great"
+}
+compdef _autocomplete_kcg kcg
+
+_autocomplete_k() {
+    compadd "kew"
+}
+compdef _autocomplete_k k
+
+_autocomplete_momo() {
+    compadd "momoisay freestyle"
+}
+compdef _autocomplete_momo momo
+
+_autocomplete_gem() {
+    compadd "gemini"
+}
+compdef _autocomplete_gem gem
+
+_autocomplete_wttr() {
+    compadd "curl wttr.in"
+}
+compdef _autocomplete_wttr wttr
 
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                              HISTORY                                       │

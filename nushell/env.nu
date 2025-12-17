@@ -1,1 +1,1 @@
-$env.EDITOR = "nvim"
+$env.EDITOR = "code"
