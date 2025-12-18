@@ -739,7 +739,7 @@ int main(int argc, const char *argv[]) {
     }
 
     const char *imagePath = argv[1];
-    const char *transitionStr = (argc > 2) ? argv[2] : "wave";
+    const char *transitionStr = (argc > 2) ? argv[2] : "liquid";
     const char *direction = (argc > 3) ? argv[3] : "left";
 
     if (access(imagePath, F_OK) == -1) {

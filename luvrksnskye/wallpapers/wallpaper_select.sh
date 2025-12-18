@@ -170,7 +170,9 @@ echo -e "${MAUVE}  ╰───────────────────�
 echo ""
 
 # Image preview with container
-if command -v chafa &>/dev/null; then
+if command -v imgcat &>/dev/null; then
+    imgcat "$file" 2>/dev/null
+elif command -v chafa &>/dev/null; then
     # Use chafa with symbols that work well
     echo -e "${SURFACE1}  ┌$(printf '─%.0s' $(seq 1 $PREVIEW_W))┐${R}"
     chafa --size="${PREVIEW_W}x${PREVIEW_H}" \
@@ -191,8 +193,6 @@ elif command -v viu &>/dev/null; then
     echo -e "${SURFACE1}  └$(printf '─%.0s' $(seq 1 $PREVIEW_W))┘${R}"
 elif command -v timg &>/dev/null; then
     timg -g "${PREVIEW_W}x${PREVIEW_H}" "$file" 2>/dev/null
-elif command -v imgcat &>/dev/null; then
-    imgcat "$file" 2>/dev/null
 else
     echo -e "${MAUVE}  ╭────────────────────────────────╮${R}"
     echo -e "${MAUVE}  │${R}                                ${MAUVE}│${R}"

@@ -5,7 +5,7 @@
 # ╰─────────────────────────────────────────────────────────────────────────────╯
 
 WALLPAPER="$1"
-TRANSITION="${2:-wave}"
+TRANSITION="${2:-liquid}"
 DIRECTION="${3:-left}"
 
 CACHE_DIR="$HOME/.cache/luvrksnskye"
