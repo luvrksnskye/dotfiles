@@ -151,16 +151,16 @@ COLS=$(tput cols 2>/dev/null || echo 80)
 LINES=$(tput lines 2>/dev/null || echo 24)
 
 # Calculate preview size (50% of terminal, with padding)
-PREVIEW_W=$(( (COLS / 2) - 6 ))
-PREVIEW_H=$(( LINES - 12 ))
+PREVIEW_W=$(( (COLS / 3) - 4 ))
+PREVIEW_H=$(( (LINES / 2) - 6 ))
 
 # Minimum sizes
 [ $PREVIEW_W -lt 20 ] && PREVIEW_W=20
 [ $PREVIEW_H -lt 8 ] && PREVIEW_H=8
 
 # Maximum sizes for clean look
-[ $PREVIEW_W -gt 80 ] && PREVIEW_W=80
-[ $PREVIEW_H -gt 30 ] && PREVIEW_H=30
+[ $PREVIEW_W -gt 60 ] && PREVIEW_W=60
+[ $PREVIEW_H -gt 20 ] && PREVIEW_H=20
 
 # Header
 echo ""
