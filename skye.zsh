@@ -36,7 +36,7 @@ alias me="luvrksnskye me"            # who am i
 alias k="luvrksnskye keys"           # keybindings
 alias hi="luvrksnskye greet"         # greeting
 alias r="luvrksnskye reload"         # reload services
-
+alias rain="terminal-rain"
 # ═══════════════════════════════════════════════════════════════════════════════
 # READABLE ALIASES - For clarity
 # ═══════════════════════════════════════════════════════════════════════════════
