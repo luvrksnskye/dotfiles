@@ -225,7 +225,7 @@ fetch_weather() {
 }
 
 get_weather_icon() {
-    local desc="${1,,}"
+   local desc=$(echo "$1" | tr '[:upper:]' '[:lower:]')
     case "$desc" in
         *sunny*|*clear*)
             if [ $HOUR -ge 6 ] && [ $HOUR -lt 19 ]; then
@@ -244,7 +244,7 @@ get_weather_icon() {
 }
 
 get_moon_icon() {
-    local phase="${1,,}"
+local phase=$(echo "$1" | tr '[:upper:]' '[:lower:]')
     case "$phase" in
         *new*moon*) echo "$ICON_MOON_NEW" ;;
         *waxing*crescent*) echo "$ICON_MOON_WAXC" ;;
