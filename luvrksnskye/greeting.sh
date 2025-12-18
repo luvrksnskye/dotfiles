@@ -273,7 +273,7 @@ get_uv_level() {
 get_activity_suggestions() {
     local period=$1
     local temp=$2
-    local weather="${3,,}"
+    local weather=$(echo "$3" | tr '[:upper:]' '[:lower:]')
     
     case "$period" in
         morning)
