@@ -15,7 +15,7 @@ DATA_DIR="$HOME/.local/share/luvrksnskye"
 mkdir -p "$CACHE_DIR" "$DATA_DIR"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# COLORS — Catppuccin Mocha 
+# COLORS — Catppuccin Mocha
 # ═══════════════════════════════════════════════════════════════════════════════
 
 if [[ -t 1 ]]; then

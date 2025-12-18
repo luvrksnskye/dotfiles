@@ -5,7 +5,7 @@
 # │     ✧･ﾟ: *✧･ﾟ:*  WALLPAPER SELECTOR  *:･ﾟ✧*:･ﾟ✧                           │
 # │                                                                             │
 # │              Beautiful & Responsive Preview                                 │
-# │              Catppuccin Mocha · Feminine Edition                            │
+# │              Catppuccin Mocha ·                       │
 # │                                                                             │
 # ╰─────────────────────────────────────────────────────────────────────────────╯
 
@@ -17,7 +17,7 @@ mkdir -p "$CACHE_DIR"
 mkdir -p "$WALLPAPER_DIR"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# COLORS — Catppuccin Mocha (Feminine)
+# COLORS — Catppuccin Mocha 
 # ═══════════════════════════════════════════════════════════════════════════════
 
 R='\033[0m'
@@ -146,102 +146,103 @@ sel="${sel#♡ }"
 sel="${sel#  }"
 file="$WALLPAPER_DIR/$sel"
 
-# Get preview dimensions (responsive)
-COLS=$(tput cols 2>/dev/null || echo 80)
-LINES=$(tput lines 2>/dev/null || echo 24)
+# Get preview dimensions from FZF_PREVIEW_COLUMNS/LINES
+PREVIEW_W=${FZF_PREVIEW_COLUMNS:-40}
+PREVIEW_H=${FZF_PREVIEW_LINES:-20}
 
-# Calculate preview size (50% of terminal, with padding)
-PREVIEW_W=$(( (COLS / 3) - 4 ))
-PREVIEW_H=$(( (LINES / 2) - 6 ))
+# Calculate image size (leave room for borders and info)
+IMG_W=$(( PREVIEW_W - 4 ))
+IMG_H=$(( PREVIEW_H - 16 ))
 
 # Minimum sizes
-[ $PREVIEW_W -lt 20 ] && PREVIEW_W=20
-[ $PREVIEW_H -lt 8 ] && PREVIEW_H=8
+[ $IMG_W -lt 20 ] && IMG_W=20
+[ $IMG_H -lt 6 ] && IMG_H=6
 
-# Maximum sizes for clean look
-[ $PREVIEW_W -gt 60 ] && PREVIEW_W=60
-[ $PREVIEW_H -gt 20 ] && PREVIEW_H=20
+# Maximum sizes for compact look
+[ $IMG_W -gt 50 ] && IMG_W=50
+[ $IMG_H -gt 14 ] && IMG_H=14
 
 # Header
 echo ""
-echo -e "${MAUVE}  ╭────────────────────────────────────────╮${R}"
-echo -e "${MAUVE}  │${R}  ${PINK}✧${R} ${B}${TEXT}Preview${R}                              ${MAUVE}│${R}"
-echo -e "${MAUVE}  ╰────────────────────────────────────────╯${R}"
+echo -e "${MAUVE}  ╭──────────────────────────────────╮${R}"
+echo -e "${MAUVE}  │${R}  ${PINK}✧${R} ${B}${TEXT}Preview${R}                        ${MAUVE}│${R}"
+echo -e "${MAUVE}  ╰──────────────────────────────────╯${R}"
 echo ""
 
-# Image preview with container
+# Image preview - prioritize quality
 if command -v imgcat &>/dev/null; then
-    imgcat "$file" 2>/dev/null
+    # iTerm2 imgcat - best quality
+    imgcat --width "${IMG_W}" "$file" 2>/dev/null
+elif command -v kitten &>/dev/null; then
+    # Kitty terminal - excellent quality
+    kitten icat --clear --transfer-mode=memory --stdin=no \
+           --place="${IMG_W}x${IMG_H}@2x1" "$file" 2>/dev/null
 elif command -v chafa &>/dev/null; then
-    # Use chafa with symbols that work well
-    echo -e "${SURFACE1}  ┌$(printf '─%.0s' $(seq 1 $PREVIEW_W))┐${R}"
-    chafa --size="${PREVIEW_W}x${PREVIEW_H}" \
-          --format=symbols \
-          --symbols=block+border \
-          --colors=256 \
-          --dither=ordered \
+    # Chafa with high quality settings
+    # Using sixel or kitty if supported, otherwise high-quality symbols
+    chafa --size="${IMG_W}x${IMG_H}" \
+          --format=auto \
+          --symbols=all \
+          --colors=full \
+          --color-space=din99d \
+          --dither=diffusion \
+          --dither-grain=2 \
           --work=9 \
-          "$file" 2>/dev/null | while IFS= read -r line; do
-        echo -e "${SURFACE1}  │${R}${line}${SURFACE1}│${R}"
-    done
-    echo -e "${SURFACE1}  └$(printf '─%.0s' $(seq 1 $PREVIEW_W))┘${R}"
+          --optimize=9 \
+          "$file" 2>/dev/null
 elif command -v viu &>/dev/null; then
-    echo -e "${SURFACE1}  ┌$(printf '─%.0s' $(seq 1 $PREVIEW_W))┐${R}"
-    viu -w "$PREVIEW_W" -h "$PREVIEW_H" "$file" 2>/dev/null | while IFS= read -r line; do
-        echo -e "${SURFACE1}  │${R}${line}"
-    done
-    echo -e "${SURFACE1}  └$(printf '─%.0s' $(seq 1 $PREVIEW_W))┘${R}"
+    # viu with truecolor
+    viu -w "$IMG_W" -h "$IMG_H" -t "$file" 2>/dev/null
 elif command -v timg &>/dev/null; then
-    timg -g "${PREVIEW_W}x${PREVIEW_H}" "$file" 2>/dev/null
+    # timg
+    timg -g "${IMG_W}x${IMG_H}" --frames=1 "$file" 2>/dev/null
 else
-    echo -e "${MAUVE}  ╭────────────────────────────────╮${R}"
-    echo -e "${MAUVE}  │${R}                                ${MAUVE}│${R}"
-    echo -e "${MAUVE}  │${R}   ${PINK}Preview requires chafa${R}       ${MAUVE}│${R}"
-    echo -e "${MAUVE}  │${R}   ${DIM}brew install chafa${R}           ${MAUVE}│${R}"
-    echo -e "${MAUVE}  │${R}                                ${MAUVE}│${R}"
-    echo -e "${MAUVE}  ╰────────────────────────────────╯${R}"
+    echo -e "${MAUVE}  ╭──────────────────────────╮${R}"
+    echo -e "${MAUVE}  │${R}                          ${MAUVE}│${R}"
+    echo -e "${MAUVE}  │${R}  ${PINK}Preview requires:${R}       ${MAUVE}│${R}"
+    echo -e "${MAUVE}  │${R}  ${DIM}brew install chafa${R}      ${MAUVE}│${R}"
+    echo -e "${MAUVE}  │${R}                          ${MAUVE}│${R}"
+    echo -e "${MAUVE}  ╰──────────────────────────╯${R}"
 fi
 
 echo ""
 
-# File info
-echo -e "${MAUVE}  ╭────────────────────────────────────────╮${R}"
-echo -e "${MAUVE}  │${R}  ${PINK}❀${R} ${B}${TEXT}Info${R}                                  ${MAUVE}│${R}"
-echo -e "${MAUVE}  ├────────────────────────────────────────┤${R}"
+# Compact file info
+echo -e "${MAUVE}  ╭──────────────────────────────────╮${R}"
+echo -e "${MAUVE}  │${R}  ${PINK}❀${R} ${B}${TEXT}Info${R}                            ${MAUVE}│${R}"
+echo -e "${MAUVE}  ├──────────────────────────────────┤${R}"
 
 # Filename (truncated if needed)
 fname=$(basename "$file")
-if [ ${#fname} -gt 34 ]; then
-    fname="${fname:0:31}..."
+if [ ${#fname} -gt 28 ]; then
+    fname="${fname:0:25}..."
 fi
-printf "${MAUVE}  │${R}  ${SUBTEXT0}Name:${R} ${TEXT}%-34s${R}${MAUVE}│${R}\n" "$fname"
+printf "${MAUVE}  │${R}  ${SUBTEXT0}Name:${R} ${TEXT}%-28s${R}${MAUVE}│${R}\n" "$fname"
 
-# File size
+# File size + dimensions on same line if possible
 if [ -f "$file" ]; then
     size=$(ls -lh "$file" 2>/dev/null | awk '{print $5}')
-    printf "${MAUVE}  │${R}  ${SUBTEXT0}Size:${R} ${TEXT}%-34s${R}${MAUVE}│${R}\n" "$size"
-fi
-
-# Dimensions (if identify available)
-if command -v identify &>/dev/null; then
-    dims=$(identify -format "%wx%h" "$file" 2>/dev/null)
+    dims=""
+    if command -v identify &>/dev/null; then
+        dims=$(identify -format "%wx%h" "$file" 2>/dev/null)
+    elif command -v sips &>/dev/null; then
+        w=$(sips -g pixelWidth "$file" 2>/dev/null | tail -1 | awk '{print $2}')
+        h=$(sips -g pixelHeight "$file" 2>/dev/null | tail -1 | awk '{print $2}')
+        [ -n "$w" ] && [ -n "$h" ] && dims="${w}x${h}"
+    fi
+    
     if [ -n "$dims" ]; then
-        printf "${MAUVE}  │${R}  ${SUBTEXT0}Dims:${R} ${TEXT}%-34s${R}${MAUVE}│${R}\n" "$dims"
+        printf "${MAUVE}  │${R}  ${SUBTEXT0}Size:${R} ${TEXT}%-10s${R} ${SUBTEXT0}Dims:${R} ${TEXT}%-10s${R}${MAUVE}│${R}\n" "$size" "$dims"
+    else
+        printf "${MAUVE}  │${R}  ${SUBTEXT0}Size:${R} ${TEXT}%-28s${R}${MAUVE}│${R}\n" "$size"
     fi
 fi
 
-# Format
-ext="${file##*.}"
-ext_upper=$(echo "$ext" | tr '[:lower:]' '[:upper:]')
-printf "${MAUVE}  │${R}  ${SUBTEXT0}Type:${R} ${TEXT}%-34s${R}${MAUVE}│${R}\n" "$ext_upper"
-
-echo -e "${MAUVE}  ╰────────────────────────────────────────╯${R}"
+echo -e "${MAUVE}  ╰──────────────────────────────────╯${R}"
 echo ""
 
-# Current transition
-echo -e "${LAVENDER}  ╭────────────────────────────────────────╮${R}"
-echo -e "${LAVENDER}  │${R}  ${SKY}✦${R} ${TEXT}Transition: ${GREEN}${TRANSITION:-wave}${R}                  ${LAVENDER}│${R}"
-echo -e "${LAVENDER}  ╰────────────────────────────────────────╯${R}"
+# Current transition (compact)
+echo -e "  ${SKY}✦${R} ${TEXT}Effect:${R} ${GREEN}${TRANSITION:-wave}${R}"
 
 PREVIEW_EOF
 chmod +x "$PREVIEW_SCRIPT"
@@ -273,7 +274,7 @@ SELECTED=$(display_list | fzf \
     --border=rounded \
     --border-label="  ╱|、 ♡ Wallpaper Selector (˚ˎ 。7  " \
     --border-label-pos=3 \
-    --margin=1,3 \
+    --margin=1,2 \
     --padding=1 \
     --prompt="  ❀ " \
     --pointer=" ♡" \
@@ -282,21 +283,17 @@ SELECTED=$(display_list | fzf \
     --color='fg:#cdd6f4,header:#cba6f7,info:#cba6f7,pointer:#f5c2e7' \
     --color='marker:#f5c2e7,fg+:#f5c2e7,prompt:#cba6f7,hl+:#f5c2e7' \
     --color='border:#cba6f7,label:#f5c2e7,query:#f5c2e7' \
-    --preview-window='right:50%:wrap:border-rounded' \
+    --preview-window='right:45%:wrap:border-rounded' \
     --preview="WALLPAPER_DIR='$WALLPAPER_DIR' TRANSITION=\$(cat '$TRANS_FILE') '$PREVIEW_SCRIPT' {}" \
-    --header=$'
-  ♡ Current wallpaper marked with ♡
+    --header=$'  ♡ Current marked with ♡
   
-  ╭───────────────────────────────────────╮
-  │  ✧ Effects                            │
-  ├───────────────────────────────────────┤
-  │  [1] wave    [2] fade    [3] grow     │
-  │  [4] liquid  [5] spiral  [6] fold     │
-  │  [7] slide   [8] bloom   [9] glitch   │
-  │  [0] direction (slide)                │
-  ╰───────────────────────────────────────╯
-  
-  [tab] toggle preview  [enter] apply
+  ╭─────────────────────────────╮
+  │ [1] wave   [2] fade  [3] grow  │
+  │ [4] liquid [5] spiral [6] fold │
+  │ [7] slide  [8] bloom [9] glitch│
+  │ [0] direction (for slide)      │
+  ╰─────────────────────────────╯
+  [tab] toggle  [enter] apply
 ' \
     --bind="1:execute-silent(echo wave > '$TRANS_FILE')+refresh-preview" \
     --bind="2:execute-silent(echo fade > '$TRANS_FILE')+refresh-preview" \
@@ -354,21 +351,18 @@ if [ -n "$SELECTED" ]; then
         # Save to cache
         echo "$FULL_PATH" > "$CACHE_FILE"
         
-        # Success message
+        # Success message (compact)
         clear
         echo ""
-        echo -e "    ${PINK}✧${MAUVE}·${LAVENDER}˚${PINK}❀${LAVENDER}˚${MAUVE}·${PINK}✧  ${MAUVE}✧${LAVENDER}·${PINK}˚${MAUVE}❀${PINK}˚${LAVENDER}·${MAUVE}✧${R}"
+        echo -e "    ${PINK}✧${MAUVE}·${LAVENDER}˚${PINK}❀${LAVENDER}˚${MAUVE}·${PINK}✧${R}"
         echo ""
-        echo -e "    ${MAUVE}╭─────────────────────────────────────╮${R}"
-        echo -e "    ${MAUVE}│${R}                                     ${MAUVE}│${R}"
-        echo -e "    ${MAUVE}│${R}   ${PINK}✧${R} ${B}${TEXT}Wallpaper Applied${R} ${PINK}✧${R}             ${MAUVE}│${R}"
-        echo -e "    ${MAUVE}│${R}                                     ${MAUVE}│${R}"
-        echo -e "    ${MAUVE}├─────────────────────────────────────┤${R}"
-        echo -e "    ${MAUVE}│${R}   ${SUBTEXT0}File:${R} ${GREEN}$(basename "$FULL_PATH" | cut -c1-26)${R}"
-        echo -e "    ${MAUVE}│${R}   ${SUBTEXT0}Effect:${R} ${LAVENDER}$TRANSITION${R}"
-        [ "$TRANSITION" = "slide" ] && echo -e "    ${MAUVE}│${R}   ${SUBTEXT0}Direction:${R} ${SKY}$DIRECTION${R}"
-        echo -e "    ${MAUVE}│${R}                                     ${MAUVE}│${R}"
-        echo -e "    ${MAUVE}╰─────────────────────────────────────╯${R}"
+        echo -e "    ${MAUVE}╭─────────────────────────────────╮${R}"
+        echo -e "    ${MAUVE}│${R}  ${PINK}✧${R} ${B}${TEXT}Wallpaper Applied${R} ${PINK}✧${R}          ${MAUVE}│${R}"
+        echo -e "    ${MAUVE}├─────────────────────────────────┤${R}"
+        echo -e "    ${MAUVE}│${R}  ${SUBTEXT0}File:${R} ${GREEN}$(basename "$FULL_PATH" | cut -c1-24)${R}"
+        echo -e "    ${MAUVE}│${R}  ${SUBTEXT0}Effect:${R} ${LAVENDER}$TRANSITION${R}"
+        [ "$TRANSITION" = "slide" ] && echo -e "    ${MAUVE}│${R}  ${SUBTEXT0}Dir:${R} ${SKY}$DIRECTION${R}"
+        echo -e "    ${MAUVE}╰─────────────────────────────────╯${R}"
         echo ""
         
         notify "$(basename "$FULL_PATH")" "Wallpaper Applied ✧"
