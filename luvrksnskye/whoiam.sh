@@ -8,7 +8,7 @@
 # ╰─────────────────────────────────────────────────────────────────────────────╯
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# COLORS — Catppuccin Mocha (Feminine)
+# COLORS — Catppuccin Mocha 
 # ═══════════════════════════════════════════════════════════════════════════════
 
 R='\033[0m'
@@ -75,53 +75,37 @@ DATE_NOW="$(date '+%Y-%m-%d')"
 TIME_NOW="$(date '+%H:%M')"
 DAY_NAME="$(date '+%A')"
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# DISPLAY
-# ═══════════════════════════════════════════════════════════════════════════════
 
-clear
-tput civis
-trap 'tput cnorm; exit' INT TERM
+# -------- ANIMATION --------
+animate() {
+    clear
+    tput civis
+    trap 'tput cnorm; exit' INT TERM
+    
+    local content
+    read -r -d '' content << EOM
+${LAVENDER}⧣₊˚﹒✦₊  ⧣₊˚   𓂃★   ⸝⸝   ⧣₊˚﹒✦₊  ⧣₊˚${RESET}
 
-# Animation delay
-DELAY=0.02
+      ${MAUVE}/)     /)
+    ${MAUve}(｡•ㅅ•｡)〝₎₎   ${PINK}luvrksknskye ✦₊ ˊ˗${RESET}
 
-animate_line() {
-    echo -e "$1"
-    sleep $DELAY
-}
+${MAUVE}╭∪─∪──────────────────── ${LAVENDER}✦ ⁺.${RESET}
+${MAUVE}│  ${TEXT} User     : ${YELLOW}${USER_NAME}${RESET}
+${MAUVE}│ 祥 ${TEXT} Uptime   : ${TEAL}${UPTIME}${RESET}
+${MAUVE}│ ⚧ ${TEXT} Pronouns : ${PINK}she/they${RESET}
+${MAUVE}│  ${TEXT} Date     : ${PEACH}${DATE_NOW}${RESET}
+${MAUVE}│ ✦ ${TEXT} Shell    : ${BLUE}${SHELL_NAME}${RESET}
+${MAUVE}│ ${OS_ICON} ${TEXT} OS       : ${GREEN}${OS_NAME}${RESET}
+${MAUVE}│  ${TEXT} Extra    : ${SKY}hai!!!${RESET}
+${MAUVE}╰─────────────────────── ${LAVENDER}✦ ⁺.${RESET}
 
-echo ""
+${LAVENDER}⧣₊˚﹒✦₊  ⧣₊˚   𓂃★   ⸝⸝   ⧣₊˚﹒✦₊  ⧣₊˚${RESET}
 
-animate_line "    ${PINK}*${MAUVE}.${LAVENDER}.${PINK}*${LAVENDER}.${MAUVE}.${PINK}*  ${MAUVE}*${LAVENDER}.${PINK}.${MAUVE}*${PINK}.${LAVENDER}.${MAUVE}*  ${LAVENDER}*${PINK}.${MAUVE}.${LAVENDER}*${MAUVE}.${PINK}.${LAVENDER}*${R}"
-echo ""
+EOM
 
-# Cute bunny ASCII art
-animate_line "    ${MAUVE}      /)     /)${R}"
-animate_line "    ${MAUVE}     ( .  . )${R}"
-animate_line "    ${MAUVE}     (  ${PINK}${ICON_HEART}${MAUVE}  )   ${PINK}luvrksknskye${R} ${LAVENDER}${ICON_SPARKLE}${R}"
-animate_line "    ${MAUVE}      |   |${R}"
-echo ""
+    echo -e "$content" | while IFS= read -r line; do
+        echo -e "$line"
+        sleep 0.02
+    done
 
-animate_line "    ${MAUVE}╭─────────────────────────────────────────╮${R}"
-animate_line "    ${MAUVE}│${R}                                         ${MAUVE}│${R}"
-animate_line "    ${MAUVE}│${R}  ${PINK}${ICON_USER}${R}  ${SUBTEXT0}User${R}      ${YELLOW}${USER_NAME}${R}"
-animate_line "    ${MAUVE}│${R}  ${TEAL}${ICON_HOME}${R}  ${SUBTEXT0}Host${R}      ${TEXT}${HOST_NAME}${R}"
-animate_line "    ${MAUVE}│${R}  ${SKY}${ICON_CLOCK}${R}  ${SUBTEXT0}Uptime${R}    ${TEAL}${UPTIME}${R}"
-animate_line "    ${MAUVE}│${R}  ${PINK}${ICON_HEART}${R}  ${SUBTEXT0}Pronouns${R}  ${PINK}she/they${R}"
-animate_line "    ${MAUVE}│${R}  ${PEACH}${ICON_CALENDAR}${R}  ${SUBTEXT0}Date${R}      ${PEACH}${DATE_NOW}${R}"
-animate_line "    ${MAUVE}│${R}  ${BLUE}${ICON_TERMINAL}${R}  ${SUBTEXT0}Shell${R}     ${BLUE}${SHELL_NAME}${R}"
-animate_line "    ${MAUVE}│${R}  ${GREEN}${OS_ICON}${R}  ${SUBTEXT0}OS${R}        ${GREEN}${OS_NAME}${R}"
-animate_line "    ${MAUVE}│${R}  ${LAVENDER}${ICON_STAR}${R}  ${SUBTEXT0}Vibe${R}      ${SKY}hai!!!${R}"
-animate_line "    ${MAUVE}│${R}                                         ${MAUVE}│${R}"
-animate_line "    ${MAUVE}╰─────────────────────────────────────────╯${R}"
-echo ""
-
-animate_line "    ${PINK}*${MAUVE}.${LAVENDER}.${PINK}*${LAVENDER}.${MAUVE}.${PINK}*  ${MAUVE}*${LAVENDER}.${PINK}.${MAUVE}*${PINK}.${LAVENDER}.${MAUVE}*  ${LAVENDER}*${PINK}.${MAUVE}.${LAVENDER}*${MAUVE}.${PINK}.${LAVENDER}*${R}"
-echo ""
-
-# Current time
-animate_line "    ${DIM}${SUBTEXT0}${DAY_NAME}, ${TIME_NOW}${R}"
-echo ""
-
-tput cnorm
+    tput cnorm
