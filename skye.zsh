@@ -37,6 +37,7 @@ alias k="luvrksnskye keys"           # keybindings
 alias hi="luvrksnskye greet"         # greeting
 alias r="luvrksnskye reload"         # reload services
 alias rain="terminal-rain"
+alias k="kew all"
 # ═══════════════════════════════════════════════════════════════════════════════
 # READABLE ALIASES - For clarity
 # ═══════════════════════════════════════════════════════════════════════════════
