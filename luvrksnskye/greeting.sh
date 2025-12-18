@@ -3,12 +3,16 @@
 # ╭─────────────────────────────────────────────────────────────────────────────╮
 # │                                                                             │
 # │     ✧･ﾟ: *✧･ﾟ:*  GREETING DASHBOARD  *:･ﾟ✧*:･ﾟ✧                           │
-# │                                                                                                          │
+# │                                                                             │
+# │              Time-based Animated Greeting                                   │
+# │              Weather • Moon Phase • Activity Report                         │
+# │              Caracas, Venezuela 🇻🇪                                          │
+# │              Catppuccin Mocha Theme                                         │
 # │                                                                             │
 # ╰─────────────────────────────────────────────────────────────────────────────╯
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# COLORS — Catppuccin Mocha 
+# COLORS — Catppuccin Mocha
 # ═══════════════════════════════════════════════════════════════════════════════
 
 R='\033[0m'
@@ -126,18 +130,18 @@ animate_line() {
     local text="$1"
     local delay="${2:-$DELAY}"
     echo -e "$text"
-    sleep $delay
+    sleep "$delay"
 }
 
 type_text() {
     local text="$1"
     local color="${2:-$TEXT}"
     local delay="${3:-0.02}"
-    
+
     echo -ne "$color"
     for (( i=0; i<${#text}; i++ )); do
         echo -n "${text:$i:1}"
-        sleep $delay
+        sleep "$delay"
     done
     echo -e "$R"
 }
@@ -146,11 +150,11 @@ spinner() {
     local pid=$1
     local delay=0.1
     local spinstr='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
-    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+    while kill -0 "$pid" 2>/dev/null; do
         local temp=${spinstr#?}
         printf " ${MAUVE}%c${R}  " "$spinstr"
-        local spinstr=$temp${spinstr%"$temp"}
-        sleep $delay
+        spinstr=$temp${spinstr%"$temp"}
+        sleep "$delay"
         printf "\b\b\b\b"
     done
     printf "    \b\b\b\b"
@@ -161,10 +165,20 @@ spinner() {
 # ═══════════════════════════════════════════════════════════════════════════════
 
 fetch_weather() {
-    # Try to fetch weather data with timeout
-   WEATHER_DATA=$(curl -s --max-time 30 "wttr.in/${LOCATION}?format=j1" 2>/dev/null)
-    
-    if [ -n "$WEATHER_DATA" ] && echo "$WEATHER_DATA" | grep -q "temp_C"; then
+    local tmp pid
+    tmp="$(mktemp)"
+
+    # SOLO el curl va en background (para el spinner)
+    curl -s --max-time 30 "wttr.in/${LOCATION}?format=j1" > "$tmp" 2>/dev/null &
+    pid=$!
+
+    spinner "$pid"
+    wait "$pid" 2>/dev/null
+
+    WEATHER_DATA="$(cat "$tmp" 2>/dev/null)"
+    rm -f "$tmp"
+
+    if [ -n "$WEATHER_DATA" ] && echo "$WEATHER_DATA" | grep -q '"temp_C"'; then
         TEMP_C=$(echo "$WEATHER_DATA" | grep -o '"temp_C": *"[^"]*"' | head -1 | grep -o '[0-9]*')
         FEELS_LIKE=$(echo "$WEATHER_DATA" | grep -o '"FeelsLikeC": *"[^"]*"' | head -1 | grep -o '[0-9]*')
         HUMIDITY=$(echo "$WEATHER_DATA" | grep -o '"humidity": *"[^"]*"' | head -1 | grep -o '[0-9]*')
@@ -175,20 +189,19 @@ fetch_weather() {
         VISIBILITY=$(echo "$WEATHER_DATA" | grep -o '"visibility": *"[^"]*"' | head -1 | grep -o '[0-9]*')
         PRESSURE=$(echo "$WEATHER_DATA" | grep -o '"pressure": *"[^"]*"' | head -1 | grep -o '[0-9]*')
         CLOUDCOVER=$(echo "$WEATHER_DATA" | grep -o '"cloudcover": *"[^"]*"' | head -1 | grep -o '[0-9]*')
-        
-        # Sunrise/Sunset
+
         SUNRISE=$(echo "$WEATHER_DATA" | grep -o '"sunrise": *"[^"]*"' | head -1 | sed 's/"sunrise": *"//' | sed 's/"$//')
         SUNSET=$(echo "$WEATHER_DATA" | grep -o '"sunset": *"[^"]*"' | head -1 | sed 's/"sunset": *"//' | sed 's/"$//')
-        
-        # Moon data
+
         MOON_PHASE=$(echo "$WEATHER_DATA" | grep -o '"moon_phase": *"[^"]*"' | head -1 | sed 's/"moon_phase": *"//' | sed 's/"$//')
         MOON_ILLUM=$(echo "$WEATHER_DATA" | grep -o '"moon_illumination": *"[^"]*"' | head -1 | grep -o '[0-9]*')
         MOONRISE=$(echo "$WEATHER_DATA" | grep -o '"moonrise": *"[^"]*"' | head -1 | sed 's/"moonrise": *"//' | sed 's/"$//')
         MOONSET=$(echo "$WEATHER_DATA" | grep -o '"moonset": *"[^"]*"' | head -1 | sed 's/"moonset": *"//' | sed 's/"$//')
-        
+
         WEATHER_LOADED=true
+        USING_FALLBACK=false
     else
-        # Fallback: Typical Caracas weather data (December averages)
+        # Fallback
         TEMP_C="25"
         FEELS_LIKE="26"
         HUMIDITY="75"
@@ -205,6 +218,7 @@ fetch_weather() {
         MOON_ILLUM="2"
         MOONRISE="05:15 AM"
         MOONSET="04:45 PM"
+
         WEATHER_LOADED=true
         USING_FALLBACK=true
     fi
@@ -215,16 +229,15 @@ get_weather_icon() {
     case "$desc" in
         *sunny*|*clear*)
             if [ $HOUR -ge 6 ] && [ $HOUR -lt 19 ]; then
-                echo ""
+                echo "$ICON_SUN"
             else
-                echo ""
+                echo "$ICON_MOON"
             fi
             ;;
-        *partly*cloudy*) echo "" ;;
-        *cloudy*|*overcast*) echo "" ;;
-        *rain*|*drizzle*) echo "" ;;
-        *thunder*|*storm*) echo "" ;;
-        *snow*) echo "" ;;
+        *partly*cloudy*) echo "$ICON_CLOUD" ;;
+        *cloudy*|*overcast*) echo "$ICON_CLOUD" ;;
+        *rain*|*drizzle*) echo "$ICON_RAIN" ;;
+        *thunder*|*storm*) echo "$ICON_BOLT" ;;
         *fog*|*mist*) echo "" ;;
         *) echo "" ;;
     esac
@@ -249,13 +262,13 @@ get_uv_level() {
     local uv=$1
     if [ -z "$uv" ]; then
         echo "N/A"
-    elif [ $uv -le 2 ]; then
+    elif [ "$uv" -le 2 ]; then
         echo "${GREEN}Low${R}"
-    elif [ $uv -le 5 ]; then
+    elif [ "$uv" -le 5 ]; then
         echo "${YELLOW}Moderate${R}"
-    elif [ $uv -le 7 ]; then
+    elif [ "$uv" -le 7 ]; then
         echo "${PEACH}High${R}"
-    elif [ $uv -le 10 ]; then
+    elif [ "$uv" -le 10 ]; then
         echo "${RED}Very High${R}"
     else
         echo "${MAUVE}Extreme${R}"
@@ -269,8 +282,9 @@ get_uv_level() {
 get_activity_suggestions() {
     local period=$1
     local temp=$2
-    local weather=$(echo "$3" | tr '[:upper:]' '[:lower:]')
-    
+    local weather
+    weather=$(echo "$3" | tr '[:upper:]' '[:lower:]')
+
     case "$period" in
         morning)
             if [[ "$weather" == *rain* ]] || [[ "$weather" == *storm* ]]; then
@@ -280,7 +294,7 @@ get_activity_suggestions() {
             fi
             ;;
         afternoon)
-            if [ -n "$temp" ] && [ $temp -gt 28 ]; then
+            if [ -n "$temp" ] && [ "$temp" -gt 28 ]; then
                 echo "Indoor work session|Swimming pool time|Power nap"
             else
                 echo "Productive meetings|Creative project|Downtown stroll"
@@ -306,7 +320,7 @@ year_progress() {
     local bar_width=30
     local filled=$((percentage * bar_width / 100))
     local empty=$((bar_width - filled))
-    
+
     printf "${SURFACE0}["
     for ((i=0; i<filled; i++)); do printf "${GREEN}━"; done
     for ((i=0; i<empty; i++)); do printf "${SURFACE2}─"; done
@@ -321,10 +335,9 @@ clear
 tput civis
 trap 'tput cnorm; exit' INT TERM
 
-# Fetch weather data with loading indicator
+# Fetch weather data (spinner happens INSIDE fetch_weather)
 echo -ne "    ${DIM}${SUBTEXT0}Loading data...${R}"
-fetch_weather &
-spinner $!
+fetch_weather
 echo -ne "\r                           \r"
 
 echo ""
@@ -404,12 +417,12 @@ echo ""
 if [ "$WEATHER_LOADED" = true ]; then
     WEATHER_ICON=$(get_weather_icon "$WEATHER_DESC")
     UV_LEVEL=$(get_uv_level "$UV_INDEX")
-    
+
     FALLBACK_NOTE=""
     if [ "$USING_FALLBACK" = true ]; then
         FALLBACK_NOTE=" ${DIM}(typical data)${R}"
     fi
-    
+
     animate_line "    ${TEAL}╭───────────────────────────────────────────────────────────────╮${R}" $VERY_FAST
     animate_line "    ${TEAL}│${R}  ${WEATHER_ICON}  ${B}${TEXT}CURRENT WEATHER${R}${FALLBACK_NOTE}                                ${TEAL}│${R}" $FAST_DELAY
     animate_line "    ${TEAL}├───────────────────────────────────────────────────────────────┤${R}" $VERY_FAST
@@ -426,18 +439,16 @@ if [ "$WEATHER_LOADED" = true ]; then
     animate_line "    ${TEAL}├───────────────────────────────────────────────────────────────┤${R}" $VERY_FAST
     animate_line "    ${TEAL}│${R}  ${ICON_SUNRISE} Sunrise   ${PEACH}${SUNRISE}${R}         ${ICON_SUNSET_2} Sunset     ${PEACH}${SUNSET}${R}        ${TEAL}│${R}" $FAST_DELAY
     animate_line "    ${TEAL}╰───────────────────────────────────────────────────────────────╯${R}" $VERY_FAST
-    
+
     echo ""
-    
+
     # ═══════════════════════════════════════════════════════════════════════════════
     # MOON PHASE SECTION
     # ═══════════════════════════════════════════════════════════════════════════════
-    
+
     MOON_ICON=$(get_moon_icon "$MOON_PHASE")
-    
-    # Moon phase names (already in English from API)
     MOON_PHASE_EN="$MOON_PHASE"
-    
+
     animate_line "    ${MAUVE}╭───────────────────────────────────────╮${R}" $VERY_FAST
     animate_line "    ${MAUVE}│${R}  ${MOON_ICON}  ${B}${TEXT}MOON PHASE${R}                          ${MAUVE}│${R}" $FAST_DELAY
     animate_line "    ${MAUVE}├───────────────────────────────────────┤${R}" $VERY_FAST
@@ -449,7 +460,6 @@ if [ "$WEATHER_LOADED" = true ]; then
     animate_line "    ${MAUVE}│${R}   ${ICON_MOON} Sets    ${PINK}${MOONSET}${R}                 ${MAUVE}│${R}" $FAST_DELAY
     animate_line "    ${MAUVE}│${R}                                       ${MAUVE}│${R}" $VERY_FAST
     animate_line "    ${MAUVE}╰───────────────────────────────────────╯${R}" $VERY_FAST
-    
 else
     animate_line "    ${RED}╭───────────────────────────────────────╮${R}" $VERY_FAST
     animate_line "    ${RED}│${R}  ${ICON_INFO} ${TEXT}Could not load weather data${R}       ${RED}│${R}" $FAST_DELAY
