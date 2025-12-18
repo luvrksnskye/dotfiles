@@ -43,6 +43,20 @@ reload() {
     echo "All configurations reloaded successfully!"
 }
 
+# Recording mode - stops yabai completely
+rec-mode() {
+    echo "🎬 Stopping yabai for recording..."
+    yabai --stop-service
+    echo "✅ Yabai stopped. Ready to record!"
+}
+
+# Normal mode - starts yabai again
+normal-mode() {
+    echo "✨ Starting yabai..."
+    yabai --start-service
+    echo "✅ Yabai running. Back to normal!"
+}
+
 
 # Editor
 alias v="nvim"

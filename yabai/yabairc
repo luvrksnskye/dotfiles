@@ -136,6 +136,17 @@ yabai -m rule --add app="^Digital Color"       manage=off
 yabai -m rule --add app="^Disk Utility$"       manage=off
 yabai -m rule --add app="^KeyboardCleanTool$"  manage=off
 
+# Screen recording apps
+yabai -m rule --add app="^TapRecord$"         manage=off
+yabai -m rule --add app="^OBS$"               manage=off
+yabai -m rule --add app="^OBS Studio$"        manage=off
+yabai -m rule --add app="^Screen Recording$"  manage=off
+yabai -m rule --add app="^QuickTime Player$"  manage=off
+yabai -m rule --add app="^Kap$"               manage=off
+yabai -m rule --add app="^CleanShot"          manage=off
+yabai -m rule --add app="^ScreenFlow"         manage=off
+yabai -m rule --add app="^Loom$"              manage=off
+
 # Float specific windows
 yabai -m rule --add title="^Preferences$"      manage=off
 yabai -m rule --add title="^Settings$"         manage=off
