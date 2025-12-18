@@ -162,7 +162,7 @@ spinner() {
 
 fetch_weather() {
     # Try to fetch weather data with timeout
-   WEATHER_DATA=$(curl -s --max-time 10 "wttr.in/${LOCATION}?format=j1" 2>/dev/null)
+   WEATHER_DATA=$(curl -s --max-time 30 "wttr.in/${LOCATION}?format=j1" 2>/dev/null)
     
     if [ -n "$WEATHER_DATA" ] && echo "$WEATHER_DATA" | grep -q "temp_C"; then
         TEMP_C=$(echo "$WEATHER_DATA" | grep -o '"temp_C": *"[^"]*"' | head -1 | grep -o '[0-9]*')
