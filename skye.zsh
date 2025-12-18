@@ -2,8 +2,7 @@
 # │                                                                             │
 # │     ✧･ﾟ: *✧･ﾟ:*  SKYE'S ZSH CONFIG  *:･ﾟ✧*:･ﾟ✧                            │
 # │                                                                             │
-# │              Add to ~/.zshrc: source ~/.config/skye.zsh                     
-                            │
+# │              Add to ~/.zshrc: source ~/.config/skye.zsh                     │
 # │                                                                             │
 # ╰─────────────────────────────────────────────────────────────────────────────╯
 
@@ -177,16 +176,25 @@ setopt HIST_REDUCE_BLANKS
 
 aliases() {
     echo ""
-    echo "  ✧ LUVR Quick Reference ✧"
-    echo ""
-    echo "  WALLPAPER          PRODUCTIVITY       SYSTEM"
-    echo "  ──────────         ────────────       ──────"
-    echo "  w    selector      p    pomodoro      me   whoami"
-    echo "  wr   random        t    todo          k    keys"
-    echo "  wl   list          m    mood          hi   greeting"
-    echo "  ws   set                              r    reload"
-    echo ""
-    echo ""
-    echo "  TODO: ta 'task'  (add)   tl  (list)   td 1  (done)"
+    echo "  ╭─────────────────────────────────────────────────╮"
+    echo "  │         ✧ LUVR Quick Reference ✧               │"
+    echo "  ├─────────────────────────────────────────────────┤"
+    echo "  │  Command │ Description                          │"
+    echo "  ├──────────┼──────────────────────────────────────┤"
+    echo "  │  luvr    │ Open interactive menu                │"
+    echo "  │  w       │ Wallpaper selector                   │"
+    echo "  │  wr      │ Random wallpaper                     │"
+    echo "  │  wl      │ List wallpapers                      │"
+    echo "  │  ws      │ Set wallpaper (ws img.jpg)           │"
+    echo "  │  p       │ Pomodoro timer                       │"
+    echo "  │  t       │ Todo list                            │"
+    echo "  │  m       │ Mood tracker                         │"
+    echo "  │  me      │ Who am I card                        │"
+    echo "  │  k       │ Keybindings                          │"
+    echo "  │  hi      │ Greeting                             │"
+    echo "  │  r       │ Reload services                      │"
+    echo "  ├──────────┴──────────────────────────────────────┤"
+    echo "  │  TODO: ta 'task' (add)  tl (list)  td 1 (done)  │"
+    echo "  ╰─────────────────────────────────────────────────╯"
     echo ""
 }

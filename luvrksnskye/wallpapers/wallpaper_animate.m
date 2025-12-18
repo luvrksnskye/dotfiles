@@ -120,6 +120,9 @@ static void animateLiquid(const char *path, double duration) {
         clock_gettime(CLOCK_MONOTONIC, &start);
         double elapsed = 0.0;
         
+        // Set wallpaper early (at 70% of animation) to prevent flash
+        BOOL wallpaperSet = NO;
+        
         // Animate circle expanding
         while (elapsed < duration) {
             clock_gettime(CLOCK_MONOTONIC, &current);
@@ -128,6 +131,13 @@ static void animateLiquid(const char *path, double duration) {
             double progress = fmin(elapsed / duration, 1.0);
             double easedProgress = easeOutQuart(progress);
             double radius = maxRadius * easedProgress;
+            
+            // Set wallpaper at 70% progress to ensure no flash
+            if (!wallpaperSet && progress >= 0.7) {
+                setWallpaper(path);
+                wallpaperSet = YES;
+                pumpRunLoop();
+            }
             
             // Create circle path centered on screen
             CGMutablePathRef circlePath = CGPathCreateMutable();
@@ -144,9 +154,17 @@ static void animateLiquid(const char *path, double duration) {
             usleep((useconds_t)(frameDuration * 1000000));
         }
         
-        // Set actual wallpaper and cleanup
-        setWallpaper(path);
-        usleep(50000);
+        // Ensure wallpaper is set if animation was very short
+        if (!wallpaperSet) {
+            setWallpaper(path);
+            pumpRunLoop();
+        }
+        
+        // Small delay to let wallpaper render before closing window
+        usleep(100000); // 100ms
+        pumpRunLoop();
+        
+        // Close window
         [window orderOut:nil];
         [window close];
     }
@@ -183,7 +201,6 @@ int main(int argc, const char *argv[]) {
         
         animateLiquid(imagePath, duration);
         
-        usleep(50000);
         return EXIT_SUCCESS;
     }
 }

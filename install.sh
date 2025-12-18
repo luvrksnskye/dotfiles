@@ -272,9 +272,3 @@ echo -e "  ${C_MAUVE}k${C_RESET}           ${C_DIM}${ICON_ARROW} Keybindings${C_
 echo -e "  ${C_MAUVE}hi${C_RESET}          ${C_DIM}${ICON_ARROW} Greeting${C_RESET}"
 echo -e "  ${C_MAUVE}r${C_RESET}           ${C_DIM}${ICON_ARROW} Reload services${C_RESET}"
 echo ""
-
-section "Wallpaper Effects"
-echo -e "  ${C_PEACH}wave${C_RESET}  ${C_TEAL}fade${C_RESET}  ${C_GREEN}grow${C_RESET}  ${C_MAUVE}liquid${C_RESET}  ${C_PINK}spiral${C_RESET}  ${C_BLUE}fold${C_RESET}  ${C_LAVENDER}slide${C_RESET}  ${C_YELLOW}bloom${C_RESET}  ${C_RED}glitch${C_RESET}"
-echo ""
-echo -e "  ${C_DIM}Usage: ws image.jpg fade${C_RESET}"
-echo ""
