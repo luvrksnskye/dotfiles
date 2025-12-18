@@ -10,39 +10,23 @@ Haiii this is my macOS desktop setup with Aerospace as the window manager, Sketc
     ███████║██║  ██╗   ██║   ███████╗
     ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝
 ```
-
----
-
-## Features
-
-- Yabai tiling window manager with fluid animations (configured via built-in `asmvik` fork features)
-- skhd for keyboard shortcuts
-- SketchyBar with Spotify + Apple Music support
-- Animated wallpaper transitions (now with "slide" effect, "liquid" is default)
-- Enhanced terminal interfaces for custom scripts
-- Catppuccin Mocha theme
-
 ---
 
 ## Installation
 
-### Prerequisites
+This repository contains two installation methods. Follow the one for your operating system.
 
-Partially disable SIP for full Yabai features (animations, opacity, etc.).
+### macOS Installation (Full Desktop Experience)
 
-```bash
-# Required
-brew install koekeishiya/formulae/yabai
-brew install koekeishiya/formulae/skhd
-brew install sketchybar
-brew tap FelixKratz/formulae && brew install borders
-brew install --cask font-jetbrains-mono-nerd-font
+This will install the complete macOS desktop environment, including window manager, status bar, and shell configurations.
 
-# Recommended
-brew install fzf jq nowplaying-cli chafa neofetch cava
-```
+#### 1. Prerequisites
 
-### Install
+Install [Homebrew](https://brew.sh/). The script will handle the rest of the dependencies. You may need to partially disable SIP for some of Yabai's features like animations.
+
+#### 2. Run the Installer
+
+Clone the repository and run the `install.sh` script. It will automatically install required fonts and applications via Homebrew, then back up any existing dotfiles and copy the new ones into place.
 
 ```bash
 git clone https://github.com/luvrksnskye/dotfiles.git
@@ -51,10 +35,10 @@ chmod +x install.sh
 ./install.sh
 ```
 
-### Post-Install
+#### 3. Post-Install
 
 ```bash
-# Add to ~/.zshrc
+# Add to ~/.zshrc if you use Zsh
 source ~/.config/skye.zsh
 
 # Start services
@@ -63,6 +47,31 @@ skhd --start-service
 brew services start sketchybar
 brew services start borders
 ```
+
+### Windows Installation (Nushell, Starship, etc)
+
+This method installs a complete shell environment (Nushell, Starship) for a consistent experience on Windows 10/11 that I made for my bf!
+
+#### 1. Run the Installer
+
+Clone the repository. Then, right-click the `install.ps1` script and select "Run with PowerShell".
+
+The script will ask for Administrator privileges to automatically install all required dependencies using `winget`, including:
+- A Nerd Font (via the OhMyPosh package)
+- Nushell
+- Starship
+
+It will then install the configurations for you.
+
+```powershell
+git clone https://github.com/luvrksnskye/dotfiles.git
+cd dotfiles
+./install.ps1
+```
+
+#### 2. Post-Install
+
+After the script finishes, you just need to configure your terminal (like Windows Terminal or Fluent Terminal) to use your new Nerd Font (e.g., `JetBrainsMono NF`) and set Nushell as your default shell.
 
 ---
 

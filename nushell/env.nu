@@ -1,77 +1,122 @@
+# =============================================================================
+# Nushell Environment Configuration
+# Platform: macOS Intel
+# =============================================================================
 
+# -----------------------------------------------------------------------------
+# XDG Base Directories
+# -----------------------------------------------------------------------------
+$env.XDG_CONFIG_HOME = ($env.HOME | path join ".config")
+$env.XDG_DATA_HOME = ($env.HOME | path join ".local" "share")
+$env.XDG_CACHE_HOME = ($env.HOME | path join ".cache")
+$env.XDG_STATE_HOME = ($env.HOME | path join ".local" "state")
+
+# -----------------------------------------------------------------------------
+# Editor Configuration
+# -----------------------------------------------------------------------------
 $env.EDITOR = "code"
 $env.VISUAL = "code"
+$env.PAGER = "less -RF"
 
-# =========================
+# -----------------------------------------------------------------------------
+# Locale
+# -----------------------------------------------------------------------------
+$env.LANG = "en_US.UTF-8"
+$env.LC_ALL = "en_US.UTF-8"
+
+# -----------------------------------------------------------------------------
+# Homebrew (macOS Intel)
+# -----------------------------------------------------------------------------
+$env.HOMEBREW_PREFIX = "/usr/local"
+$env.HOMEBREW_CELLAR = "/usr/local/Cellar"
+$env.HOMEBREW_REPOSITORY = "/usr/local/Homebrew"
+$env.HOMEBREW_NO_ANALYTICS = "1"
+
+# -----------------------------------------------------------------------------
+# Node.js
+# -----------------------------------------------------------------------------
+$env.NODE_ENV = "development"
+$env.NPM_CONFIG_PREFIX = ($env.HOME | path join ".npm-global")
+
+# -----------------------------------------------------------------------------
+# Python
+# -----------------------------------------------------------------------------
+$env.PYTHONDONTWRITEBYTECODE = "1"
+$env.PYTHONUNBUFFERED = "1"
+$env.VIRTUAL_ENV_DISABLE_PROMPT = "1"
+
+# -----------------------------------------------------------------------------
+# Java (SDKMAN)
+# -----------------------------------------------------------------------------
+$env.SDKMAN_DIR = ($env.HOME | path join ".sdkman")
+
+# -----------------------------------------------------------------------------
+# Docker
+# -----------------------------------------------------------------------------
+$env.DOCKER_BUILDKIT = "1"
+$env.COMPOSE_DOCKER_CLI_BUILD = "1"
+
+# -----------------------------------------------------------------------------
+# Go
+# -----------------------------------------------------------------------------
+$env.GOPATH = ($env.HOME | path join "go")
+$env.GOBIN = ($env.HOME | path join "go" "bin")
+$env.GO111MODULE = "on"
+
+# -----------------------------------------------------------------------------
+# Rust
+# -----------------------------------------------------------------------------
+$env.CARGO_HOME = ($env.HOME | path join ".cargo")
+$env.RUSTUP_HOME = ($env.HOME | path join ".rustup")
+
+# -----------------------------------------------------------------------------
 # Starship
-# =========================
+# -----------------------------------------------------------------------------
+$env.STARSHIP_CONFIG = ($env.XDG_CONFIG_HOME | path join "starship.toml")
+$env.STARSHIP_CACHE = ($env.XDG_CACHE_HOME | path join "starship")
 
-$env.STARSHIP_CONFIG = $"($env.HOME)/.config/starship/starship.toml"
-$env.STARSHIP_CACHE = $"($env.HOME)/.cache/starship"
-# Nushell Environment Config File
-#
-# version = "0.95.0"
+# -----------------------------------------------------------------------------
+# FZF (Catppuccin Mocha colors)
+# -----------------------------------------------------------------------------
+$env.FZF_DEFAULT_OPTS = "--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 --border rounded --height 40%"
 
-def create_left_prompt [] {
-    let dir = match (do --ignore-shell-errors { $env.PWD | path relative-to $nu.home-path }) {
-        null => $env.PWD
-        '' => '~'
-        $relative_pwd => ([~ $relative_pwd] | path join)
-    }
-
-    let path_color = (if (is-admin) { ansi red_bold } else { ansi green_bold })
-    let separator_color = (if (is-admin) { ansi light_red_bold } else { ansi light_green_bold })
-    let path_segment = $"($path_color)($dir)"
-
-    $path_segment | str replace --all (char path_sep) $"($separator_color)(char path_sep)($path_color)"
+# -----------------------------------------------------------------------------
+# PATH Construction
+# -----------------------------------------------------------------------------
+def create-path-list [] {
+    let base_paths = [
+        "/usr/local/bin"
+        "/usr/local/sbin"
+        "/usr/bin"
+        "/usr/sbin"
+        "/bin"
+        "/sbin"
+    ]
+    
+    let user_paths = [
+        ($env.HOME | path join ".local" "bin")
+        ($env.HOME | path join "bin")
+    ]
+    
+    let dev_paths = [
+        ($env.HOME | path join ".npm-global" "bin")
+        ($env.HOME | path join ".cargo" "bin")
+        ($env.HOME | path join "go" "bin")
+        ($env.HOME | path join ".pyenv" "shims")
+        ($env.HOME | path join ".pyenv" "bin")
+        ($env.HOME | path join ".sdkman" "candidates" "java" "current" "bin")
+        ($env.HOME | path join ".sdkman" "candidates" "maven" "current" "bin")
+        ($env.HOME | path join ".sdkman" "candidates" "gradle" "current" "bin")
+    ]
+    
+    $user_paths | append $dev_paths | append $base_paths | where { path exists }
 }
 
-def create_right_prompt [] {
-    # create a right prompt in magenta with green separators and am/pm underlined
-    let time_segment = ([
-        (ansi reset)
-        (ansi magenta)
-        (date now | format date '%x %X') # try to respect user's locale
-    ] | str join | str replace --regex --all "([/:])" $"(ansi green)${1}(ansi magenta)" |
-        str replace --regex --all "([AP]M)" $"(ansi magenta_underline)${1}")
+$env.PATH = (create-path-list | uniq)
 
-    let last_exit_code = if ($env.LAST_EXIT_CODE != 0) {([
-        (ansi rb)
-        ($env.LAST_EXIT_CODE)
-    ] | str join)
-    } else { "" }
-
-    ([$last_exit_code, (char space), $time_segment] | str join)
-}
-
-# Use nushell functions to define your right and left prompt
-$env.PROMPT_COMMAND = {|| create_left_prompt }
-# FIXME: This default is not implemented in rust code as of 2023-09-08.
-$env.PROMPT_COMMAND_RIGHT = {|| create_right_prompt }
-
-# The prompt indicators are environmental variables that represent
-# the state of the prompt
-$env.PROMPT_INDICATOR = {|| "> " }
-$env.PROMPT_INDICATOR_VI_INSERT = {|| ": " }
-$env.PROMPT_INDICATOR_VI_NORMAL = {|| "> " }
-$env.PROMPT_MULTILINE_INDICATOR = {|| "::: " }
-
-# If you want previously entered commands to have a different prompt from the usual one,
-# you can uncomment one or more of the following lines.
-# This can be useful if you have a 2-line prompt and it's taking up a lot of space
-# because every command entered takes up 2 lines instead of 1. You can then uncomment
-# the line below so that previously entered commands show with a single `🚀`.
-# $env.TRANSIENT_PROMPT_COMMAND = {|| "🚀 " }
-# $env.TRANSIENT_PROMPT_INDICATOR = {|| "" }
-# $env.TRANSIENT_PROMPT_INDICATOR_VI_INSERT = {|| "" }
-# $env.TRANSIENT_PROMPT_INDICATOR_VI_NORMAL = {|| "" }
-# $env.TRANSIENT_PROMPT_MULTILINE_INDICATOR = {|| "" }
-# $env.TRANSIENT_PROMPT_COMMAND_RIGHT = {|| "" }
-
-# Specifies how environment variables are:
-# - converted from a string to a value on Nushell startup (from_string)
-# - converted from a value back to a string when running external commands (to_string)
-# Note: The conversions happen *after* config.nu is loaded
+# -----------------------------------------------------------------------------
+# Prompt Converters
+# -----------------------------------------------------------------------------
 $env.ENV_CONVERSIONS = {
     "PATH": {
         from_string: { |s| $s | split row (char esep) | path expand --no-symlink }
@@ -82,50 +127,3 @@ $env.ENV_CONVERSIONS = {
         to_string: { |v| $v | path expand --no-symlink | str join (char esep) }
     }
 }
-
-# Directories to search for scripts when calling source or use
-# The default for this is $nu.default-config-dir/scripts
-$env.NU_LIB_DIRS = [
-    ($nu.default-config-dir | path join 'scripts') # add <nushell-config-dir>/scripts
-    ($nu.data-dir | path join 'completions') # default home for nushell completions
-]
-
-# Directories to search for plugin binaries when calling register
-# The default for this is $nu.default-config-dir/plugins
-$env.NU_PLUGIN_DIRS = [
-    ($nu.default-config-dir | path join 'plugins') # add <nushell-config-dir>/plugins
-]
-
-# To add entries to PATH (on Windows you might use Path), you can use the following pattern:
-# $env.PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
-# An alternate way to add entries to $env.PATH is to use the custom command `path add`
-# which is built into the nushell stdlib:
-use std "path add"
-# $env.PATH = ($env.PATH | split row (char esep))
-# path add /some/path
-# path add ($env.CARGO_HOME | path join "bin")
-# path add ($env.HOME | path join ".local" "bin")
-# $env.PATH = ($env.PATH | uniq)
-
-if 'IN_NIX_SHELL' not-in $env and 'DEVBOX_SHELL_ENABLED' not-in $env {
-    $env.PATH = ($env.PATH | append [
-        /opt/homebrew/bin
-        /run/current-system/sw/bin
-        /Users/omerxx/.local/bin
-        /opt/homebrew/opt/ruby/bin
-        /opt/homebrew/sbin
-        /Users/omerxx/.opencode/bin
-    ])
-}
-
-devbox global shellenv --format nushell --preserve-path-stack -r
-  | lines 
-  | parse "$env.{name} = \"{value}\""
-  | where name != null 
-  | transpose -r 
-  | into record 
-  | load-env
-
-# Set custom variables for dev environment
-$env.DEV_ENV = "development"
-$env.NODE_ENV = "development"       
