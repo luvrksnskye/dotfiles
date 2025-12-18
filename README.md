@@ -244,38 +244,6 @@ For a full and animated keybinding reference, run `luvr keys` or just `k` in you
 
 ---
 
-## File Structure
-
-```
-~/.config/
-├── luvrksnskye/           # Main toolkit
-│   ├── luvrksnskye        # Main script
-│   ├── skye.zsh           # Zsh config with aliases
-│   ├── greeting.sh
-│   ├── whoiam.sh
-│   ├── key_hints.sh
-│   ├── reload.sh
-│   ├── pomodoro.sh
-│   ├── todo.sh
-│   ├── mood.sh
-│   └── wallpapers/
-│       ├── wallpaper_select.sh
-│       ├── wallpaper_set.sh
-│       ├── wallpaper_list.sh
-│       ├── wallpaper_random.sh
-│       ├── wallpaper_animate.m
-│       ├── wallpaper_animate    # compiled binary
-│       └── Makefile
-├── yabai/
-├── skhd/
-├── sketchybar/
-├── borders/
-├── ghostty/
-└── starship/
-```
-
----
-
 ## Music
 
 SketchyBar supports both Spotify and Apple Music. Click the music widget to play/pause, right-click for next track.

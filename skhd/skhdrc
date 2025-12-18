@@ -164,7 +164,7 @@ shift + ctrl + alt - 3 : /usr/local/bin/yabai -m window --display 3 --focus
 # ┌────────────────────────────────────────────────────────────────────────────┐
 # │                        APP LAUNCHING                                       │
 # └────────────────────────────────────────────────────────────────────────────┘
-shift + alt - t : /usr/bin/open -na /Applications/Ghostty.app
+shift + alt - t : /usr/bin/open -na /Applications/Kitty.app
 shift + alt - b : /usr/bin/open -na "/Applications/Brave Browser.app"
 shift + alt - z : /usr/bin/open -na "/Applications/Zen Browser.app"
 shift + alt - o : /usr/bin/open -na /Applications/Obsidian.app

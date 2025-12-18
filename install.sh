@@ -220,7 +220,7 @@ install_config "Tmux" "$SCRIPT_DIR/tmux" "$HOME/.config/tmux"
 [ -f "$SCRIPT_DIR/starship/starship.toml" ] && { backup "$HOME/.config/starship.toml"; cp "$SCRIPT_DIR/starship/starship.toml" "$HOME/.config/starship.toml"; }
 
 section "Terminal"
-install_config "Ghostty" "$SCRIPT_DIR/ghostty" "$HOME/.config/ghostty"
+install_config "Kitty" "$SCRIPT_DIR/kitty" "$HOME/.config/kitty"
 install_config "Neofetch" "$SCRIPT_DIR/neofetch" "$HOME/.config/neofetch"
 install_config "Cava" "$SCRIPT_DIR/cava" "$HOME/.config/cava"
 install_config "Kew" "$SCRIPT_DIR/kew" "$HOME/.config/kew"
