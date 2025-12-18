@@ -9,7 +9,7 @@
 # │                                                                             │
 # ╰─────────────────────────────────────────────────────────────────────────────╯
 
-WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
+WALLPAPER_DIR="$HOME/Pictures/wallpapers"
 CACHE_DIR="$HOME/.cache/luvrksnskye"
 CACHE_FILE="$CACHE_DIR/current_wallpaper"
 
