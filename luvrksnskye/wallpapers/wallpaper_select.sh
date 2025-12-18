@@ -1,288 +1,381 @@
 #!/bin/bash
 
-# ╔════════════════════════════════════════════════════════════════════════════╗
-# ║                        WALLPAPER SELECTOR                                  ║
-# ╚════════════════════════════════════════════════════════════════════════════╝
+# ╭─────────────────────────────────────────────────────────────────────────────╮
+# │                                                                             │
+# │     ✧･ﾟ: *✧･ﾟ:*  WALLPAPER SELECTOR  *:･ﾟ✧*:･ﾟ✧                           │
+# │                                                                             │
+# │              Beautiful & Responsive Preview                                 │
+# │              Catppuccin Mocha · Feminine Edition                            │
+# │                                                                             │
+# ╰─────────────────────────────────────────────────────────────────────────────╯
 
 WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
-CACHE_FILE="$HOME/. cache/luvrksnskye/current_wallpaper"
+CACHE_DIR="$HOME/.cache/luvrksnskye"
+CACHE_FILE="$CACHE_DIR/current_wallpaper"
 
-# Display a notification
-send_notification() {
-    local message="$1"
-    /usr/bin/osascript -e "display notification \"${message}\" with title \"Wallpaper Selector\""
-}
-
-mkdir -p "$HOME/.cache/luvrksnskye"
+mkdir -p "$CACHE_DIR"
 mkdir -p "$WALLPAPER_DIR"
 
-# Colors — CATPPUCCIN MOCHA (True Color)
-C_RESET='\033[0m'
-C_DIM='\033[2m'
-C_BOLD='\033[1m'
-C_MAUVE='\033[38;2;203;166;247m'
-C_LAVENDER='\033[38;2;180;190;254m'
-C_PINK='\033[38;2;245;194;231m'
-C_BLUE='\033[38;2;137;180;250m'
-C_SKY='\033[38;2;137;220;235m'
-C_TEAL='\033[38;2;148;226;213m'
-C_GREEN='\033[38;2;166;227;161m'
-C_YELLOW='\033[38;2;249;226;175m'
-C_PEACH='\033[38;2;250;179;135m'
-C_TEXT='\033[38;2;205;214;244m'
-C_SUBTEXT='\033[38;2;166;173;200m'
-C_OVERLAY='\033[38;2;125;130;152m'
-C_SURFACE='\033[38;2;69;71;90m'
-C_BASE='\033[38;2;30;30;46m'
-C_MANTLE='\033[38;2;24;24;37m'
-C_CRUST='\033[38;2;17;17;27m'
+# ═══════════════════════════════════════════════════════════════════════════════
+# COLORS — Catppuccin Mocha (Feminine)
+# ═══════════════════════════════════════════════════════════════════════════════
 
-# Animator
+R='\033[0m'
+B='\033[1m'
+DIM='\033[2m'
+ITALIC='\033[3m'
+
+ROSEWATER='\033[38;2;245;224;220m'
+FLAMINGO='\033[38;2;242;205;205m'
+PINK='\033[38;2;245;194;231m'
+MAUVE='\033[38;2;203;166;247m'
+RED='\033[38;2;243;139;168m'
+MAROON='\033[38;2;235;160;172m'
+PEACH='\033[38;2;250;179;135m'
+YELLOW='\033[38;2;249;226;175m'
+GREEN='\033[38;2;166;227;161m'
+TEAL='\033[38;2;148;226;213m'
+SKY='\033[38;2;137;220;235m'
+SAPPHIRE='\033[38;2;116;199;236m'
+BLUE='\033[38;2;137;180;250m'
+LAVENDER='\033[38;2;180;190;254m'
+
+TEXT='\033[38;2;205;214;244m'
+SUBTEXT1='\033[38;2;186;194;222m'
+SUBTEXT0='\033[38;2;166;173;200m'
+OVERLAY0='\033[38;2;108;112;134m'
+SURFACE1='\033[38;2;69;71;90m'
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# NOTIFICATIONS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+notify() {
+    local message="$1"
+    local title="${2:-Wallpaper}"
+    osascript -e "display notification \"${message}\" with title \"${title}\"" 2>/dev/null
+}
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SETUP
+# ═══════════════════════════════════════════════════════════════════════════════
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ANIMATOR="$SCRIPT_DIR/wallpaper_animate"
-TRANSITION_TYPE="${1:-wave}"
+TRANSITION="${1:-wave}"
+DIRECTION="left"
 
-print_header() {
-  clear
-  echo ""
-  echo -e "${C_LAVENDER}"
-  cat << 'EOF'
-    ╭──────────────────────────────────────────────────────────────────╮
-    │                                                                  │
-    │                         WALLPAPER                               │
-    │                                                                  │
-    │                          SELECTOR                                │
-    │                                                                  │
-    │                                                                  │
-    ╰──────────────────────────────────────────────────────────────────╯
-EOF
-  echo -e "${C_RESET}"
-}
+# Export for fzf
+export WALLPAPER_DIR CACHE_FILE TRANSITION DIRECTION
+export PINK MAUVE LAVENDER GREEN PEACH R DIM SUBTEXT0 TEXT
 
-print_footer() {
-  echo ""
-  echo -e "${C_DIM}────────────────────────────────────────────────────────────────────${C_RESET}"
-  echo ""
-  echo -e "  ${C_SUBTEXT} Navigation${C_RESET}"
-  echo -e "  ${C_MAUVE}↑/↓${C_RESET}         Move selection"
-  echo -e "  ${C_MAUVE}⏎ Enter${C_RESET}       Apply wallpaper"
-  echo -e "  ${C_MAUVE}⇆ Tab${C_RESET}         Toggle preview"
-  echo -e "  ${C_MAUVE}⎋ Esc${C_RESET}         Cancel"
-  echo ""
-  echo -e "  ${C_SUBTEXT}✨ Transition effects${C_RESET}"
-  echo -e "  ${C_SKY}1${C_RESET} liquid   ${C_TEAL}2${C_RESET} wave   ${C_LAVENDER}3${C_RESET} grow   ${C_PEACH}4${C_RESET} fade   ${C_MAUVE}5${C_RESET} spiral   ${C_PINK}6${C_RESET} fold   ${C_BLUE}7${C_RESET} slide"
-  echo -e "  ${C_SUBTEXT}Press ${C_YELLOW}8${C_RESET} to change slide direction${C_RESET}"
-  echo ""
-}
+# ═══════════════════════════════════════════════════════════════════════════════
+# CHECK DEPENDENCIES
+# ═══════════════════════════════════════════════════════════════════════════════
 
-# Main selection logic
-main() {
-  # Check fzf
-  if !  command -v fzf &>/dev/null; then
-    print_header
+if ! command -v fzf &>/dev/null; then
     echo ""
-    echo -e "  ${C_PINK}fzf is required${C_RESET}"
-    echo -e "  ${C_LAVENDER}brew install fzf${C_RESET}"
+    echo -e "  ${PINK}✧ fzf is required${R}"
+    echo -e "  ${LAVENDER}brew install fzf${R}"
     echo ""
     exit 1
-  fi
+fi
 
-  # Find wallpapers
-  WALLPAPERS=$(find "$WALLPAPER_DIR" -maxdepth 1 -type f \( \
-    -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" \
-  \) 2>/dev/null | sort)
+# ═══════════════════════════════════════════════════════════════════════════════
+# FIND WALLPAPERS
+# ═══════════════════════════════════════════════════════════════════════════════
 
-  if [ -z "$WALLPAPERS" ]; then
-    print_header
+WALLPAPERS=$(find "$WALLPAPER_DIR" -maxdepth 1 -type f \( \
+    -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" -o -iname "*.gif" \
+\) 2>/dev/null | sort)
+
+if [ -z "$WALLPAPERS" ]; then
     echo ""
-    echo -e "  ${C_PINK}No wallpapers found${C_RESET}"
-    echo -e "  Add images to:  ${C_LAVENDER}$WALLPAPER_DIR${C_RESET}"
+    echo -e "  ${PINK}✧ No wallpapers found${R}"
+    echo -e "  ${LAVENDER}Add images to: $WALLPAPER_DIR${R}"
     echo ""
-    send_notification "No wallpapers found. Add images to ${WALLPAPER_DIR}." # Added notification
+    notify "No wallpapers found" "Add images to ~/Pictures/Wallpapers"
     exit 1
-  fi
+fi
 
-  CURRENT=""
-  [ -f "$CACHE_FILE" ] && CURRENT=$(cat "$CACHE_FILE")
+# Current wallpaper
+CURRENT=""
+[ -f "$CACHE_FILE" ] && CURRENT=$(cat "$CACHE_FILE")
 
-  display_list() {
+# ═══════════════════════════════════════════════════════════════════════════════
+# BUILD DISPLAY LIST
+# ═══════════════════════════════════════════════════════════════════════════════
+
+display_list() {
     while IFS= read -r path; do
-      name=$(basename "$path")
-      if [ "$path" = "$CURRENT" ]; then
-        echo "* $name"
-      else
-        echo "  $name"
-      fi
+        name=$(basename "$path")
+        if [ "$path" = "$CURRENT" ]; then
+            echo "♡ $name"
+        else
+            echo "  $name"
+        fi
     done <<< "$WALLPAPERS"
-  }
+}
 
-  print_header
-  print_footer
+# ═══════════════════════════════════════════════════════════════════════════════
+# BEAUTIFUL PREVIEW COMMAND
+# ═══════════════════════════════════════════════════════════════════════════════
 
-  # Set initial transition type
-  export TRANSITION="$TRANSITION_TYPE"
-  export DIRECTION="left"
+# Create preview script
+PREVIEW_SCRIPT=$(mktemp)
+cat > "$PREVIEW_SCRIPT" << 'PREVIEW_EOF'
+#!/bin/bash
 
-  # Function to change transition
-  change_transition() {
-    case "$1" in
-      1) TRANSITION="liquid" ;;
-      2) TRANSITION="wave" ;;
-      3) TRANSITION="grow" ;;
-      4) TRANSITION="fade" ;;
-      5) TRANSITION="spiral" ;;
-      6) TRANSITION="fold" ;;
-      7) TRANSITION="slide" ;;
-      *) TRANSITION="wave" ;;
-    esac
-    echo -e "\n  ${C_GREEN}Transition: ${C_RESET}${C_PINK}$TRANSITION${C_RESET}"
-  }
+# Colors
+R='\033[0m'
+B='\033[1m'
+DIM='\033[2m'
+PINK='\033[38;2;245;194;231m'
+MAUVE='\033[38;2;203;166;247m'
+LAVENDER='\033[38;2;180;190;254m'
+GREEN='\033[38;2;166;227;161m'
+PEACH='\033[38;2;250;179;135m'
+SKY='\033[38;2;137;220;235m'
+TEXT='\033[38;2;205;214;244m'
+SUBTEXT0='\033[38;2;166;173;200m'
+OVERLAY0='\033[38;2;108;112;134m'
+SURFACE1='\033[38;2;69;71;90m'
 
-  # Function to change slide direction
-  change_direction() {
-      case "$DIRECTION" in
-          left) DIRECTION="right" ;;
-          right) DIRECTION="up" ;;
-          up) DIRECTION="down" ;;
-          down) DIRECTION="left" ;;
-      esac
-      echo -e "\n  ${C_GREEN}Slide Direction: ${C_RESET}${C_PINK}$DIRECTION${C_RESET}"
-  }
+sel="$1"
+sel="${sel#♡ }"
+sel="${sel#  }"
+file="$WALLPAPER_DIR/$sel"
 
-  export -f change_transition
-  export -f change_direction
+# Get preview dimensions (responsive)
+COLS=$(tput cols 2>/dev/null || echo 80)
+LINES=$(tput lines 2>/dev/null || echo 24)
 
+# Calculate preview size (50% of terminal, with padding)
+PREVIEW_W=$(( (COLS / 2) - 6 ))
+PREVIEW_H=$(( LINES - 12 ))
 
-  # Custom preview command
-  PREVIEW_CMD="bash -lc '
-  sel=\"\$1\"
-  sel=\"\${sel#\* }\"
-  sel=\"\${sel#  }\"
-  file=\"$WALLPAPER_DIR/\$sel\"
+# Minimum sizes
+[ $PREVIEW_W -lt 20 ] && PREVIEW_W=20
+[ $PREVIEW_H -lt 8 ] && PREVIEW_H=8
 
-  # Get terminal size
-  TERM_WIDTH=\$(tput cols)
-  TERM_HEIGHT=\$(tput lines)
+# Maximum sizes for clean look
+[ $PREVIEW_W -gt 80 ] && PREVIEW_W=80
+[ $PREVIEW_H -gt 30 ] && PREVIEW_H=30
 
-  # fzf preview window is 50% of terminal width
-  # Allocate 48% of terminal width for image to leave some padding
-  PREVIEW_WIDTH=\$((\$TERM_WIDTH * 48 / 100))
-  PREVIEW_HEIGHT=\$((\$TERM_HEIGHT * 80 / 100)) # Use 80% of terminal height
+# Header
+echo ""
+echo -e "${MAUVE}  ╭────────────────────────────────────────╮${R}"
+echo -e "${MAUVE}  │${R}  ${PINK}✧${R} ${B}${TEXT}Preview${R}                              ${MAUVE}│${R}"
+echo -e "${MAUVE}  ╰────────────────────────────────────────╯${R}"
+echo ""
 
-  # Deduct some space for FZF UI and padding
-  PREVIEW_WIDTH=\$((PREVIEW_WIDTH - 4)) # Account for fzf border and padding
-  PREVIEW_HEIGHT=\$((PREVIEW_HEIGHT - 2)) # Account for fzf border and padding
+# Image preview with container
+if command -v chafa &>/dev/null; then
+    # Use chafa with symbols that work well
+    echo -e "${SURFACE1}  ┌$(printf '─%.0s' $(seq 1 $PREVIEW_W))┐${R}"
+    chafa --size="${PREVIEW_W}x${PREVIEW_H}" \
+          --format=symbols \
+          --symbols=block+border \
+          --colors=256 \
+          --dither=ordered \
+          --work=9 \
+          "$file" 2>/dev/null | while IFS= read -r line; do
+        echo -e "${SURFACE1}  │${R}${line}${SURFACE1}│${R}"
+    done
+    echo -e "${SURFACE1}  └$(printf '─%.0s' $(seq 1 $PREVIEW_W))┘${R}"
+elif command -v viu &>/dev/null; then
+    echo -e "${SURFACE1}  ┌$(printf '─%.0s' $(seq 1 $PREVIEW_W))┐${R}"
+    viu -w "$PREVIEW_W" -h "$PREVIEW_H" "$file" 2>/dev/null | while IFS= read -r line; do
+        echo -e "${SURFACE1}  │${R}${line}"
+    done
+    echo -e "${SURFACE1}  └$(printf '─%.0s' $(seq 1 $PREVIEW_W))┘${R}"
+elif command -v timg &>/dev/null; then
+    timg -g "${PREVIEW_W}x${PREVIEW_H}" "$file" 2>/dev/null
+elif command -v imgcat &>/dev/null; then
+    imgcat "$file" 2>/dev/null
+else
+    echo -e "${MAUVE}  ╭────────────────────────────────╮${R}"
+    echo -e "${MAUVE}  │${R}                                ${MAUVE}│${R}"
+    echo -e "${MAUVE}  │${R}   ${PINK}Preview requires chafa${R}       ${MAUVE}│${R}"
+    echo -e "${MAUVE}  │${R}   ${DIM}brew install chafa${R}           ${MAUVE}│${R}"
+    echo -e "${MAUVE}  │${R}                                ${MAUVE}│${R}"
+    echo -e "${MAUVE}  ╰────────────────────────────────╯${R}"
+fi
 
-  # Ensure minimum size to display some content
-  [ \$PREVIEW_WIDTH -lt 10 ] && PREVIEW_WIDTH=10
-  [ \$PREVIEW_HEIGHT -lt 5 ] && PREVIEW_HEIGHT=5
+echo ""
 
-  if command -v chafa &>/dev/null; then
-      chafa --size=\${PREVIEW_WIDTH}x\${PREVIEW_HEIGHT} --symbols=ascii+block+border --colors=256 --fill=space \"\$file\"
-  elif command -v viu &>/dev/null; then
-      viu --width \$PREVIEW_WIDTH --height \$PREVIEW_HEIGHT \"\$file\"
-  elif command -v timg &>/dev/null; then
-      timg -w \$PREVIEW_WIDTH -h \$PREVIEW_HEIGHT \"\$file\"
-  elif command -v imgcat &>/dev/null; then
-      # imgcat does not have size parameters, relies on terminal emulator.
-      # This might overflow the frame.
-      imgcat \"\$file\" 2>/dev/null
-  else
-      echo \"╭────────────────────────────────╮\"
-      echo \"│                                │\"
-      echo \"│    Preview not available       │\"
-      echo \"│    brew install chafa          │\"
-      echo \"│                                │\"
-      echo \"╰────────────────────────────────╯\"
-  fi
+# File info
+echo -e "${MAUVE}  ╭────────────────────────────────────────╮${R}"
+echo -e "${MAUVE}  │${R}  ${PINK}❀${R} ${B}${TEXT}Info${R}                                  ${MAUVE}│${R}"
+echo -e "${MAUVE}  ├────────────────────────────────────────┤${R}"
 
-  echo \"\"
-  echo \"\${C_DIM}File: \${C_RESET}\$(basename \"\$file\")\"
-  if command -v identify &>/dev/null; then
-      info=\$(identify -format \"%wx%h\" \"\$file\" 2>/dev/null)
-      echo \"\${C_DIM}Size:  \${C_RESET}\$info\"
-  fi
-  ' _ {}"
+# Filename (truncated if needed)
+fname=$(basename "$file")
+if [ ${#fname} -gt 34 ]; then
+    fname="${fname:0:31}..."
+fi
+printf "${MAUVE}  │${R}  ${SUBTEXT0}Name:${R} ${TEXT}%-34s${R}${MAUVE}│${R}\n" "$fname"
 
-  # fzf selector with keybindings
-  SELECTED=$(display_list | fzf \
+# File size
+if [ -f "$file" ]; then
+    size=$(ls -lh "$file" 2>/dev/null | awk '{print $5}')
+    printf "${MAUVE}  │${R}  ${SUBTEXT0}Size:${R} ${TEXT}%-34s${R}${MAUVE}│${R}\n" "$size"
+fi
+
+# Dimensions (if identify available)
+if command -v identify &>/dev/null; then
+    dims=$(identify -format "%wx%h" "$file" 2>/dev/null)
+    if [ -n "$dims" ]; then
+        printf "${MAUVE}  │${R}  ${SUBTEXT0}Dims:${R} ${TEXT}%-34s${R}${MAUVE}│${R}\n" "$dims"
+    fi
+fi
+
+# Format
+ext="${file##*.}"
+ext_upper=$(echo "$ext" | tr '[:lower:]' '[:upper:]')
+printf "${MAUVE}  │${R}  ${SUBTEXT0}Type:${R} ${TEXT}%-34s${R}${MAUVE}│${R}\n" "$ext_upper"
+
+echo -e "${MAUVE}  ╰────────────────────────────────────────╯${R}"
+echo ""
+
+# Current transition
+echo -e "${LAVENDER}  ╭────────────────────────────────────────╮${R}"
+echo -e "${LAVENDER}  │${R}  ${SKY}✦${R} ${TEXT}Transition: ${GREEN}${TRANSITION:-wave}${R}                  ${LAVENDER}│${R}"
+echo -e "${LAVENDER}  ╰────────────────────────────────────────╯${R}"
+
+PREVIEW_EOF
+chmod +x "$PREVIEW_SCRIPT"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# FZF SELECTOR
+# ═══════════════════════════════════════════════════════════════════════════════
+
+clear
+
+# Header
+echo ""
+echo -e "    ${PINK}✧${MAUVE}·${LAVENDER}˚${PINK}❀${LAVENDER}˚${MAUVE}·${PINK}✧  ${MAUVE}✧${LAVENDER}·${PINK}˚${MAUVE}❀${PINK}˚${LAVENDER}·${MAUVE}✧  ${LAVENDER}✧${PINK}·${MAUVE}˚${LAVENDER}❀${MAUVE}˚${PINK}·${LAVENDER}✧${R}"
+echo ""
+
+# Transition state file
+TRANS_FILE=$(mktemp)
+echo "$TRANSITION" > "$TRANS_FILE"
+DIR_FILE=$(mktemp)
+echo "$DIRECTION" > "$DIR_FILE"
+
+export TRANS_FILE DIR_FILE
+
+SELECTED=$(display_list | fzf \
     --ansi \
     --no-bold \
     --cycle \
     --reverse \
     --border=rounded \
-    --border-label=" ╱|、 Select Wallpaper (˚ˎ 。7 " \
+    --border-label="  ╱|、 ♡ Wallpaper Selector (˚ˎ 。7  " \
     --border-label-pos=3 \
-    --margin=1,2 \
+    --margin=1,3 \
     --padding=1 \
-    --prompt="  " \
-    --pointer=" >" \
-    --color='bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8' \
-    --color='fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc' \
-    --color='marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8' \
-    --color='border:#cba6f7,label:#cba6f7' \
-    --preview-window=right:50%:wrap \
-    --preview="$PREVIEW_CMD" \
-    --header=$'\n  Current wallpaper marked with *\n' \
-    --bind="1:execute(change_transition 1)+refresh-preview" \
-    --bind="2:execute(change_transition 2)+refresh-preview" \
-    --bind="3:execute(change_transition 3)+refresh-preview" \
-    --bind="4:execute(change_transition 4)+refresh-preview" \
-    --bind="5:execute(change_transition 5)+refresh-preview" \
-    --bind="6:execute(change_transition 6)+refresh-preview" \
-    --bind="7:execute(change_transition 7)+refresh-preview" \
-    --bind="8:execute(change_direction)+refresh-preview" \
+    --prompt="  ❀ " \
+    --pointer=" ♡" \
+    --marker="✧" \
+    --color='bg+:#313244,bg:#1e1e2e,spinner:#f5c2e7,hl:#f5c2e7' \
+    --color='fg:#cdd6f4,header:#cba6f7,info:#cba6f7,pointer:#f5c2e7' \
+    --color='marker:#f5c2e7,fg+:#f5c2e7,prompt:#cba6f7,hl+:#f5c2e7' \
+    --color='border:#cba6f7,label:#f5c2e7,query:#f5c2e7' \
+    --preview-window='right:50%:wrap:border-rounded' \
+    --preview="WALLPAPER_DIR='$WALLPAPER_DIR' TRANSITION=\$(cat '$TRANS_FILE') '$PREVIEW_SCRIPT' {}" \
+    --header=$'
+  ♡ Current wallpaper marked with ♡
+  
+  ╭───────────────────────────────────────╮
+  │  ✧ Effects                            │
+  ├───────────────────────────────────────┤
+  │  [1] wave    [2] fade    [3] grow     │
+  │  [4] liquid  [5] spiral  [6] fold     │
+  │  [7] slide   [8] bloom   [9] glitch   │
+  │  [0] direction (slide)                │
+  ╰───────────────────────────────────────╯
+  
+  [tab] toggle preview  [enter] apply
+' \
+    --bind="1:execute-silent(echo wave > '$TRANS_FILE')+refresh-preview" \
+    --bind="2:execute-silent(echo fade > '$TRANS_FILE')+refresh-preview" \
+    --bind="3:execute-silent(echo grow > '$TRANS_FILE')+refresh-preview" \
+    --bind="4:execute-silent(echo liquid > '$TRANS_FILE')+refresh-preview" \
+    --bind="5:execute-silent(echo spiral > '$TRANS_FILE')+refresh-preview" \
+    --bind="6:execute-silent(echo fold > '$TRANS_FILE')+refresh-preview" \
+    --bind="7:execute-silent(echo slide > '$TRANS_FILE')+refresh-preview" \
+    --bind="8:execute-silent(echo bloom > '$TRANS_FILE')+refresh-preview" \
+    --bind="9:execute-silent(echo glitch > '$TRANS_FILE')+refresh-preview" \
+    --bind="0:execute-silent(
+        d=\$(cat '$DIR_FILE')
+        case \$d in
+            left) echo right > '$DIR_FILE' ;;
+            right) echo up > '$DIR_FILE' ;;
+            up) echo down > '$DIR_FILE' ;;
+            *) echo left > '$DIR_FILE' ;;
+        esac
+    )+refresh-preview" \
     --bind="tab:toggle-preview"
-  )
+)
 
-  if [ -n "$SELECTED" ]; then
+# Read final transition
+TRANSITION=$(cat "$TRANS_FILE" 2>/dev/null || echo "wave")
+DIRECTION=$(cat "$DIR_FILE" 2>/dev/null || echo "left")
+
+# Cleanup
+rm -f "$PREVIEW_SCRIPT" "$TRANS_FILE" "$DIR_FILE"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# APPLY WALLPAPER
+# ═══════════════════════════════════════════════════════════════════════════════
+
+if [ -n "$SELECTED" ]; then
     FILE="$SELECTED"
-    FILE="${FILE#\* }"
+    FILE="${FILE#♡ }"
     FILE="${FILE#  }"
-
+    
     FULL_PATH="$WALLPAPER_DIR/$FILE"
-
+    
     if [ -f "$FULL_PATH" ]; then
-      if [ -x "$ANIMATOR" ]; then
-        if [ "$TRANSITION" = "slide" ]; then
-          "$ANIMATOR" "$FULL_PATH" "$TRANSITION" "$DIRECTION" 2>/dev/null || \
-          osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"$FULL_PATH\""
+        # Apply with animation
+        if [ -x "$ANIMATOR" ]; then
+            if [ "$TRANSITION" = "slide" ]; then
+                "$ANIMATOR" "$FULL_PATH" "$TRANSITION" "$DIRECTION" 2>/dev/null || \
+                osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"$FULL_PATH\""
+            else
+                "$ANIMATOR" "$FULL_PATH" "$TRANSITION" 2>/dev/null || \
+                osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"$FULL_PATH\""
+            fi
         else
-          "$ANIMATOR" "$FULL_PATH" "$TRANSITION" 2>/dev/null || \
-          osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"$FULL_PATH\""
+            osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"$FULL_PATH\""
         fi
-      else
-        osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"$FULL_PATH\""
-      fi
-
-      echo "$FULL_PATH" > "$CACHE_FILE"
-
-      clear
-      echo ""
-      echo -e "${C_LAVENDER}"
-      cat << 'EOF'
-    ✨ Wallpaper Applied ✨
-EOF
-      echo -e "${C_RESET}"
-      echo -e "  ${C_GREEN}$(basename "$FULL_PATH")${C_RESET}"
-      echo ""
-      echo -e "  ${C_SUBTEXT}Transition:  ${C_RESET}${C_PINK}$TRANSITION${C_RESET}"
-      if [ "$TRANSITION" = "slide" ]; then
-        echo -e "  ${C_SUBTEXT}Direction:   ${C_RESET}${C_PINK}$DIRECTION${C_RESET}"
-      fi
-      echo ""
-      send_notification "Wallpaper set to $(basename "$FULL_PATH")"
+        
+        # Save to cache
+        echo "$FULL_PATH" > "$CACHE_FILE"
+        
+        # Success message
+        clear
+        echo ""
+        echo -e "    ${PINK}✧${MAUVE}·${LAVENDER}˚${PINK}❀${LAVENDER}˚${MAUVE}·${PINK}✧  ${MAUVE}✧${LAVENDER}·${PINK}˚${MAUVE}❀${PINK}˚${LAVENDER}·${MAUVE}✧${R}"
+        echo ""
+        echo -e "    ${MAUVE}╭─────────────────────────────────────╮${R}"
+        echo -e "    ${MAUVE}│${R}                                     ${MAUVE}│${R}"
+        echo -e "    ${MAUVE}│${R}   ${PINK}✧${R} ${B}${TEXT}Wallpaper Applied${R} ${PINK}✧${R}             ${MAUVE}│${R}"
+        echo -e "    ${MAUVE}│${R}                                     ${MAUVE}│${R}"
+        echo -e "    ${MAUVE}├─────────────────────────────────────┤${R}"
+        echo -e "    ${MAUVE}│${R}   ${SUBTEXT0}File:${R} ${GREEN}$(basename "$FULL_PATH" | cut -c1-26)${R}"
+        echo -e "    ${MAUVE}│${R}   ${SUBTEXT0}Effect:${R} ${LAVENDER}$TRANSITION${R}"
+        [ "$TRANSITION" = "slide" ] && echo -e "    ${MAUVE}│${R}   ${SUBTEXT0}Direction:${R} ${SKY}$DIRECTION${R}"
+        echo -e "    ${MAUVE}│${R}                                     ${MAUVE}│${R}"
+        echo -e "    ${MAUVE}╰─────────────────────────────────────╯${R}"
+        echo ""
+        
+        notify "$(basename "$FULL_PATH")" "Wallpaper Applied ✧"
     else
-      echo ""
-      echo -e "  ${C_PINK}Error: File not found${C_RESET}"
-      echo "  $FULL_PATH"
-      echo ""
-      send_notification "Error: Wallpaper not found at $FULL_PATH"
+        echo -e "    ${RED}✧ File not found${R}"
+        notify "File not found" "Error"
     fi
-  else
-    send_notification "Wallpaper selection cancelled."
-  fi
-}
-
-# Run main logic
-main "$@"
+else
+    notify "Selection cancelled" "Wallpaper"
+fi

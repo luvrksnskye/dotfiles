@@ -1,34 +1,57 @@
 #!/bin/bash
 
-# ╔════════════════════════════════════════════════════════════════════════════╗
-# ║                        ANIMATED GREETING                                   ║
-# ║                 Time-based message with ASCII art                          ║
-# ╚════════════════════════════════════════════════════════════════════════════╝
+# ╭─────────────────────────────────────────────────────────────────────────────╮
+# │                                                                             │
+# │     ✧･ﾟ: *✧･ﾟ:*  GREETING  *:･ﾟ✧*:･ﾟ✧                                     │
+# │                                                                             │
+# │              Time-based Animated Greeting                                   │
+# │              Catppuccin Mocha ·                   │
+# │                                                                             │
+# ╰─────────────────────────────────────────────────────────────────────────────╯
 
-# Colors - Catppuccin Mocha (True Color)
-C_RESET='\033[0m'
-C_BOLD='\033[1m'
-C_DIM='\033[2m'
-C_LAVENDER='\033[38;2;180;190;254m'
-C_PINK='\033[38;2;245;194;231m'
-C_MAUVE='\033[38;2;203;166;247m'
-C_BLUE='\033[38;2;137;180;250m'
-C_SKY='\033[38;2;137;220;235m'
-C_TEAL='\033[38;2;148;226;213m'
-C_GREEN='\033[38;2;166;227;161m'
-C_YELLOW='\033[38;2;249;226;175m'
-C_PEACH='\033[38;2;250;179;135m'
-C_TEXT='\033[38;2;205;214;244m'
+# ═══════════════════════════════════════════════════════════════════════════════
+# COLORS — Catppuccin Mocha 
+# ═══════════════════════════════════════════════════════════════════════════════
 
-# Animation delay
-DELAY=0.03
-FAST_DELAY=0.015
+R='\033[0m'
+B='\033[1m'
+DIM='\033[2m'
 
-# Get current hour
+PINK='\033[38;2;245;194;231m'
+MAUVE='\033[38;2;203;166;247m'
+LAVENDER='\033[38;2;180;190;254m'
+RED='\033[38;2;243;139;168m'
+PEACH='\033[38;2;250;179;135m'
+YELLOW='\033[38;2;249;226;175m'
+GREEN='\033[38;2;166;227;161m'
+TEAL='\033[38;2;148;226;213m'
+SKY='\033[38;2;137;220;235m'
+BLUE='\033[38;2;137;180;250m'
+
+TEXT='\033[38;2;205;214;244m'
+SUBTEXT0='\033[38;2;166;173;200m'
+OVERLAY0='\033[38;2;108;112;134m'
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# NERD FONT ICONS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+ICON_SUN=""         # nf-fa-sun_o
+ICON_CLOUD=""       # nf-weather-day_sunny_overcast
+ICON_SUNSET="󰖝"      # nf-md-weather_sunset
+ICON_MOON=""        # nf-fa-moon_o
+ICON_STAR=""        # nf-fa-star
+ICON_HEART=""       # nf-fa-heart
+ICON_COFFEE=""      # nf-fa-coffee
+ICON_SPARKLE="󰫢"     # nf-md-shimmer
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# TIME DETECTION
+# ═══════════════════════════════════════════════════════════════════════════════
+
 HOUR=$(date +%H)
 
-# Determine greeting based on time
-get_greeting() {
+get_period() {
     if [ $HOUR -ge 5 ] && [ $HOUR -lt 12 ]; then
         echo "morning"
     elif [ $HOUR -ge 12 ] && [ $HOUR -lt 17 ]; then
@@ -40,127 +63,109 @@ get_greeting() {
     fi
 }
 
-# Animate text character by character
-animate_text() {
+PERIOD=$(get_period)
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# ANIMATION
+# ═══════════════════════════════════════════════════════════════════════════════
+
+DELAY=0.015
+FAST_DELAY=0.008
+
+animate_line() {
     local text="$1"
-    local color="${2:-$C_TEXT}"
-    local delay="${3:-$DELAY}"
+    local delay="${2:-$DELAY}"
+    echo -e "$text"
+    sleep $delay
+}
+
+type_text() {
+    local text="$1"
+    local color="${2:-$TEXT}"
+    local delay="${3:-0.03}"
     
     echo -ne "$color"
     for (( i=0; i<${#text}; i++ )); do
         echo -n "${text:$i:1}"
         sleep $delay
     done
-    echo -e "$C_RESET"
+    echo -e "$R"
 }
 
-# Animate line by line
-animate_block() {
-    local color="$1"
-    shift
-    for line in "$@"; do
-        echo -e "${color}${line}${C_RESET}"
-        sleep $FAST_DELAY
-    done
-}
+# ═══════════════════════════════════════════════════════════════════════════════
+# DISPLAY
+# ═══════════════════════════════════════════════════════════════════════════════
 
-# Clear and hide cursor
 clear
 tput civis
-
-# Trap to restore cursor on exit
 trap 'tput cnorm; exit' INT TERM
 
-PERIOD=$(get_greeting)
+echo ""
+animate_line "    ${PINK}*${MAUVE}.${LAVENDER}.${PINK}*${LAVENDER}.${MAUVE}.${PINK}*  ${MAUVE}*${LAVENDER}.${PINK}.${MAUVE}*${PINK}.${LAVENDER}.${MAUVE}*  ${LAVENDER}*${PINK}.${MAUVE}.${LAVENDER}*${MAUVE}.${PINK}.${LAVENDER}*${R}" $FAST_DELAY
+echo ""
 
 case "$PERIOD" in
     morning)
-        COLOR=$C_YELLOW
-        sleep 0.2
-        animate_block "$C_PEACH" \
-            "" \
-            "" \
-            ""
-        
-        sleep 0.3
-        echo ""
-        animate_text "  ╭─────────────────────────────────────╮" "$C_LAVENDER" $FAST_DELAY
-        echo -e "  ${C_LAVENDER}│${C_RESET}"
-        animate_text "  │   Good Morning, Skye!" "$C_YELLOW" $DELAY
-        echo -e "  ${C_LAVENDER}│${C_RESET}"
-        animate_text "  │   Rise and shine " "$C_PEACH" $DELAY
-        echo -e "  ${C_LAVENDER}│${C_RESET}"
-        animate_text "  ╰─────────────────────────────────────╯" "$C_LAVENDER" $FAST_DELAY
+        ICON="$ICON_SUN"
+        COLOR="$YELLOW"
+        ACCENT="$PEACH"
+        GREETING="Good Morning"
+        MESSAGE="Rise and shine"
+        EXTRA="$ICON_COFFEE Time for coffee?"
         ;;
-        
     afternoon)
-        COLOR=$C_SKY
-        sleep 0.2
-        animate_block "$C_SKY" \
-            "" \
-            "" \
-            ""
-        
-        sleep 0.3
-        echo ""
-        animate_text "  ╭─────────────────────────────────────╮" "$C_LAVENDER" $FAST_DELAY
-        echo -e "  ${C_LAVENDER}│${C_RESET}"
-        animate_text "  │   Good Afternoon, Skye!" "$C_SKY" $DELAY
-        echo -e "  ${C_LAVENDER}│${C_RESET}"
-        animate_text "  │   Keep up the great work  flexing_biceps" "$C_TEAL" $DELAY
-        echo -e "  ${C_LAVENDER}│${C_RESET}"
-        animate_text "  ╰─────────────────────────────────────╯" "$C_LAVENDER" $FAST_DELAY
+        ICON="$ICON_CLOUD"
+        COLOR="$SKY"
+        ACCENT="$TEAL"
+        GREETING="Good Afternoon"
+        MESSAGE="Keep up the great work"
+        EXTRA="$ICON_STAR You're doing amazing"
         ;;
-        
     evening)
-        COLOR=$C_PEACH
-        sleep 0.2
-        animate_block "$C_PEACH" \
-            "" \
-            "" \
-            ""
-        
-        sleep 0.3
-        echo ""
-        animate_text "  ╭─────────────────────────────────────╮" "$C_LAVENDER" $FAST_DELAY
-        echo -e "  ${C_LAVENDER}│${C_RESET}"
-        animate_text "  │   Good Evening, Skye!" "$C_PEACH" $DELAY
-        echo -e "  ${C_LAVENDER}│${C_RESET}"
-        animate_text "  │   Time to wind down " "$C_MAUVE" $DELAY
-        echo -e "  ${C_LAVENDER}│${C_RESET}"
-        animate_text "  ╰─────────────────────────────────────╯" "$C_LAVENDER" $FAST_DELAY
+        ICON="$ICON_SUNSET"
+        COLOR="$PEACH"
+        ACCENT="$MAUVE"
+        GREETING="Good Evening"
+        MESSAGE="Time to wind down"
+        EXTRA="$ICON_HEART Take it easy"
         ;;
-        
     night)
-        COLOR=$C_MAUVE
-        sleep 0.2
-        animate_block "$C_MAUVE" \
-            "" \
-            "" \
-            ""
-        
-        sleep 0.3
-        echo ""
-        animate_text "  ╭─────────────────────────────────────╮" "$C_LAVENDER" $FAST_DELAY
-        echo -e "  ${C_LAVENDER}│${C_RESET}"
-        animate_text "  │   Good Night, Skye!" "$C_MAUVE" $DELAY
-        echo -e "  ${C_LAVENDER}│${C_RESET}"
-        animate_text "  │   Sweet dreams " "$C_PINK" $DELAY
-        echo -e "  ${C_LAVENDER}│${C_RESET}"
-        animate_text "  ╰─────────────────────────────────────╯" "$C_LAVENDER" $FAST_DELAY
+        ICON="$ICON_MOON"
+        COLOR="$MAUVE"
+        ACCENT="$PINK"
+        GREETING="Good Night"
+        MESSAGE="Sweet dreams"
+        EXTRA="$ICON_SPARKLE Rest well"
         ;;
 esac
 
+# Main greeting box
+animate_line "    ${MAUVE}╭─────────────────────────────────────────╮${R}" $FAST_DELAY
+animate_line "    ${MAUVE}│${R}                                         ${MAUVE}│${R}" $FAST_DELAY
+echo -ne "    ${MAUVE}│${R}     ${COLOR}${ICON}${R}  "
+type_text "${B}${GREETING}, Skye!${R}" "$COLOR" 0.04
+animate_line "    ${MAUVE}│${R}                                         ${MAUVE}│${R}" $FAST_DELAY
+echo -ne "    ${MAUVE}│${R}        "
+type_text "${MESSAGE}" "$ACCENT" 0.03
+animate_line "    ${MAUVE}│${R}                                         ${MAUVE}│${R}" $FAST_DELAY
+animate_line "    ${MAUVE}╰─────────────────────────────────────────╯${R}" $FAST_DELAY
+
 echo ""
 
-# Show date and time
-TIME=$(date "+%A, %B %d")
-CLOCK=$(date "+%I:%M %p")
+# Extra message
+animate_line "    ${DIM}${ACCENT}${EXTRA}${R}" $DELAY
 
-sleep 0.2
-echo -e "  ${C_DIM}${TIME}${C_RESET}"
-echo -e "  ${C_TEXT}${CLOCK}${C_RESET}"
 echo ""
 
-# Restore cursor
+# Date and time
+DATE_STR=$(date "+%A, %B %d")
+TIME_STR=$(date "+%I:%M %p")
+
+animate_line "    ${DIM}${SUBTEXT0}${DATE_STR}${R}" $DELAY
+animate_line "    ${TEXT}${TIME_STR}${R}" $DELAY
+
+echo ""
+animate_line "    ${PINK}*${MAUVE}.${LAVENDER}.${PINK}*${LAVENDER}.${MAUVE}.${PINK}*  ${MAUVE}*${LAVENDER}.${PINK}.${MAUVE}*${PINK}.${LAVENDER}.${MAUVE}*  ${LAVENDER}*${PINK}.${MAUVE}.${LAVENDER}*${MAUVE}.${PINK}.${LAVENDER}*${R}" $FAST_DELAY
+echo ""
+
 tput cnorm

@@ -1,6 +1,6 @@
 # Skye's Dotfiles
 
-Haiii this is my macOS desktop setup with Aerospace as the window manager, SketchyBar, and a few custom utilities lol. I used to be a Linux user, and after switching to macOS, I just tried to make the most of it with some simple tweaks to keep it comfy.
+Haiii this is my macOS desktop setup with Yabai as the window manager, SketchyBar, and a few custom utilities lol. I used to be a Linux user, and after switching to macOS, I just tried to make the most of it with some simple tweaks to keep it comfy.
 
 ```
     ███████╗██╗  ██╗██╗   ██╗███████╗
@@ -13,10 +13,6 @@ Haiii this is my macOS desktop setup with Aerospace as the window manager, Sketc
 ---
 
 ## Installation
-
-This repository contains two installation methods. Follow the one for your operating system.
-
-### macOS Installation (Full Desktop Experience)
 
 This will install the complete macOS desktop environment, including window manager, status bar, and shell configurations.
 
@@ -48,42 +44,128 @@ brew services start sketchybar
 brew services start borders
 ```
 
-### Windows Installation (Nushell, Starship, etc)
+---
 
-This method installs a complete shell environment (Nushell, Starship) for a consistent experience on Windows 10/11 that I made for my bf!
+## Quick Reference
 
-#### 1. Run the Installer
+### Super Short Commands
 
-Clone the repository. Then, right-click the `install.ps1` script and select "Run with PowerShell".
+These are the fastest way to access everything. Add `source ~/.config/skye.zsh` to your `.zshrc` to enable them.
 
-The script will ask for Administrator privileges to automatically install all required dependencies using `winget`, including:
-- A Nerd Font (via the OhMyPosh package)
-- Nushell
-- Starship
+| Command | Description |
+|---------|-------------|
+| `luvr` | Open interactive menu |
+| `w` | Wallpaper selector |
+| `wr` | Random wallpaper |
+| `p` | Pomodoro timer |
+| `t` | Todo list |
+| `m` | Mood tracker |
+| `me` | Who am I card |
+| `k` | Keybindings |
+| `hi` | Greeting |
+| `r` | Reload services |
 
-It will then install the configurations for you.
+### All Commands
 
-```powershell
-git clone https://github.com/luvrksnskye/dotfiles.git
-cd dotfiles
-./install.ps1
+| Command | Description |
+|---------|-------------|
+| `luvr` | Open interactive menu |
+| `luvr wall` | Interactive wallpaper selector |
+| `luvr random` | Set random wallpaper |
+| `luvr list` | List available wallpapers |
+| `luvr set <image> [effect]` | Set wallpaper with effect |
+| `luvr pomo` | Start pomodoro timer |
+| `luvr todo` | Open todo list |
+| `luvr mood` | Open mood tracker |
+| `luvr me` | Show user info card |
+| `luvr keys` | Animated keybinding reference |
+| `luvr greet` | Animated greeting |
+| `luvr reload` | Reload all services |
+
+### Todo Quick Commands
+
+```bash
+ta "buy groceries"  # add task
+tl                  # list tasks
+td 1                # complete task #1
 ```
 
-#### 2. Post-Install
+---
 
-After the script finishes, you just need to configure your terminal (like Windows Terminal or Fluent Terminal) to use your new Nerd Font (e.g., `JetBrainsMono NF`) and set Nushell as your default shell.
+**Quick effect shortcuts:**
+```bash
+wf image.jpg   # fade
+ww image.jpg   # wave
+wg image.jpg   # grow
+wl image.jpg   # liquid
+wsp image.jpg  # spiral
+wfo image.jpg  # fold
+wsl image.jpg left  # slide
+wb image.jpg   # bloom
+wgl image.jpg  # glitch
+```
+
+### Pomodoro Timer
+
+Focus timer with visual progress bar and notifications.
+
+- 25 minute focus sessions
+- 5 minute short breaks
+- 15 minute long breaks (after 4 sessions)
+- Sound notifications
+- Session statistics
+
+**Commands:**
+```bash
+p          # open pomodoro menu
+luvr pomo  # same
+luvr pomo 30  # custom 30 min timer
+```
+
+### Todo List
+
+Cute task manager with priorities.
+
+- High/Medium/Low priority levels
+- Completion history
+- Quick add/complete/delete
+
+**Commands:**
+```bash
+t           # open todo menu
+ta "task"   # quick add
+tl          # quick list
+td 1        # complete task #1
+```
+
+### Mood Tracker
+
+Track how you're feeling with statistics.
+
+- 5 mood levels (Amazing to Bad)
+- Optional notes
+- History view
+- Statistics with averages
+
+**Commands:**
+```bash
+m          # open mood tracker
+luvr mood  # same
+```
 
 ---
 
 ## Keybindings
 
-For a full and animated keybinding reference, run `luvr keys` in your terminal.
+For a full and animated keybinding reference, run `luvr keys` or just `k` in your terminal.
 
 ### Window Focus
 | Key | Action |
 |-----|--------|
 | Alt + H/J/K/L | Focus (vim) |
 | Alt + Arrows | Focus (arrows) |
+| Alt + Tab | Recent space |
+| Alt + P/N | Prev/Next space |
 
 ### Window Move
 | Key | Action |
@@ -96,6 +178,7 @@ For a full and animated keybinding reference, run `luvr keys` in your terminal.
 |-----|--------|
 | Alt + 1-4 | Focus space |
 | Alt + Shift + 1-4 | Send to space |
+| Alt + 0 | Balance windows |
 
 ### Layout
 | Key | Action |
@@ -104,31 +187,92 @@ For a full and animated keybinding reference, run `luvr keys` in your terminal.
 | Alt + Shift + F | Fullscreen |
 | Alt + / | Toggle split |
 | Alt + R | Rotate 90 |
-| Alt + 0 | Balance |
+
+### Resize
+| Key | Action |
+|-----|--------|
+| Ctrl + Alt + Arrows | Resize window |
+| Alt + Shift + +/- | Grow/Shrink |
+| fn + drag | Free resize |
 
 ### Apps
 | Key | App |
 |-----|-----|
 | Alt + Shift + T | Terminal |
 | Alt + Shift + B | Brave |
-| Alt + Shift + M | Spotify |
+| Alt + Shift + Z | Zen Browser |
+| Alt + Shift + E | Finder |
+| Alt + Shift + D | Discord |
 | Alt + Shift + C | Claude |
+| Alt + Shift + V | VS Code |
+| Alt + Shift + M | Spotify |
+| Alt + Shift + A | Apple Music |
+| Alt + Shift + O | Obsidian |
+
+### Services
+| Key | Action |
+|-----|--------|
+| Ctrl + Alt + R | Restart Yabai |
+| Ctrl + Alt + S | Reload skhd |
+| Ctrl + Alt + G | Greeting |
+
+### Mouse (hold fn)
+| Action | Effect |
+|--------|--------|
+| fn + Left Click | Move window |
+| fn + Right Click | Resize window |
 
 ---
 
-## Commands
+## Dependencies
 
-| Command | Description |
-|---------|-------------|
-| luvr | Show help |
-| luvr greet | Animated greeting |
-| luvr whoami | Show user info card |
-| luvr keys | Animated keybinding reference |
-| luvr wall | Interactive wallpaper selector |
-| luvr wall-random | Set random wallpaper |
-| luvr wall-list | List wallpapers |
-| luvr wall-set <path> [fx] | Set wallpaper with animation (fx: wave, fade, grow, liquid, spiral, fold, slide) |
-| reload | Reload all configurations and services |
+**Required:**
+- zsh
+- fzf
+- Nerd Fonts (JetBrains Mono recommended)
+
+**Optional:**
+- chafa (for image preview in wallpaper selector)
+
+**Installed by script:**
+- yabai
+- skhd
+- sketchybar
+- borders
+- starship
+- bat, eza, ripgrep, fd, neofetch, tmux, lazygit
+
+---
+
+## File Structure
+
+```
+~/.config/
+├── luvrksnskye/           # Main toolkit
+│   ├── luvrksnskye        # Main script
+│   ├── skye.zsh           # Zsh config with aliases
+│   ├── greeting.sh
+│   ├── whoiam.sh
+│   ├── key_hints.sh
+│   ├── reload.sh
+│   ├── pomodoro.sh
+│   ├── todo.sh
+│   ├── mood.sh
+│   └── wallpapers/
+│       ├── wallpaper_select.sh
+│       ├── wallpaper_set.sh
+│       ├── wallpaper_list.sh
+│       ├── wallpaper_random.sh
+│       ├── wallpaper_animate.m
+│       ├── wallpaper_animate    # compiled binary
+│       └── Makefile
+├── yabai/
+├── skhd/
+├── sketchybar/
+├── borders/
+├── ghostty/
+└── starship/
+```
 
 ---
 
@@ -137,3 +281,28 @@ For a full and animated keybinding reference, run `luvr keys` in your terminal.
 SketchyBar supports both Spotify and Apple Music. Click the music widget to play/pause, right-click for next track.
 
 ---
+
+## Troubleshooting
+
+### Wallpaper animations not working
+Make sure SIP is partially disabled and the animator is compiled:
+```bash
+cd ~/.config/luvrksnskye/wallpapers
+make clean && make
+```
+
+### Image preview not showing
+Install chafa:
+```bash
+brew install chafa
+```
+
+### Icons not displaying correctly
+Install a Nerd Font:
+```bash
+brew install --cask font-jetbrains-mono-nerd-font
+```
+
+---
+
+*made with love and insomnia*

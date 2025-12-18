@@ -1,92 +1,258 @@
 #!/bin/bash
 
-#    ███████╗██╗  ██╗██╗   ██╗███████╗         ██╗ ██████╗ ██╗   ██╗██████╗ ███╗   ██╗███████╗██╗   ██╗
-#    ██╔════╝██║ ██╔╝╚██╗ ██╔╝██╔════╝         ██║██╔═══██╗██║   ██║██╔══██╗████╗  ██║██╔════╝╚██╗ ██╔╝
-#    ███████╗█████╔╝  ╚████╔╝ █████╗           ██║██║   ██║██║   ██║██████╔╝██╔██╗ ██║█████╗   ╚████╔╝ 
-#    ╚════██║██╔═██╗   ╚██╔╝  ██╔══╝      ██   ██║██║   ██║██║   ██║██╔══██╗██║╚██╗██║██╔══╝    ╚██╔╝  
-#    ███████║██║  ██╗   ██║   ███████╗    ╚█████╔╝╚██████╔╝╚██████╔╝██║  ██║██║ ╚████║███████╗   ██║   
-#    ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝     ╚════╝  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   
-
-# =============================================================================
-#  Skye Journey ✦ Terminal Toolkit
-# =============================================================================
+# ╭─────────────────────────────────────────────────────────────────────────────╮
+# │                                                                             │
+# │     ✧･ﾟ: *✧･ﾟ:*  L U V R K S N S K Y E  *:･ﾟ✧*:･ﾟ✧                        │
+# │                                                                             │
+# │              Skye's Cozy Terminal Toolkit ♡                                                          │
+# │                                                                             │
+# ╰─────────────────────────────────────────────────────────────────────────────╯
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WALLPAPER_SCRIPTS="$SCRIPT_DIR/wallpapers"
 CACHE_DIR="$HOME/.cache/luvrksnskye"
-mkdir -p "$CACHE_DIR"
+DATA_DIR="$HOME/.local/share/luvrksnskye"
+mkdir -p "$CACHE_DIR" "$DATA_DIR"
 
-# -----------------------------------------------------------------------------
-# SCRIPT DEPS
-# -----------------------------------------------------------------------------
-source "$HOME/.config/yabai/skye.zsh"
+# ═══════════════════════════════════════════════════════════════════════════════
+# COLORS — Catppuccin Mocha 
+# ═══════════════════════════════════════════════════════════════════════════════
 
-# -----------------------------------------------------------------------------
-# COLORS — Catppuccin Mocha
-# -----------------------------------------------------------------------------
 if [[ -t 1 ]]; then
     R="\033[0m"
     B="\033[1m"
-    C_RED="\033[38;2;243;139;168m"
-    C_MAUVE="\033[38;2;203;166;247m"
-    C_LAVENDER="\033[38;2;180;190;254m"
-    C_BLUE="\033[38;2;137;180;250m"
-    C_GREEN="\033[38;2;166;227;161m"
-    C_PINK="\033[38;2;245;194;231m"
-    SUB="\033[38;2;186;194;222m"
-    LINE="\033[38;2;88;91;112m"
+    DIM="\033[2m"
+    ITALIC="\033[3m"
+    
+    # Main colors
+    ROSEWATER="\033[38;2;245;224;220m"
+    FLAMINGO="\033[38;2;242;205;205m"
+    PINK="\033[38;2;245;194;231m"
+    MAUVE="\033[38;2;203;166;247m"
+    RED="\033[38;2;243;139;168m"
+    MAROON="\033[38;2;235;160;172m"
+    PEACH="\033[38;2;250;179;135m"
+    YELLOW="\033[38;2;249;226;175m"
+    GREEN="\033[38;2;166;227;161m"
+    TEAL="\033[38;2;148;226;213m"
+    SKY="\033[38;2;137;220;235m"
+    SAPPHIRE="\033[38;2;116;199;236m"
+    BLUE="\033[38;2;137;180;250m"
+    LAVENDER="\033[38;2;180;190;254m"
+    
+    # Surface colors
+    TEXT="\033[38;2;205;214;244m"
+    SUBTEXT1="\033[38;2;186;194;222m"
+    SUBTEXT0="\033[38;2;166;173;200m"
+    OVERLAY2="\033[38;2;147;153;178m"
+    OVERLAY1="\033[38;2;127;132;156m"
+    OVERLAY0="\033[38;2;108;112;134m"
+    SURFACE2="\033[38;2;88;91;112m"
+    SURFACE1="\033[38;2;69;71;90m"
+    SURFACE0="\033[38;2;49;50;68m"
+    BASE="\033[38;2;30;30;46m"
+    MANTLE="\033[38;2;24;24;37m"
+    CRUST="\033[38;2;17;17;27m"
+    
+    # Background colors
+    BG_SURFACE0="\033[48;2;49;50;68m"
+    BG_BASE="\033[48;2;30;30;46m"
+    BG_PINK="\033[48;2;245;194;231m"
+    BG_MAUVE="\033[48;2;203;166;247m"
 else
-    R=""; B=""
-    C_RED=""; C_MAUVE=""; C_LAVENDER=""; C_BLUE=""; C_GREEN=""; C_PINK=""
-    SUB=""; LINE=""
+    R=""; B=""; DIM=""; ITALIC=""
+    ROSEWATER=""; FLAMINGO=""; PINK=""; MAUVE=""; RED=""; MAROON=""
+    PEACH=""; YELLOW=""; GREEN=""; TEAL=""; SKY=""; SAPPHIRE=""; BLUE=""; LAVENDER=""
+    TEXT=""; SUBTEXT1=""; SUBTEXT0=""; OVERLAY2=""; OVERLAY1=""; OVERLAY0=""
+    SURFACE2=""; SURFACE1=""; SURFACE0=""; BASE=""; MANTLE=""; CRUST=""
+    BG_SURFACE0=""; BG_BASE=""; BG_PINK=""; BG_MAUVE=""
 fi
 
-# -----------------------------------------------------------------------------
-# UI
-# -----------------------------------------------------------------------------
+# ═══════════════════════════════════════════════════════════════════════════════
+# UI COMPONENTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Decorative elements
+STAR="✦"
+SPARKLE="✧"
+HEART="♡"
+FLOWER="❀"
+DIAMOND="◇"
+DOT="·"
+ARROW="›"
+
+# Hide/show cursor
+hide_cursor() { tput civis 2>/dev/null; }
+show_cursor() { tput cnorm 2>/dev/null; }
+
+# Cleanup on exit
+cleanup() {
+    show_cursor
+    echo -e "$R"
+}
+trap cleanup EXIT INT TERM
+
+# Animated text
+type_text() {
+    local text="$1"
+    local delay="${2:-0.02}"
+    for (( i=0; i<${#text}; i++ )); do
+        printf "%s" "${text:$i:1}"
+        sleep "$delay"
+    done
+}
+
+# Box drawing
+draw_box() {
+    local width="$1"
+    local color="${2:-$MAUVE}"
+    local top_left="╭" top_right="╮" bottom_left="╰" bottom_right="╯"
+    local horizontal="─" vertical="│"
+    
+    printf "%b%s" "$color" "$top_left"
+    printf "%0.s$horizontal" $(seq 1 $((width-2)))
+    printf "%s%b\n" "$top_right" "$R"
+}
+
+draw_box_bottom() {
+    local width="$1"
+    local color="${2:-$MAUVE}"
+    
+    printf "%b╰" "$color"
+    printf "%0.s─" $(seq 1 $((width-2)))
+    printf "╯%b\n" "$R"
+}
+
+# Centered text in box
+center_text() {
+    local text="$1"
+    local width="$2"
+    local color="${3:-$TEXT}"
+    local text_len=${#text}
+    local padding=$(( (width - text_len - 2) / 2 ))
+    
+    printf "%b│%b" "$MAUVE" "$R"
+    printf "%${padding}s" ""
+    printf "%b%s%b" "$color" "$text" "$R"
+    printf "%$((width - text_len - padding - 2))s" ""
+    printf "%b│%b\n" "$MAUVE" "$R"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# MAIN MENU
+# ═══════════════════════════════════════════════════════════════════════════════
+
+show_menu() {
+    clear
+    hide_cursor
+    
+    local width=60
+    
+    echo ""
+    echo -e "    ${PINK}${SPARKLE}${DOT}˚${FLOWER}${DOT}${SPARKLE}  ${MAUVE}${SPARKLE}${DOT}˚${FLOWER}${DOT}${SPARKLE}  ${LAVENDER}${SPARKLE}${DOT}˚${FLOWER}${DOT}${SPARKLE}  ${PINK}${SPARKLE}${DOT}˚${FLOWER}${DOT}${SPARKLE}${R}"
+    echo ""
+    
+    # Logo
+    echo -e "${PINK}       ██╗     ██╗   ██╗██╗   ██╗██████╗ ${R}"
+    echo -e "${MAUVE}       ██║     ██║   ██║██║   ██║██╔══██╗${R}"
+    echo -e "${LAVENDER}       ██║     ██║   ██║██║   ██║██████╔╝${R}"
+    echo -e "${BLUE}       ██║     ██║   ██║╚██╗ ██╔╝██╔══██╗${R}"
+    echo -e "${SKY}       ███████╗╚██████╔╝ ╚████╔╝ ██║  ██║${R}"
+    echo -e "${TEAL}       ╚══════╝ ╚═════╝   ╚═══╝  ╚═╝  ╚═╝${R}"
+    echo ""
+    echo -e "    ${DIM}${SUBTEXT0}✧ Skye's Cozy Terminal Toolkit ✧${R}"
+    echo ""
+    echo -e "    ${PINK}${SPARKLE}${DOT}˚${FLOWER}${DOT}${SPARKLE}  ${MAUVE}${SPARKLE}${DOT}˚${FLOWER}${DOT}${SPARKLE}  ${LAVENDER}${SPARKLE}${DOT}˚${FLOWER}${DOT}${SPARKLE}  ${PINK}${SPARKLE}${DOT}˚${FLOWER}${DOT}${SPARKLE}${R}"
+    echo ""
+    
+    # Menu sections
+    echo -e "    ${MAUVE}╭───────────────────────────────────────────────╮${R}"
+    echo -e "    ${MAUVE}│${R}  ${PINK}${B}${FLOWER} WALLPAPER${R}                                  ${MAUVE}│${R}"
+    echo -e "    ${MAUVE}├───────────────────────────────────────────────┤${R}"
+    echo -e "    ${MAUVE}│${R}   ${LAVENDER}[1]${R} ${TEXT}Select wallpaper        ${DIM}${OVERLAY0}interactive${R}   ${MAUVE}│${R}"
+    echo -e "    ${MAUVE}│${R}   ${LAVENDER}[2]${R} ${TEXT}Random wallpaper        ${DIM}${OVERLAY0}surprise me${R}   ${MAUVE}│${R}"
+    echo -e "    ${MAUVE}│${R}   ${LAVENDER}[3]${R} ${TEXT}List wallpapers         ${DIM}${OVERLAY0}browse${R}        ${MAUVE}│${R}"
+    echo -e "    ${MAUVE}╰───────────────────────────────────────────────╯${R}"
+    echo ""
+    echo -e "    ${PINK}╭───────────────────────────────────────────────╮${R}"
+    echo -e "    ${PINK}│${R}  ${MAUVE}${B}${HEART} PRODUCTIVITY${R}                               ${PINK}│${R}"
+    echo -e "    ${PINK}├───────────────────────────────────────────────┤${R}"
+    echo -e "    ${PINK}│${R}   ${LAVENDER}[4]${R} ${TEXT}Pomodoro timer          ${DIM}${OVERLAY0}focus time${R}    ${PINK}│${R}"
+    echo -e "    ${PINK}│${R}   ${LAVENDER}[5]${R} ${TEXT}Todo list               ${DIM}${OVERLAY0}tasks${R}         ${PINK}│${R}"
+    echo -e "    ${PINK}│${R}   ${LAVENDER}[6]${R} ${TEXT}Mood tracker            ${DIM}${OVERLAY0}how are you?${R}  ${PINK}│${R}"
+    echo -e "    ${PINK}╰───────────────────────────────────────────────╯${R}"
+    echo ""
+    echo -e "    ${LAVENDER}╭───────────────────────────────────────────────╮${R}"
+    echo -e "    ${LAVENDER}│${R}  ${SKY}${B}${STAR} SYSTEM${R}                                     ${LAVENDER}│${R}"
+    echo -e "    ${LAVENDER}├───────────────────────────────────────────────┤${R}"
+    echo -e "    ${LAVENDER}│${R}   ${LAVENDER}[7]${R} ${TEXT}Who am I?               ${DIM}${OVERLAY0}cute card${R}     ${LAVENDER}│${R}"
+    echo -e "    ${LAVENDER}│${R}   ${LAVENDER}[8]${R} ${TEXT}Keybindings             ${DIM}${OVERLAY0}yabai/skhd${R}   ${LAVENDER}│${R}"
+    echo -e "    ${LAVENDER}│${R}   ${LAVENDER}[9]${R} ${TEXT}Reload services         ${DIM}${OVERLAY0}refresh${R}      ${LAVENDER}│${R}"
+    echo -e "    ${LAVENDER}│${R}   ${LAVENDER}[0]${R} ${TEXT}Greeting                ${DIM}${OVERLAY0}hello!${R}       ${LAVENDER}│${R}"
+    echo -e "    ${LAVENDER}╰───────────────────────────────────────────────╯${R}"
+    echo ""
+    echo -e "    ${SURFACE1}╭───────────────────────────────────────────────╮${R}"
+    echo -e "    ${SURFACE1}│${R}   ${RED}[q]${R} ${SUBTEXT0}Quit${R}    ${SURFACE1}│${R}   ${YELLOW}[h]${R} ${SUBTEXT0}Help${R}    ${SURFACE1}│${R}   ${GREEN}[c]${R} ${SUBTEXT0}Clear${R}   ${SURFACE1}│${R}"
+    echo -e "    ${SURFACE1}╰───────────────────────────────────────────────╯${R}"
+    echo ""
+    echo -ne "    ${PINK}${HEART}${R} ${TEXT}Choose an option: ${R}"
+    
+    show_cursor
+}
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# HELP SCREEN
+# ═══════════════════════════════════════════════════════════════════════════════
+
 show_help() {
     clear
-    echo -e "${C_RED}███████╗██╗  ██╗██╗   ██╗███████╗         ██╗ ██████╗ ██╗   ██╗██████╗ ███╗   ██╗███████╗██╗   ██╗${R}"
-    echo -e "${C_MAUVE}██╔════╝██║ ██╔╝╚██╗ ██╔╝██╔════╝         ██║██╔═══██╗██║   ██║██╔══██╗████╗  ██║██╔════╝╚██╗ ██╔╝${R}"
-    echo -e "${C_LAVENDER}███████╗█████╔╝  ╚████╔╝ █████╗           ██║██║   ██║██║   ██║██████╔╝██╔██╗ ██║█████╗   ╚████╔╝ ${R}"
-    echo -e "${C_BLUE}╚════██║██╔═██╗   ╚██╔╝  ██╔══╝      ██   ██║██║   ██║██║   ██║██╔══██╗██║╚██╗██║██╔══╝    ╚██╔╝  ${R}"
-    echo -e "${C_GREEN}███████║██║  ██╗   ██║   ███████╗    ╚█████╔╝╚██████╔╝╚██████╔╝██║  ██║██║ ╚████║███████╗   ██║   ${R}"
-    echo -e "${C_BLUE}╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝     ╚════╝  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ${R}"
-    echo
-    echo -e "        ${SUB}✦ Skye Journey · Custom Terminal Toolkit · Catppuccin Mocha ✦${R}"
-    echo
-    echo -e "${LINE}────────────────────────────────────────────────────────────────────────${R}"
-    echo
-    echo -e "${C_LAVENDER}${B}WALLPAPER${R}"
-    echo -e "${LINE}────────────────────────${R}"
-    echo -e "${C_BLUE}luvr wall${R}               Interactive wallpaper selector"
-    echo -e "${C_BLUE}luvr wall-random${R}        Set random wallpaper"
-    echo -e "${C_BLUE}luvr wall-list${R}          List wallpapers"
-    echo -e "${C_BLUE}luvr wall-set <path>${R}    Set wallpaper"
-    echo -e "${C_BLUE}luvr wall-set <path> <fx>${R}"
-    echo -e "      ${SUB}fx: wave · fade · grow · liquid · spiral · fold${R}"
-    echo
-    echo -e "${C_LAVENDER}${B}USER${R}"
-    echo -e "${LINE}────────────────────────${R}"
-    echo -e "${C_BLUE}luvr whoami${R}             Show user info"
-    echo
-    echo -e "${C_LAVENDER}${B}ALIASES${R}"
-    echo -e "${LINE}────────────────────────${R}"
-    echo -e "${C_GREEN}wall${R}   → luvr wall"
-    echo -e "${C_GREEN}wallr${R}  → luvr wall-random"
-    echo -e "${C_GREEN}wallls${R} → luvr wall-list"
-    echo -e "${C_GREEN}whoiam${R} → luvr whoami"
-    echo
-    echo -e "${LINE}────────────────────────────────────────────────────────────────────────${R}"
-    echo -e "${SUB}made with love and insomnia ✦${R}"
-    echo
+    echo ""
+    echo -e "${PINK}    ╭──────────────────────────────────────────────────────────────╮${R}"
+    echo -e "${PINK}    │${R}                                                              ${PINK}│${R}"
+    echo -e "${PINK}    │${R}   ${MAUVE}${B}✧ LUVR - Command Reference ✧${R}                             ${PINK}│${R}"
+    echo -e "${PINK}    │${R}                                                              ${PINK}│${R}"
+    echo -e "${PINK}    ╰──────────────────────────────────────────────────────────────╯${R}"
+    echo ""
+    echo -e "    ${LAVENDER}${B}QUICK COMMANDS${R}"
+    echo -e "    ${SURFACE1}────────────────────────────────────────────────────────${R}"
+    echo -e "    ${PINK}luvr${R}              ${SUBTEXT0}${ARROW}${R} ${TEXT}Open interactive menu${R}"
+    echo -e "    ${PINK}luvr wall${R}         ${SUBTEXT0}${ARROW}${R} ${TEXT}Wallpaper selector${R}"
+    echo -e "    ${PINK}luvr random${R}       ${SUBTEXT0}${ARROW}${R} ${TEXT}Random wallpaper${R}"
+    echo -e "    ${PINK}luvr pomo${R}         ${SUBTEXT0}${ARROW}${R} ${TEXT}Start pomodoro${R}"
+    echo -e "    ${PINK}luvr todo${R}         ${SUBTEXT0}${ARROW}${R} ${TEXT}Todo list${R}"
+    echo -e "    ${PINK}luvr mood${R}         ${SUBTEXT0}${ARROW}${R} ${TEXT}Mood tracker${R}"
+    echo -e "    ${PINK}luvr me${R}           ${SUBTEXT0}${ARROW}${R} ${TEXT}Who am I card${R}"
+    echo -e "    ${PINK}luvr keys${R}         ${SUBTEXT0}${ARROW}${R} ${TEXT}Keybindings${R}"
+    echo -e "    ${PINK}luvr reload${R}       ${SUBTEXT0}${ARROW}${R} ${TEXT}Reload services${R}"
+    echo -e "    ${PINK}luvr greet${R}        ${SUBTEXT0}${ARROW}${R} ${TEXT}Show greeting${R}"
+    echo ""
+    echo -e "    ${LAVENDER}${B}SUPER SHORT ALIASES${R} ${DIM}(add to .zshrc)${R}"
+    echo -e "    ${SURFACE1}────────────────────────────────────────────────────────${R}"
+    echo -e "    ${SKY}w${R}        ${SUBTEXT0}${ARROW}${R} ${TEXT}wallpaper selector${R}"
+    echo -e "    ${SKY}wr${R}       ${SUBTEXT0}${ARROW}${R} ${TEXT}random wallpaper${R}"
+    echo -e "    ${SKY}p${R}        ${SUBTEXT0}${ARROW}${R} ${TEXT}pomodoro${R}"
+    echo -e "    ${SKY}t${R}        ${SUBTEXT0}${ARROW}${R} ${TEXT}todo${R}"
+    echo -e "    ${SKY}m${R}        ${SUBTEXT0}${ARROW}${R} ${TEXT}mood${R}"
+    echo -e "    ${SKY}me${R}       ${SUBTEXT0}${ARROW}${R} ${TEXT}who am i${R}"
+    echo -e "    ${SKY}hi${R}       ${SUBTEXT0}${ARROW}${R} ${TEXT}greeting${R}"
+    echo ""
+    echo -e "    ${LAVENDER}${B}WALLPAPER EFFECTS${R}"
+    echo -e "    ${SURFACE1}────────────────────────────────────────────────────────${R}"
+    echo -e "    ${PEACH}wave${R}  ${TEAL}fade${R}  ${GREEN}grow${R}  ${MAUVE}liquid${R}  ${PINK}spiral${R}  ${BLUE}fold${R}  ${SKY}slide${R}  ${YELLOW}bloom${R}  ${RED}glitch${R}"
+    echo ""
+    echo -e "    ${DIM}${SUBTEXT0}Press any key to return...${R}"
+    read -n 1 -s
 }
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# ERROR HANDLING
+# ═══════════════════════════════════════════════════════════════════════════════
 
 show_error() {
     echo ""
-    echo -e "  ${C_PINK}Error: $1${C_RESET}"
+    echo -e "    ${RED}${HEART} ${TEXT}$1${R}"
     echo ""
-    echo -e "  Run ${C_BLUE}luvr help${C_RESET} for usage"
+    echo -e "    ${DIM}Run ${PINK}luvr help${R}${DIM} for usage${R}"
     echo ""
     exit 1
 }
@@ -97,36 +263,133 @@ check_scripts() {
     fi
 }
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# ═══════════════════════════════════════════════════════════════════════════════
+# INTERACTIVE MENU LOOP
+# ═══════════════════════════════════════════════════════════════════════════════
+
+run_menu() {
+    while true; do
+        show_menu
+        read -n 1 choice
+        echo ""
+        
+        case "$choice" in
+            1)
+                check_scripts
+                "$WALLPAPER_SCRIPTS/wallpaper_select.sh"
+                ;;
+            2)
+                check_scripts
+                "$WALLPAPER_SCRIPTS/wallpaper_random.sh"
+                sleep 1
+                ;;
+            3)
+                check_scripts
+                "$WALLPAPER_SCRIPTS/wallpaper_list.sh"
+                echo -e "\n    ${DIM}Press any key to continue...${R}"
+                read -n 1 -s
+                ;;
+            4)
+                "$SCRIPT_DIR/pomodoro.sh"
+                ;;
+            5)
+                "$SCRIPT_DIR/todo.sh"
+                ;;
+            6)
+                "$SCRIPT_DIR/mood.sh"
+                ;;
+            7)
+                "$SCRIPT_DIR/whoiam.sh"
+                echo -e "\n    ${DIM}Press any key to continue...${R}"
+                read -n 1 -s
+                ;;
+            8)
+                "$SCRIPT_DIR/key_hints.sh"
+                ;;
+            9)
+                "$SCRIPT_DIR/reload.sh"
+                echo -e "\n    ${DIM}Press any key to continue...${R}"
+                read -n 1 -s
+                ;;
+            0)
+                "$SCRIPT_DIR/greeting.sh"
+                echo -e "\n    ${DIM}Press any key to continue...${R}"
+                read -n 1 -s
+                ;;
+            h|H)
+                show_help
+                ;;
+            c|C)
+                clear
+                ;;
+            q|Q)
+                clear
+                echo ""
+                echo -e "    ${PINK}${SPARKLE} ${MAUVE}bye bye, skye! ${PINK}${HEART}${R}"
+                echo ""
+                exit 0
+                ;;
+            *)
+                ;;
+        esac
+    done
+}
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# COMMAND LINE INTERFACE
+# ═══════════════════════════════════════════════════════════════════════════════
 
 case "$1" in
-    wall)
+    # Wallpaper commands
+    wall|w)
         check_scripts
         "$WALLPAPER_SCRIPTS/wallpaper_select.sh" "$2"
         ;;
-    wall-random|wallr)
+    random|wr|wallr)
         check_scripts
         "$WALLPAPER_SCRIPTS/wallpaper_random.sh"
         ;;
-    wall-list|wallls)
+    list|ls|wallls)
         check_scripts
         "$WALLPAPER_SCRIPTS/wallpaper_list.sh"
         ;;
-    wall-set)
+    set)
         check_scripts
-        if [ -z "$2" ]; then
-            show_error "wall-set requires a path argument"
-        fi
-        "$WALLPAPER_SCRIPTS/wallpaper_set.sh" "$2" "$3"
+        [ -z "$2" ] && show_error "Usage: luvr set <image> [effect]"
+        "$WALLPAPER_SCRIPTS/wallpaper_set.sh" "$2" "$3" "$4"
         ;;
-    whoami)
+    
+    # Productivity
+    pomo|pomodoro|p)
+        "$SCRIPT_DIR/pomodoro.sh" "$2"
+        ;;
+    todo|t)
+        "$SCRIPT_DIR/todo.sh" "$@"
+        ;;
+    mood|m)
+        "$SCRIPT_DIR/mood.sh"
+        ;;
+    
+    # System
+    me|whoami)
         "$SCRIPT_DIR/whoiam.sh"
         ;;
-    reload)
-        reload
+    keys|k)
+        "$SCRIPT_DIR/key_hints.sh"
         ;;
-    help|--help|-h|"")
+    reload|r)
+        "$SCRIPT_DIR/reload.sh"
+        ;;
+    greet|hi|hello)
+        "$SCRIPT_DIR/greeting.sh"
+        ;;
+    
+    # Help & Menu
+    help|--help|-h)
         show_help
+        ;;
+    menu|"")
+        run_menu
         ;;
     *)
         show_error "Unknown command: $1"

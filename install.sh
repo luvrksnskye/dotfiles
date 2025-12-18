@@ -22,6 +22,12 @@ C_LAVENDER='\033[38;2;180;190;254m'
 C_TEXT='\033[38;2;205;214;244m'
 C_DIM='\033[38;2;108;112;134m'
 
+# Nerd Font Icons
+ICON_CHECK=""
+ICON_CROSS=""
+ICON_ARROW=""
+ICON_STAR=""
+
 print_header() {
     clear
     echo -e "${C_LAVENDER}"
@@ -45,7 +51,7 @@ EOF
 
 section() {
     echo ""
-    echo -e "  ${C_PINK}$1${C_RESET}"
+    echo -e "  ${C_PINK}${ICON_STAR} $1${C_RESET}"
     echo -e "  ${C_DIM}────────────────────────────────────────${C_RESET}"
 }
 
@@ -55,10 +61,10 @@ check_item() {
     echo -ne "  ${C_DIM}$name${C_RESET}"
     printf '%*s' $((28 - ${#name})) ''
     if eval "$check_cmd" >/dev/null 2>&1; then
-        echo -e "${C_GREEN}installed${C_RESET}"
+        echo -e "${C_GREEN}${ICON_CHECK} installed${C_RESET}"
         return 0
     else
-        echo -e "${C_YELLOW}not found${C_RESET}"
+        echo -e "${C_YELLOW}${ICON_CROSS} not found${C_RESET}"
         return 1
     fi
 }
@@ -73,7 +79,7 @@ install_brew_pkg() {
     else
         brew install "$pkg" >/dev/null 2>&1
     fi
-    echo -e "\r  ${C_DIM}$name${C_RESET}$(printf '%*s' $((28 - ${#name})) '')${C_GREEN}installed${C_RESET}"
+    echo -e "\r  ${C_DIM}$name${C_RESET}$(printf '%*s' $((28 - ${#name})) '')${C_GREEN}${ICON_CHECK} installed${C_RESET}"
 }
 
 backup() {
@@ -93,10 +99,10 @@ install_config() {
         backup "$dest"
         cp -r "$src" "$dest"
         find "$dest" -type f \( -name "*.sh" -o -name "*rc" \) -exec chmod +x {} \; 2>/dev/null
-        echo -e "${C_GREEN}done${C_RESET}"
+        echo -e "${C_GREEN}${ICON_CHECK} done${C_RESET}"
         return 0
     else
-        echo -e "${C_RED}not found${C_RESET}"
+        echo -e "${C_RED}${ICON_CROSS} not found${C_RESET}"
         return 1
     fi
 }
@@ -107,11 +113,11 @@ print_header
 # Check for Homebrew
 section "Checking Homebrew"
 if ! command -v brew >/dev/null 2>&1; then
-    echo -e "  ${C_RED}Homebrew not found!${C_RESET}"
+    echo -e "  ${C_RED}${ICON_CROSS} Homebrew not found!${C_RESET}"
     echo -e "  ${C_DIM}Install: https://brew.sh${C_RESET}"
     exit 1
 fi
-echo -e "  ${C_DIM}Homebrew${C_RESET}                    ${C_GREEN}found${C_RESET}"
+echo -e "  ${C_DIM}Homebrew${C_RESET}                    ${C_GREEN}${ICON_CHECK} found${C_RESET}"
 
 # Tap repositories
 section "Adding Brew Taps"
@@ -119,7 +125,7 @@ for tap in "homebrew/cask-fonts" "koekeishiya/formulae" "FelixKratz/formulae"; d
     echo -ne "  ${C_DIM}$tap${C_RESET}"
     printf '%*s' $((28 - ${#tap})) ''
     brew tap "$tap" >/dev/null 2>&1 || true
-    echo -e "${C_GREEN}done${C_RESET}"
+    echo -e "${C_GREEN}${ICON_CHECK} done${C_RESET}"
 done
 
 # Core Dependencies
@@ -137,6 +143,7 @@ check_item "Borders" "command -v borders" || install_brew_pkg "Borders" "borders
 
 section "Terminal & Tools"
 check_item "fzf" "command -v fzf" || install_brew_pkg "fzf" "fzf"
+check_item "chafa" "command -v chafa" || install_brew_pkg "chafa" "chafa"
 check_item "jq" "command -v jq" || install_brew_pkg "jq" "jq"
 check_item "bat" "command -v bat" || install_brew_pkg "bat" "bat"
 check_item "eza" "command -v eza" || install_brew_pkg "eza" "eza"
@@ -148,8 +155,12 @@ check_item "lazygit" "command -v lazygit" || install_brew_pkg "lazygit" "lazygit
 
 # Create directories
 section "Creating Directories"
-mkdir -p "$HOME/.config" "$HOME/.cache/starship" "$HOME/.cache/luvrksnskye" "$HOME/Pictures/Wallpapers"
-echo -e "  ${C_DIM}All directories${C_RESET}            ${C_GREEN}ready${C_RESET}"
+mkdir -p "$HOME/.config" 
+mkdir -p "$HOME/.cache/starship" 
+mkdir -p "$HOME/.cache/luvrksnskye" 
+mkdir -p "$HOME/.local/share/luvrksnskye"
+mkdir -p "$HOME/Pictures/Wallpapers"
+echo -e "  ${C_DIM}All directories${C_RESET}            ${C_GREEN}${ICON_CHECK} ready${C_RESET}"
 
 # Install configurations
 section "Window Manager Configs"
@@ -160,23 +171,45 @@ section "Bar & Borders"
 install_config "SketchyBar" "$SCRIPT_DIR/sketchybar" "$HOME/.config/sketchybar"
 install_config "Borders" "$SCRIPT_DIR/borders" "$HOME/.config/borders"
 
-section "Utilities"
+section "Luvrksnskye Toolkit"
 install_config "luvrksnskye" "$SCRIPT_DIR/luvrksnskye" "$HOME/.config/luvrksnskye"
-[ -d "$HOME/.config/luvrksnskye" ] && chmod +x "$HOME/.config/luvrksnskye/"* 2>/dev/null || true
+
+# Make all scripts executable
+if [ -d "$HOME/.config/luvrksnskye" ]; then
+    chmod +x "$HOME/.config/luvrksnskye/luvrksnskye" 2>/dev/null || true
+    chmod +x "$HOME/.config/luvrksnskye/"*.sh 2>/dev/null || true
+    chmod +x "$HOME/.config/luvrksnskye/wallpapers/"*.sh 2>/dev/null || true
+    echo -e "  ${C_DIM}Scripts permissions${C_RESET}        ${C_GREEN}${ICON_CHECK} done${C_RESET}"
+fi
 
 # Compile wallpaper animator
+section "Wallpaper Animator"
 if [ -f "$SCRIPT_DIR/luvrksnskye/wallpapers/wallpaper_animate.m" ]; then
-    echo -ne "  ${C_DIM}Compiling wallpaper_animate${C_RESET} "
-    if (cd "$SCRIPT_DIR/luvrksnskye/wallpapers" && make clean && make) >/dev/null 2>&1; then
-        cp "$SCRIPT_DIR/luvrksnskye/wallpapers/wallpaper_animate" "$HOME/.config/luvrksnskye/" 2>/dev/null
-        echo -e "${C_GREEN}done${C_RESET}"
+    echo -ne "  ${C_DIM}Compiling animator...${C_RESET}"
+    if (cd "$SCRIPT_DIR/luvrksnskye/wallpapers" && make clean >/dev/null 2>&1 && make >/dev/null 2>&1); then
+        cp "$SCRIPT_DIR/luvrksnskye/wallpapers/wallpaper_animate" "$HOME/.config/luvrksnskye/wallpapers/" 2>/dev/null
+        echo -e "\r  ${C_DIM}Wallpaper animator${C_RESET}         ${C_GREEN}${ICON_CHECK} compiled${C_RESET}"
     else
-        echo -e "${C_YELLOW}skipped${C_RESET}"
+        echo -e "\r  ${C_DIM}Wallpaper animator${C_RESET}         ${C_YELLOW}skipped (optional)${C_RESET}"
     fi
+elif [ -f "$HOME/.config/luvrksnskye/wallpapers/wallpaper_animate.m" ]; then
+    echo -ne "  ${C_DIM}Compiling animator...${C_RESET}"
+    if (cd "$HOME/.config/luvrksnskye/wallpapers" && make clean >/dev/null 2>&1 && make >/dev/null 2>&1); then
+        echo -e "\r  ${C_DIM}Wallpaper animator${C_RESET}         ${C_GREEN}${ICON_CHECK} compiled${C_RESET}"
+    else
+        echo -e "\r  ${C_DIM}Wallpaper animator${C_RESET}         ${C_YELLOW}skipped (optional)${C_RESET}"
+    fi
+else
+    echo -e "  ${C_DIM}Wallpaper animator${C_RESET}         ${C_DIM}not found${C_RESET}"
 fi
 
 section "Shell Configuration"
-[ -f "$SCRIPT_DIR/skye.zsh" ] && { backup "$HOME/.config/skye.zsh"; cp "$SCRIPT_DIR/skye.zsh" "$HOME/.config/skye.zsh"; echo -e "  ${C_DIM}skye.zsh${C_RESET}                    ${C_GREEN}done${C_RESET}"; }
+# skye.zsh is in repo root, install to ~/.config/skye.zsh
+if [ -f "$SCRIPT_DIR/skye.zsh" ]; then
+    backup "$HOME/.config/skye.zsh"
+    cp "$SCRIPT_DIR/skye.zsh" "$HOME/.config/skye.zsh"
+    echo -e "  ${C_DIM}skye.zsh${C_RESET}                    ${C_GREEN}${ICON_CHECK} done${C_RESET}"
+fi
 install_config "Powerlevel10k" "$SCRIPT_DIR/powerlevel10k" "$HOME/.config/powerlevel10k"
 install_config "Starship" "$SCRIPT_DIR/starship" "$HOME/.config/starship"
 install_config "Nushell" "$SCRIPT_DIR/nushell" "$HOME/.config/nushell"
@@ -196,16 +229,16 @@ install_config "Kew" "$SCRIPT_DIR/kew" "$HOME/.config/kew"
 section "Initializing Shell Tools"
 if command -v starship >/dev/null 2>&1; then
     starship init nu > "$HOME/.cache/starship/init.nu" 2>/dev/null
-    echo -e "  ${C_DIM}Starship for Nushell${C_RESET}        ${C_GREEN}done${C_RESET}"
+    echo -e "  ${C_DIM}Starship for Nushell${C_RESET}        ${C_GREEN}${ICON_CHECK} done${C_RESET}"
 fi
 
 # TPM
 section "Tmux Plugin Manager"
 if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
     git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm" >/dev/null 2>&1
-    echo -e "  ${C_DIM}TPM${C_RESET}                         ${C_GREEN}installed${C_RESET}"
+    echo -e "  ${C_DIM}TPM${C_RESET}                         ${C_GREEN}${ICON_CHECK} installed${C_RESET}"
 else
-    echo -e "  ${C_DIM}TPM${C_RESET}                         ${C_GREEN}exists${C_RESET}"
+    echo -e "  ${C_DIM}TPM${C_RESET}                         ${C_GREEN}${ICON_CHECK} exists${C_RESET}"
 fi
 
 # Complete
@@ -227,10 +260,21 @@ echo -e "     ${C_DIM}brew services start sketchybar && brew services start bord
 echo -e "  ${C_TEAL}4.${C_RESET} Tmux plugins: ${C_DIM}Ctrl-a + I${C_RESET}"
 echo ""
 
-section "Commands"
-echo -e "  ${C_MAUVE}luvr${C_RESET}        ${C_DIM}Show help${C_RESET}"
-echo -e "  ${C_MAUVE}luvr greet${C_RESET}  ${C_DIM}Animated greeting${C_RESET}"
-echo -e "  ${C_MAUVE}luvr keys${C_RESET}   ${C_DIM}Keybinding reference${C_RESET}"
-echo -e "  ${C_MAUVE}luvr wall${C_RESET}   ${C_DIM}Wallpaper selector${C_RESET}"
-echo -e "  ${C_MAUVE}reload${C_RESET}      ${C_DIM}Reload configs${C_RESET}"
+section "Quick Commands"
+echo -e "  ${C_MAUVE}luvr${C_RESET}        ${C_DIM}${ICON_ARROW} Open interactive menu${C_RESET}"
+echo -e "  ${C_MAUVE}w${C_RESET}           ${C_DIM}${ICON_ARROW} Wallpaper selector${C_RESET}"
+echo -e "  ${C_MAUVE}wr${C_RESET}          ${C_DIM}${ICON_ARROW} Random wallpaper${C_RESET}"
+echo -e "  ${C_MAUVE}p${C_RESET}           ${C_DIM}${ICON_ARROW} Pomodoro timer${C_RESET}"
+echo -e "  ${C_MAUVE}t${C_RESET}           ${C_DIM}${ICON_ARROW} Todo list${C_RESET}"
+echo -e "  ${C_MAUVE}m${C_RESET}           ${C_DIM}${ICON_ARROW} Mood tracker${C_RESET}"
+echo -e "  ${C_MAUVE}me${C_RESET}          ${C_DIM}${ICON_ARROW} Who am I card${C_RESET}"
+echo -e "  ${C_MAUVE}k${C_RESET}           ${C_DIM}${ICON_ARROW} Keybindings${C_RESET}"
+echo -e "  ${C_MAUVE}hi${C_RESET}          ${C_DIM}${ICON_ARROW} Greeting${C_RESET}"
+echo -e "  ${C_MAUVE}r${C_RESET}           ${C_DIM}${ICON_ARROW} Reload services${C_RESET}"
+echo ""
+
+section "Wallpaper Effects"
+echo -e "  ${C_PEACH}wave${C_RESET}  ${C_TEAL}fade${C_RESET}  ${C_GREEN}grow${C_RESET}  ${C_MAUVE}liquid${C_RESET}  ${C_PINK}spiral${C_RESET}  ${C_BLUE}fold${C_RESET}  ${C_LAVENDER}slide${C_RESET}  ${C_YELLOW}bloom${C_RESET}  ${C_RED}glitch${C_RESET}"
+echo ""
+echo -e "  ${C_DIM}Usage: ws image.jpg fade${C_RESET}"
 echo ""
