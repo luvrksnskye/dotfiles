@@ -48,6 +48,11 @@ static NSImage* loadImage(const char *path) {
     return [[NSImage alloc] initWithContentsOfFile:imagePath];
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// Create window with image that matches EXACTLY how macOS renders wallpaper
+// Uses CALayer directly for precise control over scaling
+// ═══════════════════════════════════════════════════════════════════════════════
+
 static NSWindow* createImageWindow(NSImage *image, NSRect frame) {
     NSWindow *window = [[NSWindow alloc]
         initWithContentRect:frame
@@ -64,14 +69,29 @@ static NSWindow* createImageWindow(NSImage *image, NSRect frame) {
     [window setIgnoresMouseEvents:YES];
     [window setHasShadow:NO];
     
-    NSImageView *imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, frame.size.width, frame.size.height)];
-    [imageView setImage:image];
-    [imageView setImageScaling:NSImageScaleProportionallyUpOrDown];
-    [imageView setImageAlignment:NSImageAlignCenter];
-    [imageView setWantsLayer:YES];
-    imageView.layer.contentsGravity = kCAGravityResizeAspectFill;
+    // Use a plain NSView with a CALayer for the image
+    // This gives us precise control over how the image is scaled
+    NSView *containerView = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, frame.size.width, frame.size.height)];
+    [containerView setWantsLayer:YES];
+    containerView.layer.backgroundColor = [NSColor clearColor].CGColor;
     
-    [window setContentView:imageView];
+    // Create image layer
+    CALayer *imageLayer = [CALayer layer];
+    imageLayer.frame = containerView.bounds;
+    imageLayer.contentsGravity = kCAGravityResizeAspectFill;
+    imageLayer.contents = image;
+    imageLayer.masksToBounds = YES;
+    
+    // Disable any implicit animations on the layer
+    imageLayer.actions = @{
+        @"contents": [NSNull null],
+        @"bounds": [NSNull null],
+        @"position": [NSNull null]
+    };
+    
+    [containerView.layer addSublayer:imageLayer];
+    [window setContentView:containerView];
+    
     return window;
 }
 
@@ -94,14 +114,22 @@ static void animateLiquid(const char *path, double duration) {
         // Create window with new wallpaper image
         NSWindow *window = createImageWindow(newImage, screenFrame);
         NSView *contentView = [window contentView];
-        [contentView setWantsLayer:YES];
-        CALayer *layer = [contentView layer];
-        layer.masksToBounds = YES;
+        
+        // Get the image layer (first sublayer of contentView's layer)
+        CALayer *imageLayer = [[contentView layer] sublayers][0];
         
         // Create circular mask - starts at 0 radius
         CAShapeLayer *maskLayer = [CAShapeLayer layer];
         maskLayer.fillColor = [NSColor whiteColor].CGColor;
-        layer.mask = maskLayer;
+        
+        // Disable implicit animations on mask
+        maskLayer.actions = @{
+            @"path": [NSNull null],
+            @"bounds": [NSNull null],
+            @"position": [NSNull null]
+        };
+        
+        imageLayer.mask = maskLayer;
         
         [window setAlphaValue:1.0];
         [window makeKeyAndOrderFront:nil];
@@ -110,7 +138,7 @@ static void animateLiquid(const char *path, double duration) {
         // Calculate max radius to cover entire screen from center
         double centerX = screenFrame.size.width / 2.0;
         double centerY = screenFrame.size.height / 2.0;
-        double maxRadius = sqrt(pow(screenFrame.size.width, 2) + pow(screenFrame.size.height, 2)) / 2.0 + 20;
+        double maxRadius = sqrt(pow(screenFrame.size.width, 2) + pow(screenFrame.size.height, 2)) / 2.0 + 50;
         
         // Animation timing
         double fps = 60.0;
@@ -120,7 +148,7 @@ static void animateLiquid(const char *path, double duration) {
         clock_gettime(CLOCK_MONOTONIC, &start);
         double elapsed = 0.0;
         
-        // Set wallpaper early (at 70% of animation) to prevent flash
+        // Set wallpaper early (at 80% of animation) to prevent flash
         BOOL wallpaperSet = NO;
         
         // Animate circle expanding
@@ -132,8 +160,8 @@ static void animateLiquid(const char *path, double duration) {
             double easedProgress = easeOutQuart(progress);
             double radius = maxRadius * easedProgress;
             
-            // Set wallpaper at 70% progress to ensure no flash
-            if (!wallpaperSet && progress >= 0.7) {
+            // Set wallpaper at 80% progress to ensure no flash
+            if (!wallpaperSet && progress >= 0.80) {
                 setWallpaper(path);
                 wallpaperSet = YES;
                 pumpRunLoop();
@@ -161,7 +189,7 @@ static void animateLiquid(const char *path, double duration) {
         }
         
         // Small delay to let wallpaper render before closing window
-        usleep(100000); // 100ms
+        usleep(50000); // 50ms
         pumpRunLoop();
         
         // Close window
