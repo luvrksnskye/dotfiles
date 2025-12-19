@@ -32,19 +32,19 @@ print_header() {
     clear
     echo -e "${C_LAVENDER}"
     cat << 'EOF'
-    ╔════════════════════════════════════════════════════════════════════╗
-    ║                                                                    ║
-    ║   ███████╗██╗  ██╗██╗   ██╗███████╗                                ║
-    ║   ██╔════╝██║ ██╔╝╚██╗ ██╔╝██╔════╝                                ║
-    ║   ███████╗█████╔╝  ╚████╔╝ █████╗                                  ║
-    ║   ╚════██║██╔═██╗   ╚██╔╝  ██╔══╝                                  ║
-    ║   ███████║██║  ██╗   ██║   ███████╗                                ║
-    ║   ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝                                ║
-    ║                                                                    ║
+    +====================================================================+
+    |                                                                    |
+    |   ███████╗██╗  ██╗██╗   ██╗███████╗                                |
+    |   ██╔════╝██║ ██╔╝╚██╗ ██╔╝██╔════╝                                |
+    |   ███████╗█████╔╝  ╚████╔╝ █████╗                                  |
+    |   ╚════██║██╔═██╗   ╚██╔╝  ██╔══╝                                  |
+    |   ███████║██║  ██╗   ██║   ███████╗                                |
+    |   ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝                                |
+    |                                                                    |
 EOF
-    echo -e "    ║              ${C_PINK}Dotfiles Installer${C_LAVENDER}                              ║"
-    echo -e "    ║                ${C_TEAL}macOS Edition${C_LAVENDER}                                 ║"
-    echo -e "    ╚════════════════════════════════════════════════════════════════════╝"
+    echo -e "    |              ${C_PINK}Dotfiles Installer${C_LAVENDER}                              |"
+    echo -e "    |                ${C_TEAL}macOS Edition${C_LAVENDER}                                 |"
+    echo -e "    +====================================================================+"
     echo -e "${C_RESET}"
     echo ""
 }
@@ -52,7 +52,7 @@ EOF
 section() {
     echo ""
     echo -e "  ${C_PINK}${ICON_STAR} $1${C_RESET}"
-    echo -e "  ${C_DIM}────────────────────────────────────────${C_RESET}"
+    echo -e "  ${C_DIM}----------------------------------------${C_RESET}"
 }
 
 check_item() {
@@ -152,6 +152,7 @@ check_item "fd" "command -v fd" || install_brew_pkg "fd" "fd"
 check_item "neofetch" "command -v neofetch" || install_brew_pkg "neofetch" "neofetch"
 check_item "tmux" "command -v tmux" || install_brew_pkg "tmux" "tmux"
 check_item "lazygit" "command -v lazygit" || install_brew_pkg "lazygit" "lazygit"
+check_item "nowplaying-cli" "command -v nowplaying-cli" || install_brew_pkg "nowplaying-cli" "nowplaying-cli"
 
 # Create directories
 section "Creating Directories"
@@ -203,6 +204,23 @@ else
     echo -e "  ${C_DIM}Wallpaper animator${C_RESET}         ${C_DIM}not found${C_RESET}"
 fi
 
+# Compile SketchyBar animation helper
+section "SketchyBar Animation Helper"
+SKETCHYBAR_HELPER_SRC="$HOME/.config/sketchybar/helpers/skye_animator.c"
+SKETCHYBAR_HELPER_DST="$HOME/.config/sketchybar/helpers/skye_animator"
+
+if [ -f "$SKETCHYBAR_HELPER_SRC" ]; then
+    echo -ne "  ${C_DIM}Compiling helper...${C_RESET}"
+    if clang -O2 -Wall -std=c11 -o "$SKETCHYBAR_HELPER_DST" "$SKETCHYBAR_HELPER_SRC" -lpthread -lm 2>/dev/null; then
+        chmod +x "$SKETCHYBAR_HELPER_DST"
+        echo -e "\r  ${C_DIM}SketchyBar helper${C_RESET}          ${C_GREEN}${ICON_CHECK} compiled${C_RESET}"
+    else
+        echo -e "\r  ${C_DIM}SketchyBar helper${C_RESET}          ${C_YELLOW}skipped (optional)${C_RESET}"
+    fi
+else
+    echo -e "  ${C_DIM}SketchyBar helper${C_RESET}          ${C_DIM}not found${C_RESET}"
+fi
+
 section "Shell Configuration"
 # skye.zsh is in repo root, install to ~/.config/skye.zsh
 if [ -f "$SCRIPT_DIR/skye.zsh" ]; then
@@ -245,9 +263,9 @@ fi
 echo ""
 echo -e "${C_LAVENDER}"
 cat << 'EOF'
-    ╔════════════════════════════════════════════════════════════════════╗
-    ║                    Installation Complete!                          ║
-    ╚════════════════════════════════════════════════════════════════════╝
+    +====================================================================+
+    |                    Installation Complete!                          |
+    +====================================================================+
 EOF
 echo -e "${C_RESET}"
 

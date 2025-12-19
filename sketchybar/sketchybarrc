@@ -1,14 +1,13 @@
 #!/bin/bash
 
-# ╔═══════════════════════════════════════════════════════════════════╗
-# ║             🌙 Skye's Dreamy SketchyBar 🌙                         ║
-# ║                                                                    ║
-# ║  A complete macOS menu bar replacement                             ║
-# ║  Made with 💜 for Skye                                             ║
-# ╚═══════════════════════════════════════════════════════════════════╝
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║                                                                           ║
+# ║             🌙 Skye's Dreamy SketchyBar v2.0 🌙                           ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
 
 CONFIG_DIR="$HOME/.config/sketchybar"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
+HELPER_DIR="$CONFIG_DIR/helpers"
 
 source "$CONFIG_DIR/colors.sh"
 source "$CONFIG_DIR/icons.sh"
@@ -18,11 +17,22 @@ source "$CONFIG_DIR/icons.sh"
 # ═══════════════════════════════════════════════════════════════════════
 
 FONT="SF Pro"
+FONT_BOLD="SF Pro:Bold"
+FONT_SEMIBOLD="SF Pro:Semibold"
+FONT_MEDIUM="SF Pro:Medium"
 NERD_FONT="JetBrainsMono Nerd Font"
+MONO_FONT="SF Mono"
 PADDINGS=6
 
 # ═══════════════════════════════════════════════════════════════════════
-#                           BAR CONFIGURATION
+#                      BAR CONFIGURATION
+# ═══════════════════════════════════════════════════════════════════════
+#
+# 🎥 SCREEN RECORDING COMPATIBILITY:
+# - topmost=window keeps bar above windows but below fullscreen apps
+# - This prevents the bar from appearing in most screen recordings
+# - Change to topmost=on if you WANT the bar in recordings
+#
 # ═══════════════════════════════════════════════════════════════════════
 
 sketchybar --bar \
@@ -40,7 +50,8 @@ sketchybar --bar \
     margin=0 \
     sticky=on \
     topmost=window \
-    notch_width=200
+    notch_width=200 \
+    font_smoothing=on
 
 # ═══════════════════════════════════════════════════════════════════════
 #                         DEFAULT ITEM SETTINGS
@@ -52,7 +63,7 @@ sketchybar --default \
     icon.color="$TEXT" \
     icon.padding_left=$PADDINGS \
     icon.padding_right=$PADDINGS \
-    label.font="$FONT:Semibold:13.0" \
+    label.font="$FONT_SEMIBOLD:13.0" \
     label.color="$SUBTEXT1" \
     label.padding_left=$PADDINGS \
     label.padding_right=$PADDINGS \
@@ -72,7 +83,10 @@ sketchybar --default \
 # ═══════════════════════════════════════════════════════════════════════
 
 sketchybar --add event spotify_change "com.spotify.client.PlaybackStateChanged"
+sketchybar --add event music_change "com.apple.Music.playerInfo"
+sketchybar --add event media_change
 sketchybar --add event aerospace_workspace_change
+sketchybar --add event bluetooth_change "com.apple.bluetooth.status"
 
 # ═══════════════════════════════════════════════════════════════════════
 #                         LEFT SIDE - APPLE MENU
@@ -91,53 +105,60 @@ sketchybar --add item apple left \
 # Apple popup items
 sketchybar --add item apple.settings popup.apple \
            --set apple.settings \
-                 icon="$ICON_PREFERENCES" \
-                 icon.color="$PINK" \
-                 label="System Settings..." \
+                 icon="$ICON_PREFERENCES" icon.color="$PINK" icon.font="$NERD_FONT:Bold:15.0" \
+                 label="System Settings..." label.color="$TEXT" \
+                 background.color="$TRANSPARENT" background.corner_radius=8 \
                  click_script="open 'x-apple.systempreferences:'; sketchybar --set apple popup.drawing=off"
 
 sketchybar --add item apple.activity popup.apple \
            --set apple.activity \
-                 icon="$ICON_ACTIVITY" \
-                 icon.color="$SKY" \
-                 label="Activity Monitor" \
+                 icon="$ICON_ACTIVITY" icon.color="$SKY" icon.font="$NERD_FONT:Bold:15.0" \
+                 label="Activity Monitor" label.color="$TEXT" \
+                 background.color="$TRANSPARENT" background.corner_radius=8 \
                  click_script="open -a 'Activity Monitor'; sketchybar --set apple popup.drawing=off"
+
+sketchybar --add item apple.div1 popup.apple \
+           --set apple.div1 icon.drawing=off label.drawing=off \
+                 background.color="$SURFACE1" background.height=1 width=180
 
 sketchybar --add item apple.sleep popup.apple \
            --set apple.sleep \
-                 icon="$ICON_SLEEP" \
-                 icon.color="$LAVENDER" \
-                 label="Sleep" \
+                 icon="$ICON_SLEEP" icon.color="$LAVENDER" icon.font="$NERD_FONT:Bold:15.0" \
+                 label="Sleep" label.color="$TEXT" \
+                 background.color="$TRANSPARENT" background.corner_radius=8 \
                  click_script="pmset sleepnow; sketchybar --set apple popup.drawing=off"
 
 sketchybar --add item apple.lock popup.apple \
            --set apple.lock \
-                 icon="$ICON_LOCK" \
-                 icon.color="$BLUE" \
-                 label="Lock Screen" \
+                 icon="$ICON_LOCK" icon.color="$BLUE" icon.font="$NERD_FONT:Bold:15.0" \
+                 label="Lock Screen" label.color="$TEXT" \
+                 background.color="$TRANSPARENT" background.corner_radius=8 \
                  click_script="pmset displaysleepnow; sketchybar --set apple popup.drawing=off"
+
+sketchybar --add item apple.div2 popup.apple \
+           --set apple.div2 icon.drawing=off label.drawing=off \
+                 background.color="$SURFACE1" background.height=1 width=180
 
 sketchybar --add item apple.restart popup.apple \
            --set apple.restart \
-                 icon="$ICON_RESTART" \
-                 icon.color="$PEACH" \
-                 label="Restart..." \
+                 icon="$ICON_RESTART" icon.color="$PEACH" icon.font="$NERD_FONT:Bold:15.0" \
+                 label="Restart..." label.color="$TEXT" \
+                 background.color="$TRANSPARENT" background.corner_radius=8 \
                  click_script="osascript -e 'tell app \"loginwindow\" to «event aevtrrst»'; sketchybar --set apple popup.drawing=off"
 
 sketchybar --add item apple.shutdown popup.apple \
            --set apple.shutdown \
-                 icon="$ICON_POWER" \
-                 icon.color="$RED" \
-                 label="Shut Down..." \
+                 icon="$ICON_POWER" icon.color="$RED" icon.font="$NERD_FONT:Bold:15.0" \
+                 label="Shut Down..." label.color="$TEXT" \
+                 background.color="$TRANSPARENT" background.corner_radius=8 \
                  click_script="osascript -e 'tell app \"loginwindow\" to «event aevtrsdn»'; sketchybar --set apple popup.drawing=off"
 
 # ═══════════════════════════════════════════════════════════════════════
-#                      AEROSPACE WORKSPACES 🌙
+#                      WORKSPACES 🌙
 # ═══════════════════════════════════════════════════════════════════════
 
-# Workspaces 1-9
-FONT="JetBrainsMono Nerd Font:Regular:14.0"
 SPACE_ICONS=("󰽤" "󰽥" "󰽦" "󰽧" "󰽨" "☪︎" "˙✦" "✧" "✦")
+
 
 for i in "${!SPACE_ICONS[@]}"
 do
@@ -156,15 +177,12 @@ do
                      background.drawing=off \
                      label.drawing=off \
                      script="$PLUGIN_DIR/aerospace.sh $sid" \
-                     click_script="aerospace workspace $sid" \
-               --subscribe space."$sid" aerospace_workspace_change
+                     click_script="aerospace workspace $sid 2>/dev/null || yabai -m space --focus $sid 2>/dev/null" \
+               --subscribe space."$sid" aerospace_workspace_change front_app_switched
 done
 
 sketchybar --add bracket spaces '/space\..*/' \
-           --set spaces \
-                 background.color="$ITEM_BG" \
-                 background.corner_radius=12 \
-                 background.height=30
+           --set spaces background.color="$ITEM_BG" background.corner_radius=12 background.height=30
 
 # ═══════════════════════════════════════════════════════════════════════
 #                           FRONT APP
@@ -173,7 +191,7 @@ sketchybar --add bracket spaces '/space\..*/' \
 sketchybar --add item front_app left \
            --set front_app \
                  icon.drawing=off \
-                 label.font="$FONT:Bold:13.0" \
+                 label.font="$FONT_BOLD:13.0" \
                  label.color="$PINK" \
                  background.drawing=off \
                  padding_left=8 \
@@ -186,12 +204,12 @@ sketchybar --add item front_app left \
 
 sketchybar --add item music center \
            --set music \
-                 icon="$ICON_MUSIC" \
+                 icon="$ICON_VINYL" \
                  icon.font="$NERD_FONT:Bold:18.0" \
-                 icon.color="$GREEN" \
+                 icon.color="$OVERLAY1" \
                  label="Not Playing" \
-                 label.font="$FONT:Medium:12.0" \
-                 label.color="$SUBTEXT1" \
+                 label.font="$FONT_MEDIUM:12.0" \
+                 label.color="$SUBTEXT0" \
                  label.max_chars=45 \
                  background.color="$MEDIA_BG" \
                  background.corner_radius=12 \
@@ -199,140 +217,75 @@ sketchybar --add item music center \
                  scroll_texts=on \
                  update_freq=3 \
                  script="$PLUGIN_DIR/music.sh" \
-                 click_script="$PLUGIN_DIR/music_click.sh"
+                 click_script="$PLUGIN_DIR/music_click.sh" \
+           --subscribe music spotify_change music_change media_change
 
+# Music popup controls
 sketchybar --add item music.prev popup.music \
            --set music.prev \
-                 icon="$ICON_PREV" \
-                 icon.font="$NERD_FONT:Bold:18.0" \
-                 icon.color="$SUBTEXT1" \
-                 icon.padding_left=15 \
-                 icon.padding_right=15 \
-                 label.drawing=off \
-                 background.drawing=off \
-                 click_script="nowplaying-cli previous 2>/dev/null || osascript -e 'tell application \"Spotify\" to previous track' 2>/dev/null"
+                 icon="$ICON_PREV" icon.font="$NERD_FONT:Bold:18.0" icon.color="$SUBTEXT1" \
+                 icon.padding_left=15 icon.padding_right=10 label.drawing=off background.drawing=off \
+                 click_script="nowplaying-cli previous 2>/dev/null || osascript -e 'tell application \"Spotify\" to previous track' 2>/dev/null; sketchybar --trigger media_change"
 
 sketchybar --add item music.play popup.music \
            --set music.play \
-                 icon="$ICON_PLAY" \
-                 icon.font="$NERD_FONT:Bold:22.0" \
-                 icon.color="$PINK" \
-                 icon.padding_left=15 \
-                 icon.padding_right=15 \
-                 label.drawing=off \
-                 background.drawing=off \
-                 click_script="nowplaying-cli togglePlayPause 2>/dev/null || osascript -e 'tell application \"Spotify\" to playpause' 2>/dev/null"
+                 icon="$ICON_PLAY" icon.font="$NERD_FONT:Bold:24.0" icon.color="$PINK" \
+                 icon.padding_left=10 icon.padding_right=10 label.drawing=off background.drawing=off \
+                 click_script="nowplaying-cli togglePlayPause 2>/dev/null || osascript -e 'tell application \"Spotify\" to playpause' 2>/dev/null; sleep 0.2; sketchybar --trigger media_change"
 
 sketchybar --add item music.next popup.music \
            --set music.next \
-                 icon="$ICON_NEXT" \
-                 icon.font="$NERD_FONT:Bold:18.0" \
-                 icon.color="$SUBTEXT1" \
-                 icon.padding_left=15 \
-                 icon.padding_right=15 \
-                 label.drawing=off \
-                 background.drawing=off \
-                 click_script="nowplaying-cli next 2>/dev/null || osascript -e 'tell application \"Spotify\" to next track' 2>/dev/null"
-
-sketchybar --subscribe music spotify_change media_change
+                 icon="$ICON_NEXT" icon.font="$NERD_FONT:Bold:18.0" icon.color="$SUBTEXT1" \
+                 icon.padding_left=10 icon.padding_right=15 label.drawing=off background.drawing=off \
+                 click_script="nowplaying-cli next 2>/dev/null || osascript -e 'tell application \"Spotify\" to next track' 2>/dev/null; sketchybar --trigger media_change"
 
 # ═══════════════════════════════════════════════════════════════════════
-#                      RIGHT SIDE - CLOCK (Caracas)
+#                      RIGHT SIDE - STATUS ITEMS
 # ═══════════════════════════════════════════════════════════════════════
 
 sketchybar --add item clock right \
            --set clock \
-                 icon="$ICON_CLOCK" \
-                 icon.color="$LAVENDER" \
-                 icon.font="$NERD_FONT:Bold:16.0" \
-                 label.font="SF Mono:Bold:13.0" \
-                 label.color="$TEXT" \
-                 background.color="$ITEM_BG" \
-                 background.corner_radius=10 \
-                 update_freq=30 \
-                 script="$PLUGIN_DIR/clock.sh" \
-                 click_script="open -a Calendar"
-
-# ═══════════════════════════════════════════════════════════════════════
-#                         WEATHER (Caracas)
-# ═══════════════════════════════════════════════════════════════════════
+                 icon="$ICON_CLOCK" icon.color="$LAVENDER" icon.font="$NERD_FONT:Bold:16.0" \
+                 label.font="$MONO_FONT:Bold:13.0" label.color="$TEXT" \
+                 background.color="$ITEM_BG" background.corner_radius=10 \
+                 update_freq=30 script="$PLUGIN_DIR/clock.sh" click_script="open -a Calendar"
 
 sketchybar --add item weather right \
            --set weather \
-                 icon="$ICON_WEATHER_CLEAR" \
-                 icon.font="$NERD_FONT:Bold:16.0" \
-                 icon.color="$SKY" \
-                 label="--°" \
-                 label.color="$TEXT" \
-                 background.color="$ITEM_BG" \
-                 background.corner_radius=10 \
-                 update_freq=1800 \
-                 script="$PLUGIN_DIR/weather.sh" \
-                 click_script="open 'https://wttr.in/Caracas'" \
+                 icon="$ICON_WEATHER_CLEAR" icon.font="$NERD_FONT:Bold:16.0" icon.color="$SKY" \
+                 label="--°" label.color="$TEXT" \
+                 background.color="$ITEM_BG" background.corner_radius=10 \
+                 update_freq=1800 script="$PLUGIN_DIR/weather.sh" click_script="open 'https://wttr.in/Caracas'" \
            --subscribe weather system_woke
-
-# ═══════════════════════════════════════════════════════════════════════
-#                            BATTERY
-# ═══════════════════════════════════════════════════════════════════════
 
 sketchybar --add item battery right \
            --set battery \
-                 icon.font="$NERD_FONT:Bold:16.0" \
-                 icon.color="$GREEN" \
-                 label.color="$TEXT" \
-                 background.color="$ITEM_BG" \
-                 background.corner_radius=10 \
-                 update_freq=120 \
-                 script="$PLUGIN_DIR/battery.sh" \
+                 icon.font="$NERD_FONT:Bold:16.0" icon.color="$GREEN" label.color="$TEXT" \
+                 background.color="$ITEM_BG" background.corner_radius=10 \
+                 update_freq=120 script="$PLUGIN_DIR/battery.sh" \
                  click_script="open 'x-apple.systempreferences:com.apple.preference.battery'" \
            --subscribe battery system_woke power_source_change
 
-# ═══════════════════════════════════════════════════════════════════════
-#                             WIFI
-# ═══════════════════════════════════════════════════════════════════════
-
 sketchybar --add item wifi right \
            --set wifi \
-                 icon="$ICON_WIFI" \
-                 icon.font="$NERD_FONT:Bold:16.0" \
-                 icon.color="$TEAL" \
-                 label.drawing=off \
-                 background.color="$ITEM_BG" \
-                 background.corner_radius=10 \
-                 script="$PLUGIN_DIR/wifi.sh" \
-                 click_script="open 'x-apple.systempreferences:com.apple.preference.network'" \
+                 icon="$ICON_WIFI" icon.font="$NERD_FONT:Bold:16.0" icon.color="$TEAL" label.drawing=off \
+                 background.color="$ITEM_BG" background.corner_radius=10 \
+                 script="$PLUGIN_DIR/wifi.sh" click_script="open 'x-apple.systempreferences:com.apple.preference.network'" \
                  update_freq=30
-
-# ═══════════════════════════════════════════════════════════════════════
-#                           BLUETOOTH
-# ═══════════════════════════════════════════════════════════════════════
 
 sketchybar --add item bluetooth right \
            --set bluetooth \
-                 icon="$ICON_BLUETOOTH" \
-                 icon.font="$NERD_FONT:Bold:14.0" \
-                 icon.color="$BLUE" \
-                 label.drawing=off \
-                 background.color="$ITEM_BG" \
-                 background.corner_radius=10 \
-                 script="$PLUGIN_DIR/bluetooth.sh" \
-                 click_script="open 'x-apple.systempreferences:com.apple.preference.Bluetooth'" \
-                 update_freq=30
-
-# ═══════════════════════════════════════════════════════════════════════
-#                            VOLUME
-# ═══════════════════════════════════════════════════════════════════════
+                 icon="$ICON_BLUETOOTH" icon.font="$NERD_FONT:Bold:14.0" icon.color="$BLUE" label.drawing=off \
+                 background.color="$ITEM_BG" background.corner_radius=10 \
+                 script="$PLUGIN_DIR/bluetooth.sh" click_script="open 'x-apple.systempreferences:com.apple.preference.Bluetooth'" \
+                 update_freq=30 \
+           --subscribe bluetooth bluetooth_change
 
 sketchybar --add item volume right \
            --set volume \
-                 icon="$ICON_VOLUME_HIGH" \
-                 icon.font="$NERD_FONT:Bold:16.0" \
-                 icon.color="$PEACH" \
-                 label.drawing=off \
-                 background.color="$ITEM_BG" \
-                 background.corner_radius=10 \
-                 script="$PLUGIN_DIR/volume.sh" \
-                 click_script="open 'x-apple.systempreferences:com.apple.preference.sound'" \
+                 icon="$ICON_VOLUME_HIGH" icon.font="$NERD_FONT:Bold:16.0" icon.color="$PEACH" label.drawing=off \
+                 background.color="$ITEM_BG" background.corner_radius=10 \
+                 script="$PLUGIN_DIR/volume.sh" click_script="open 'x-apple.systempreferences:com.apple.preference.sound'" \
            --subscribe volume volume_change
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -341,4 +294,11 @@ sketchybar --add item volume right \
 
 sketchybar --update
 
-echo "✨ Skye's Dreamy Bar loaded! ✨"
+echo ""
+echo "╔═══════════════════════════════════════════════════════════════╗"
+echo "║                                                               ║"
+echo "║        ✨ Skye's Dreamy Bar v2.0 loaded! ✨                   ║"
+echo "║                                                               ║"
+echo "║                                                               ║"
+echo "╚═══════════════════════════════════════════════════════════════╝"
+echo ""

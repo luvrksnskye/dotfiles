@@ -90,21 +90,6 @@ tl                  # list tasks
 td 1                # complete task #1
 ```
 
----
-
-**Quick effect shortcuts:**
-```bash
-wf image.jpg   # fade
-ww image.jpg   # wave
-wg image.jpg   # grow
-wl image.jpg   # liquid
-wsp image.jpg  # spiral
-wfo image.jpg  # fold
-wsl image.jpg left  # slide
-wb image.jpg   # bloom
-wgl image.jpg  # glitch
-```
-
 ### Pomodoro Timer
 
 Focus timer with visual progress bar and notifications.
